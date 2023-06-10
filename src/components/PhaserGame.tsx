@@ -14,6 +14,12 @@ const PhaserGame = () => {
           width: 800,
           height: 600,
           scene: [GameStageScene, GameOverScene, MainMenuScene],
+          physics: {
+            default: 'arcade',
+            arcade: {
+                gravity: { y: 0 },
+            }
+          },
         };
     
         game = new Phaser.Game(config);
