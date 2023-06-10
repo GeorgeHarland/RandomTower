@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
-import GameStageScene from '../scenes/GameStage';
-import GameOverScene from '../scenes/GameOver';
-import MainMenuScene from '../scenes/MainMenu';
+import GameStageScene from '../game/scenes/GameStage'
+import GameOverScene from '../game/scenes/GameOver';
+import MainMenuScene from '../game/scenes/MainMenu';
 import { useEffect, useRef } from 'preact/hooks';
 
 const PhaserGame = () => {
