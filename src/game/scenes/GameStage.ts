@@ -8,6 +8,8 @@ export default class GameStageScene extends Phaser.Scene {
   private tower: Phaser.Physics.Arcade.Sprite | undefined;
   private arrows: Phaser.Physics.Arcade.Group | undefined;
 
+  private shopBoxes: Phaser.GameObjects.Group | undefined;
+
   private towerLife: number;
   private towerLifeText: Phaser.GameObjects.Text | undefined;
   private playerGold: number;
@@ -48,6 +50,13 @@ export default class GameStageScene extends Phaser.Scene {
     this.arrows = this.physics.add.group({
       classType: Phaser.GameObjects.Rectangle
     });
+    this.shopBoxes = this.physics.add.group({
+      classType: Phaser.GameObjects.Rectangle
+    })
+    for(let i = 0; i < 3; i++) {
+      const shopBox = this.physics.add.sprite(80+(100*i), this.scale.height - 80, 'shopBoxTexture')
+      this.shopBoxes?.add(shopBox);
+    }
     this.towerLifeText = this.add.text(10, 10, 'Tower Life: ' + this.towerLife, {
       fontSize: '24px',
       color: '#000000'
@@ -85,7 +94,7 @@ export default class GameStageScene extends Phaser.Scene {
 
     this.time.addEvent({
       delay: 1000,
-      callback: () => this.enemyRate+=0.1,
+      callback: () => this.enemyRate+=0.01,
       callbackScope: this,
       loop: true
     });
@@ -109,6 +118,9 @@ export default class GameStageScene extends Phaser.Scene {
     this.enemies && this.enemies.children.entries.forEach((enemy) => {
       this.tower && this.physics.moveToObject(enemy, this.tower, 80)
     });
+
+    // for each shop 
+    // - if no item, add a new item - image + name + cost
     
     this.towerLifeText && this.towerLifeText.setText('Tower Life: ' + this.towerLife);
     this.goldText && this.goldText.setText('Gold: ' + this.playerGold);
@@ -184,7 +196,7 @@ export default class GameStageScene extends Phaser.Scene {
 
   enemyDefeated(enemy: any) {
     enemy.destroy();
-    this.playerGold += 5;
+    this.playerGold++;
   }
 
   updateSpawnTimer() {

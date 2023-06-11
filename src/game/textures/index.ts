@@ -37,6 +37,13 @@ const generateTextures = (objectCreator: any) => {
   arrowGraphic.fillStyle(0x000000, 1)
   arrowGraphic.fillRect(0, 0, 12, 3)
   arrowGraphic.generateTexture('arrowTexture', 12, 3)
+
+  let shopBoxTexture = objectCreator.graphics();
+  shopBoxTexture.fillStyle(0x000000, 1)
+  shopBoxTexture.fillRect(0, 0, 80, 80)
+  shopBoxTexture.fillStyle(0xa52a2a, 1)
+  shopBoxTexture.fillRect(2, 2, 76, 76)
+  shopBoxTexture.generateTexture('shopBoxTexture', 80, 80)
 }
 
 export default generateTextures;
