@@ -6,20 +6,26 @@ export default class GameStageScene extends Phaser.Scene {
   private circle: Phaser.Physics.Arcade.Sprite | undefined;
   private enemies: Phaser.Physics.Arcade.Group | undefined;
   private tower: Phaser.Physics.Arcade.Sprite | undefined;
+  private arrows: Phaser.Physics.Arcade.Group | undefined;
 
   private towerLife: number;
   private towerLifeText: Phaser.GameObjects.Text | undefined;
   private playerGold: number;
   private goldText: Phaser.GameObjects.Text | undefined;
   private enemyRate: number;
-  private spawnEnemyTimer: Phaser.Time.TimerEvent | undefined;
   private enemyRateText: Phaser.GameObjects.Text | undefined;
+  private arrowRate: number;
+  private arrowRateText: Phaser.GameObjects.Text | undefined;
+
+  private spawnArrowTimer: Phaser.Time.TimerEvent | undefined;
+  private spawnEnemyTimer: Phaser.Time.TimerEvent | undefined;
 
   constructor() {
     super({ key: 'GameStage' });
     this.towerLife = 100;
     this.playerGold = 0;
-    this.enemyRate = 0.5
+    this.enemyRate = 0.5;
+    this.arrowRate = 0.2;
   }
 
   preload() {
@@ -39,6 +45,9 @@ export default class GameStageScene extends Phaser.Scene {
     this.enemies = this.physics.add.group({
       classType: Phaser.GameObjects.Rectangle
     });
+    this.arrows = this.physics.add.group({
+      classType: Phaser.GameObjects.Rectangle
+    });
     this.towerLifeText = this.add.text(10, 10, 'Tower Life: ' + this.towerLife, {
       fontSize: '24px',
       color: '#000000'
@@ -47,13 +56,18 @@ export default class GameStageScene extends Phaser.Scene {
       fontSize: '24px',
       color: '#eeee00'
     });
-    this.enemyRateText = this.add.text(10, 70, 'Enemies per second: ' + this.enemyRate, {
+    this.enemyRateText = this.add.text(10, 70, 'Enemies per second: ' + this.enemyRate.toFixed(1), {
+      fontSize: '24px',
+      color: '#cccccc'
+    });
+    this.arrowRateText = this.add.text(10, 90, 'Arrows per second: ' + this.arrowRate.toFixed(1), {
       fontSize: '24px',
       color: '#cccccc'
     });
     
     this.physics.add.collider(this.enemies, this.tower, (tower, enemy) => { this.enemyTowerCollision(tower, enemy) }); 
-    this.physics.add.collider(this.enemies, this.circle, (circle, enemy) => { this.enemyWeaponCollision(circle, enemy) }); 
+    this.physics.add.collider(this.enemies, this.circle, (circle, enemy) => { this.enemyWeaponCollision(circle, enemy, false) }); 
+    this.physics.add.collider(this.enemies, this.arrows, (arrow, enemy) => { this.enemyWeaponCollision(arrow, enemy, true) }); 
 
     this.spawnEnemyTimer = this.time.addEvent({
       delay: 1000 / this.enemyRate,
@@ -62,9 +76,16 @@ export default class GameStageScene extends Phaser.Scene {
       loop: true
     });
 
+    this.spawnArrowTimer = this.time.addEvent({
+      delay: 1000 / this.arrowRate,
+      callback: this.spawnArrow,
+      callbackScope: this,
+      loop: true
+    });
+
     this.time.addEvent({
       delay: 1000,
-      callback: () => this.enemyRate+=0.25,
+      callback: () => this.enemyRate+=0.1,
       callbackScope: this,
       loop: true
     });
@@ -86,12 +107,13 @@ export default class GameStageScene extends Phaser.Scene {
     }
 
     this.enemies && this.enemies.children.entries.forEach((enemy) => {
-      this.tower && this.physics.moveToObject(enemy, this.tower, 100)
-    }); 
+      this.tower && this.physics.moveToObject(enemy, this.tower, 80)
+    });
     
     this.towerLifeText && this.towerLifeText.setText('Tower Life: ' + this.towerLife);
     this.goldText && this.goldText.setText('Gold: ' + this.playerGold);
-    this.enemyRateText && this.enemyRateText.setText('Enemies per second: ' + this.enemyRate);
+    this.enemyRateText && this.enemyRateText.setText('Enemies per second: ' + this.enemyRate.toFixed(1));
+    this.arrowRateText && this.arrowRateText.setText('Arrows per second: ' + this.arrowRate.toFixed(1));
   }
 
   spawnEnemy() {
@@ -111,13 +133,51 @@ export default class GameStageScene extends Phaser.Scene {
     this.updateSpawnTimer();
   }
 
+  spawnArrow() {
+    if(this.tower) {
+      const x = this.tower.x
+      const y = this.tower.y
+
+      const arrow = this.physics.add.sprite(x, y, 'arrowTexture');
+      this.arrows?.add(arrow);
+
+      let closestEnemy = this.getClosestEnemy(this.tower);
+      if (closestEnemy) {
+        this.physics.moveToObject(arrow, closestEnemy, 200);
+      } else {
+        let angle = Phaser.Math.Between(0, 360);
+        this.physics.velocityFromAngle(angle, 200, arrow.body.velocity);
+      }
+  
+      console.log('Arrow fired');
+      this.updateArrowTimer();
+    } 
+  }
+
+  getClosestEnemy(origin: Phaser.Physics.Arcade.Sprite) {
+    let closestEnemy = null;
+    let closestDistance = Number.MAX_VALUE;
+  
+    this.enemies?.children.entries.forEach((enemy: Phaser.GameObjects.GameObject) => {
+      const enemySprite = enemy as Phaser.Physics.Arcade.Sprite;
+      let distance = Phaser.Math.Distance.Between(origin.x, origin.y, enemySprite.x, enemySprite.y);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestEnemy = enemySprite;
+      }
+    })
+  
+    return closestEnemy;
+  }
+  
   enemyTowerCollision(tower: any, enemy: any) {
     enemy.destroy();
     this.towerLife -= 5;
     console.log('Tower collision')
   }
 
-  enemyWeaponCollision(weapon: any, enemy: any) {
+  enemyWeaponCollision(weapon: any, enemy: any, weaponDestroyed: boolean = false) {
+    weaponDestroyed && weapon.destroy()
     this.enemyDefeated(enemy)
     console.log('Weapon collision')
   }
@@ -134,6 +194,18 @@ export default class GameStageScene extends Phaser.Scene {
     this.spawnEnemyTimer = this.time.addEvent({
       delay: 1000 / this.enemyRate,
       callback: this.spawnEnemy,
+      callbackScope: this,
+      loop: true
+    });
+  }
+
+  updateArrowTimer() {
+    if (this.spawnArrowTimer) {
+      this.spawnArrowTimer.destroy();
+    }
+    this.spawnArrowTimer = this.time.addEvent({
+      delay: 1000 / this.arrowRate,
+      callback: this.spawnArrow,
       callbackScope: this,
       loop: true
     });
