@@ -9,10 +9,16 @@ export default class GameStageScene extends Phaser.Scene {
 
   private towerLife: number;
   private towerLifeText: Phaser.GameObjects.Text | undefined;
+  private playerGold: number;
+  private goldText: Phaser.GameObjects.Text | undefined;
+  private enemyRate: number;
+  private enemyRateText: Phaser.GameObjects.Text | undefined;
 
   constructor() {
     super({ key: 'GameStage' });
     this.towerLife = 100;
+    this.playerGold = 0;
+    this.enemyRate = 0.5
   }
 
   preload() {
@@ -21,6 +27,9 @@ export default class GameStageScene extends Phaser.Scene {
 
   create() {
     generateTextures(this.make);
+
+    const bg = this.add.tileSprite(0, 0, this.scale.width, this.scale.height, 'bgTexture');
+    bg.setOrigin(0, 0);
 
     this.tower = this.physics.add.sprite(400, 300, 'towerTexture');
     this.tower.setImmovable(true);
@@ -31,15 +40,30 @@ export default class GameStageScene extends Phaser.Scene {
     });
     this.towerLifeText = this.add.text(10, 10, 'Tower Life: ' + this.towerLife, {
       fontSize: '24px',
-      color: '#ffffff'
+      color: '#000000'
+    });
+    this.goldText = this.add.text(10, 40, 'Gold: ' + this.playerGold, {
+      fontSize: '24px',
+      color: '#eeee00'
+    });
+    this.enemyRateText = this.add.text(10, 70, 'Enemies per second: ' + this.enemyRate, {
+      fontSize: '24px',
+      color: '#cccccc'
     });
     
     this.physics.add.collider(this.enemies, this.tower, (tower, enemy) => { this.enemyTowerCollision(tower, enemy) }); 
     this.physics.add.collider(this.enemies, this.circle, (circle, enemy) => { this.enemyWeaponCollision(circle, enemy) }); 
 
     this.time.addEvent({
-      delay: 2000,
+      delay: 1000 / this.enemyRate,
       callback: this.spawnEnemy,
+      callbackScope: this,
+      loop: true
+    });
+
+    this.time.addEvent({
+      delay: 1000,
+      callback: () => this.enemyRate+=0.25,
       callbackScope: this,
       loop: true
     });
@@ -60,10 +84,13 @@ export default class GameStageScene extends Phaser.Scene {
         if(this.circle?.x !== undefined) this.circle.x = this.circle.x + 2;
     }
 
-    // enemies: move towards tower -> despawn and deal damage if collides
     this.enemies && this.enemies.children.entries.forEach((enemy) => {
       this.tower && this.physics.moveToObject(enemy, this.tower, 100)
     }); 
+    
+    this.towerLifeText && this.towerLifeText.setText('Tower Life: ' + this.towerLife);
+    this.goldText && this.goldText.setText('Gold: ' + this.playerGold);
+    this.enemyRateText && this.enemyRateText.setText('Enemies per second: ' + this.enemyRate);
   }
 
   spawnEnemy() {
@@ -86,11 +113,15 @@ export default class GameStageScene extends Phaser.Scene {
     enemy.destroy();
     this.towerLife -= 5;
     console.log('Tower collision')
-    this.towerLifeText && this.towerLifeText.setText('Tower Life: ' + this.towerLife);
   }
 
   enemyWeaponCollision(weapon: any, enemy: any) {
-    enemy.destroy();
+    this.enemyDefeated(enemy)
     console.log('Weapon collision')
+  }
+
+  enemyDefeated(enemy: any) {
+    enemy.destroy();
+    this.playerGold += 5;
   }
 }
