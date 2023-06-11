@@ -12,6 +12,7 @@ export default class GameStageScene extends Phaser.Scene {
   private playerGold: number;
   private goldText: Phaser.GameObjects.Text | undefined;
   private enemyRate: number;
+  private spawnEnemyTimer: Phaser.Time.TimerEvent | undefined;
   private enemyRateText: Phaser.GameObjects.Text | undefined;
 
   constructor() {
@@ -54,7 +55,7 @@ export default class GameStageScene extends Phaser.Scene {
     this.physics.add.collider(this.enemies, this.tower, (tower, enemy) => { this.enemyTowerCollision(tower, enemy) }); 
     this.physics.add.collider(this.enemies, this.circle, (circle, enemy) => { this.enemyWeaponCollision(circle, enemy) }); 
 
-    this.time.addEvent({
+    this.spawnEnemyTimer = this.time.addEvent({
       delay: 1000 / this.enemyRate,
       callback: this.spawnEnemy,
       callbackScope: this,
@@ -107,6 +108,7 @@ export default class GameStageScene extends Phaser.Scene {
     const enemy = this.physics.add.sprite(x, y, 'enemyTexture');
     this.enemies?.add(enemy);
     console.log('Enemy spawned')
+    this.updateSpawnTimer();
   }
 
   enemyTowerCollision(tower: any, enemy: any) {
@@ -123,5 +125,17 @@ export default class GameStageScene extends Phaser.Scene {
   enemyDefeated(enemy: any) {
     enemy.destroy();
     this.playerGold += 5;
+  }
+
+  updateSpawnTimer() {
+    if (this.spawnEnemyTimer) {
+      this.spawnEnemyTimer.destroy();
+    }
+    this.spawnEnemyTimer = this.time.addEvent({
+      delay: 1000 / this.enemyRate,
+      callback: this.spawnEnemy,
+      callbackScope: this,
+      loop: true
+    });
   }
 }
