@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 import generateTextures from '../textures';
+import Item from '../classes/ui/item';
+import ShopBox from '../classes/ui/shopBox';
 
 export default class GameStageScene extends Phaser.Scene {
 
@@ -51,10 +53,16 @@ export default class GameStageScene extends Phaser.Scene {
       classType: Phaser.GameObjects.Rectangle
     });
     this.shopBoxes = this.physics.add.group({
-      classType: Phaser.GameObjects.Rectangle
+      classType: ShopBox
     })
     for(let i = 0; i < 3; i++) {
-      const shopBox = this.physics.add.sprite(80+(100*i), this.scale.height - 80, 'shopBoxTexture')
+      const shopBox = new ShopBox({
+        scene: this,
+        x: 80+(100*i),
+        y: this.scale.height - 80,
+        key: 'shopBoxTexture',
+        keybind: 'Q'
+      })
       this.shopBoxes?.add(shopBox);
     }
     this.towerLifeText = this.add.text(10, 10, 'Tower Life: ' + this.towerLife, {
@@ -119,8 +127,12 @@ export default class GameStageScene extends Phaser.Scene {
       this.tower && this.physics.moveToObject(enemy, this.tower, 80)
     });
 
-    // for each shop 
+    // for each shopBox
     // - if no item, add a new item - image + name + cost
+    // create random item
+    this.shopBoxes?.children.entries.forEach((shopBox) => {
+      (shopBox as ShopBox).addItem(this.generateRandomItem())
+    })
     
     this.towerLifeText && this.towerLifeText.setText('Tower Life: ' + this.towerLife);
     this.goldText && this.goldText.setText('Gold: ' + this.playerGold);
@@ -166,6 +178,10 @@ export default class GameStageScene extends Phaser.Scene {
     } 
   }
 
+  generateRandomItem(): Item {
+    return new Item(this, 0, 0, 'item0')
+  }
+  
   getClosestEnemy(origin: Phaser.Physics.Arcade.Sprite) {
     let closestEnemy = null;
     let closestDistance = Number.MAX_VALUE;
