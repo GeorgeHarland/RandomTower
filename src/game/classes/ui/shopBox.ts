@@ -13,11 +13,12 @@ interface ShopBoxConfig {
 
 export default class ShopBox extends Phaser.GameObjects.Sprite {
   private currentItem: Item | null;
+  private keybind: KeybindType | null;
 
   constructor({scene, x, y, key, keybind}: ShopBoxConfig) {
     super(scene, x, y, key)
-    // other args?
     this.currentItem = null;
+    this.keybind = keybind;
     scene.add.existing(this)
   }
 

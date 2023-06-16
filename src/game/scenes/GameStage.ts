@@ -24,6 +24,10 @@ export default class GameStageScene extends Phaser.Scene {
   private spawnArrowTimer: Phaser.Time.TimerEvent | undefined;
   private spawnEnemyTimer: Phaser.Time.TimerEvent | undefined;
 
+  private keyQ: Phaser.Input.Keyboard.Key | null = null;
+  private keyW: Phaser.Input.Keyboard.Key | null = null;
+  private keyE: Phaser.Input.Keyboard.Key | null = null;
+
   constructor() {
     super({ key: 'GameStage' });
     this.towerLife = 100;
@@ -38,6 +42,12 @@ export default class GameStageScene extends Phaser.Scene {
 
   create() {
     generateTextures(this.make);
+
+    if(this.input.keyboard) {
+      this.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
+      this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+      this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+    }
 
     const bg = this.add.tileSprite(0, 0, this.scale.width, this.scale.height, 'bgTexture');
     bg.setOrigin(0, 0);
