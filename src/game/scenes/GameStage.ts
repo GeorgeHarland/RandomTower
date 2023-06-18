@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import generateTextures from '../textures';
 import Item from '../classes/ui/item';
 import ShopBox from '../classes/ui/shopBox';
+import { KeybindType } from '../types';
 
 export default class GameStageScene extends Phaser.Scene {
 
@@ -66,12 +67,16 @@ export default class GameStageScene extends Phaser.Scene {
       classType: ShopBox
     })
     for(let i = 0; i < 3; i++) {
+      let keybind : KeybindType = 'K';
+      if (i === 0) keybind = 'Q';
+      if (i === 1) keybind = 'W';
+      if (i === 2) keybind = 'E';
       const shopBox = new ShopBox({
         scene: this,
         x: 80+(100*i),
         y: this.scale.height - 80,
         key: 'shopBoxTexture',
-        keybind: 'Q'
+        keybind: keybind,
       })
       this.shopBoxes?.add(shopBox);
     }
@@ -133,7 +138,25 @@ export default class GameStageScene extends Phaser.Scene {
         if(this.circle?.x !== undefined) this.circle.x = this.circle.x + 2;
     }
 
-    this.enemies && this.enemies.children.entries.forEach((enemy) => {
+    const shopBoxKeybinds: {[id: string]: ShopBox} = {}
+    this.shopBoxes?.children.entries.forEach((gameObject: Phaser.GameObjects.GameObject) => {
+      let shopBox = gameObject as ShopBox;
+      shopBoxKeybinds[shopBox.getKeybind()] = shopBox;
+    })
+
+    if(this.input.keyboard) {
+      if(Phaser.Input.Keyboard.JustDown(this.keyQ as Phaser.Input.Keyboard.Key)) {
+        // do key q: if shopBoxKeybinds.q -> buyItem
+      }
+      if(Phaser.Input.Keyboard.JustDown(this.keyW as Phaser.Input.Keyboard.Key)) {
+        // do key w
+      }
+      if(Phaser.Input.Keyboard.JustDown(this.keyE as Phaser.Input.Keyboard.Key)) {
+        // do key e
+      }
+    }
+
+    this.enemies?.children.entries.forEach((enemy) => {
       this.tower && this.physics.moveToObject(enemy, this.tower, 80)
     });
 

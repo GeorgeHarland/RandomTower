@@ -1,7 +1,6 @@
 import Phaser from "phaser";
 import Item from './item';
-
-type KeybindType = 'Q' | 'W' | 'E'
+import { KeybindType } from "../../types";
 
 interface ShopBoxConfig {
   scene: Phaser.Scene;
@@ -13,7 +12,7 @@ interface ShopBoxConfig {
 
 export default class ShopBox extends Phaser.GameObjects.Sprite {
   private currentItem: Item | null;
-  private keybind: KeybindType | null;
+  private keybind: KeybindType = 'K';
 
   constructor({scene, x, y, key, keybind}: ShopBoxConfig) {
     super(scene, x, y, key)
@@ -26,11 +25,21 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
     this.currentItem = item;
   }
 
+  public buyItem = (currentGold: number): void => {
+    // if player currentGold > price
+    // remove item + return Item
+    // from there, call restockItem
+  }
+
   public removeItem = (): void => {
     this.currentItem = null;
   }
 
   public getItem = (): Item | null => {
     return this.currentItem;
+  }
+
+  public getKeybind = (): KeybindType => {
+    return this.keybind;
   }
 }
