@@ -24,7 +24,10 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
   }
 
   public addItem = (item: Item): void => {
+    // start with 3 Ds at start of game though
     this.currentItem = item;
+    
+    // random gold * somemthing for grade
     // generate random-ish values and add to item (cost, rank, etc.)
   }
 

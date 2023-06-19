@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import generateTextures from '../textures';
-import Item from '../classes/ui/item';
+import Item, { ItemGradeType } from '../classes/ui/item';
 import ShopBox from '../classes/ui/shopBox';
 import { KeybindType } from '../types';
 
@@ -212,7 +212,24 @@ export default class GameStageScene extends Phaser.Scene {
   }
 
   generateRandomItem(): Item {
-    return new Item(this, 0, 0, 'item0')
+    const gradeCost = {
+      'D': 20,
+      'C': 40,
+      'B': 60,
+      'A': 80,
+      'S': 120,
+    }
+
+    const randomNum = Math.random() * 100;
+    let grade: ItemGradeType = 'D'
+    if (randomNum > 40 && randomNum <= 70) grade = 'C'
+    if (randomNum > 70 && randomNum <= 90) grade = 'B'
+    if (randomNum > 90 && randomNum <= 98) grade = 'A'
+    if (randomNum > 98 && randomNum <= 100) grade = 'S'
+
+    const itemCost = gradeCost[grade] * Math.random() * (1.3 - 0.7) + 0.7;
+
+    return new Item(this, 0, 0, 'item0', grade, itemCost)
   }
   
   getClosestEnemy(origin: Phaser.Physics.Arcade.Sprite) {
