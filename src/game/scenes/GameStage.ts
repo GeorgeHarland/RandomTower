@@ -46,6 +46,7 @@ export default class GameStageScene extends Phaser.Scene {
 
     if(this.input.keyboard) {
       this.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
+      console.log('Assigned keyQ:', this.keyQ);
       this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
       this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
     }
@@ -143,16 +144,15 @@ export default class GameStageScene extends Phaser.Scene {
       let shopBox = gameObject as ShopBox;
       shopBoxKeybinds[shopBox.getKeybind()] = shopBox;
     })
-
     if(this.input.keyboard) {
       if(Phaser.Input.Keyboard.JustDown(this.keyQ as Phaser.Input.Keyboard.Key)) {
-        shopBoxKeybinds.q.buyItem(this.playerGold)
+        shopBoxKeybinds.Q.buyItem(this.playerGold)
       }
       if(Phaser.Input.Keyboard.JustDown(this.keyW as Phaser.Input.Keyboard.Key)) {
-        shopBoxKeybinds.w.buyItem(this.playerGold)
+        shopBoxKeybinds.W.buyItem(this.playerGold)
       }
       if(Phaser.Input.Keyboard.JustDown(this.keyE as Phaser.Input.Keyboard.Key)) {
-        shopBoxKeybinds.e.buyItem(this.playerGold)
+        shopBoxKeybinds.E.buyItem(this.playerGold)
       }
     }
 
@@ -164,7 +164,9 @@ export default class GameStageScene extends Phaser.Scene {
     // - if no item, add a new item - image + name + cost
     // create random item
     this.shopBoxes?.children.entries.forEach((shopBox) => {
-      (shopBox as ShopBox).addItem(this.generateRandomItem())
+      if((shopBox as ShopBox).getItem() === null) {
+        (shopBox as ShopBox).addItem(this.generateRandomItem())
+      }
     })
     
     this.towerLifeText && this.towerLifeText.setText('Tower Life: ' + this.towerLife);
@@ -227,7 +229,7 @@ export default class GameStageScene extends Phaser.Scene {
     if (randomNum > 90 && randomNum <= 98) grade = 'A'
     if (randomNum > 98 && randomNum <= 100) grade = 'S'
 
-    const itemCost = gradeCost[grade] * Math.random() * (1.3 - 0.7) + 0.7;
+    const itemCost = Math.floor(gradeCost[grade] * Math.random() * (1.3 - 0.7) + 0.7);
 
     return new Item(this, 0, 0, 'item0', grade, itemCost)
   }
