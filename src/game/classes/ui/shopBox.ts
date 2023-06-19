@@ -13,22 +13,29 @@ interface ShopBoxConfig {
 export default class ShopBox extends Phaser.GameObjects.Sprite {
   private currentItem: Item | null;
   private keybind: KeybindType = 'K';
+  private price;
 
   constructor({scene, x, y, key, keybind}: ShopBoxConfig) {
     super(scene, x, y, key)
     this.currentItem = null;
     this.keybind = keybind;
+    this.price = 0;
     scene.add.existing(this)
   }
 
   public addItem = (item: Item): void => {
     this.currentItem = item;
+    // generate random-ish values and add to item (cost, rank, etc.)
   }
 
-  public buyItem = (currentGold: number): void => {
-    // if player currentGold > price
-    // remove item + return Item
-    // from there, call restockItem
+  public buyItem = (currentGold: number): Item | null => {
+    if (this.currentItem && currentGold < this.price) {
+      return this.currentItem;
+      // subtract gold from player somehow
+      // remove item + return Item
+      // from there, call restockItem / start timer until item restocked
+    }
+    return null
   }
 
   public removeItem = (): void => {
