@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import Item from './item';
+import Item, { ItemGradeType } from './item';
 import { KeybindType } from "../../types";
 
 interface ShopBoxConfig {
@@ -26,7 +26,7 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
     scene.add.existing(this.keybindText)
   }
 
-  public addItem = (item: Item): void => {
+  public addItem = (item: Item = this.generateRandomItem() ): void => {
     // start with 3 Ds at start of game though
     this.currentItem = item;
     this.priceText = this.scene.add.text(this.x, this.y, item.cost.toString(), { font: '16px Arial', color: '#000000' });
@@ -40,6 +40,7 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
     if (this.currentItem && (currentGold >= this.currentItem.cost)) {
       console.log('Buying', currentGold, this.currentItem.cost)
       this.priceText && this.priceText.destroy()
+      this.respawnItemTimer();
       return this.currentItem;
       // subtract gold from player somehow
       // remove item + return Item
@@ -48,12 +49,37 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
     return null
   }
 
+  public respawnItemTimer = (): void => {
+    setTimeout(this.addItem, 3000)
+  }
+
   public removeItem = (): void => {
     this.currentItem = null;
   }
 
   public getItem = (): Item | null => {
     return this.currentItem;
+  }
+
+  generateRandomItem(): Item {
+    const gradeCost = {
+      'D': 20,
+      'C': 40,
+      'B': 60,
+      'A': 80,
+      'S': 120,
+    }
+
+    const randomNum = Math.random() * 100;
+    let grade: ItemGradeType = 'D'
+    if (randomNum > 40 && randomNum <= 70) grade = 'C'
+    if (randomNum > 70 && randomNum <= 90) grade = 'B'
+    if (randomNum > 90 && randomNum <= 98) grade = 'A'
+    if (randomNum > 98 && randomNum <= 100) grade = 'S'
+
+    const itemCost = Math.floor(gradeCost[grade] * Math.random() * (1.3 - 0.7) + 0.7);
+
+    return new Item(this.scene, 0, 0, 'item0', grade, itemCost)
   }
 
   public getKeybind = (): KeybindType => {
