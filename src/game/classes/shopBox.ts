@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import Item, { ItemGradeType } from './item';
-import { KeybindType } from "../../types";
+import { KeybindType } from "../types";
+import Player from "./player";
 
 interface ShopBoxConfig {
   scene: Phaser.Scene;
@@ -23,6 +24,7 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
     scene.add.existing(this)
     this.keybindText = scene.add.text(x, y, keybind, { font: '16px Arial', color: '#FFFFFF' });
     this.keybindText.setOrigin(0.5, -1);
+    this.priceText = scene.add.text(x, y, '', { font: '16px Arial', color: '#FFFFFF' });
     scene.add.existing(this.keybindText)
   }
 
@@ -35,14 +37,12 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
     // generate random-ish values and add to item (cost, rank, etc.)
   }
 
-  public buyItem = (currentGold: number): Item | null => {
-    if(this.currentItem) console.log('Key pressed', currentGold, this.currentItem.cost)
-    if (this.currentItem && (currentGold >= this.currentItem.cost)) {
-      console.log('Buying', currentGold, this.currentItem.cost)
+  public buyItem = (player: Player): Item | null => {
+    if (this.currentItem && (player.currentGold >= this.currentItem.cost)) {
       this.priceText && this.priceText.destroy()
       this.respawnItemTimer();
+      player.currentGold -= this.currentItem.cost;
       return this.currentItem;
-      // subtract gold from player somehow
       // remove item + return Item
       // from there, call restockItem / start timer until item restocked
     }

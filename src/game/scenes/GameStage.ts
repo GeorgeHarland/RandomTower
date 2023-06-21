@@ -1,7 +1,8 @@
 import Phaser from 'phaser';
 import generateTextures from '../textures';
-import ShopBox from '../classes/ui/shopBox';
+import ShopBox from '../classes/shopBox';
 import { KeybindType } from '../types';
+import Player from '../classes/player';
 
 export default class GameStageScene extends Phaser.Scene {
 
@@ -9,16 +10,16 @@ export default class GameStageScene extends Phaser.Scene {
   private enemies: Phaser.Physics.Arcade.Group | undefined;
   private tower: Phaser.Physics.Arcade.Sprite | undefined;
   private arrows: Phaser.Physics.Arcade.Group | undefined;
+  private player: Player = new Player();
 
   private shopBoxes: Phaser.GameObjects.Group | undefined;
 
-  private towerLife: number;
+  private towerLife: number = 100;
   private towerLifeText: Phaser.GameObjects.Text | undefined;
-  private playerGold: number;
   private goldText: Phaser.GameObjects.Text | undefined;
-  private enemyRate: number;
+  private enemyRate: number = 0.5;
   private enemyRateText: Phaser.GameObjects.Text | undefined;
-  private arrowRate: number;
+  private arrowRate: number = 0.2;
   private arrowRateText: Phaser.GameObjects.Text | undefined;
 
   private spawnArrowTimer: Phaser.Time.TimerEvent | undefined;
@@ -30,10 +31,6 @@ export default class GameStageScene extends Phaser.Scene {
 
   constructor() {
     super({ key: 'GameStage' });
-    this.towerLife = 100;
-    this.playerGold = 0;
-    this.enemyRate = 0.5;
-    this.arrowRate = 0.2;
   }
 
   preload() {
@@ -84,7 +81,7 @@ export default class GameStageScene extends Phaser.Scene {
       fontSize: '24px',
       color: '#000000'
     });
-    this.goldText = this.add.text(10, 40, 'Gold: ' + this.playerGold, {
+    this.goldText = this.add.text(10, 40, 'Gold: ' + this.player.currentGold, {
       fontSize: '24px',
       color: '#eeee00'
     });
@@ -145,13 +142,13 @@ export default class GameStageScene extends Phaser.Scene {
     })
     if(this.input.keyboard) {
       if(Phaser.Input.Keyboard.JustDown(this.keyQ as Phaser.Input.Keyboard.Key)) {
-        shopBoxKeybinds.Q.buyItem(this.playerGold)
+        shopBoxKeybinds.Q.buyItem(this.player)
       }
       if(Phaser.Input.Keyboard.JustDown(this.keyW as Phaser.Input.Keyboard.Key)) {
-        shopBoxKeybinds.W.buyItem(this.playerGold)
+        shopBoxKeybinds.W.buyItem(this.player)
       }
       if(Phaser.Input.Keyboard.JustDown(this.keyE as Phaser.Input.Keyboard.Key)) {
-        shopBoxKeybinds.E.buyItem(this.playerGold)
+        shopBoxKeybinds.E.buyItem(this.player)
       }
     }
 
@@ -170,7 +167,7 @@ export default class GameStageScene extends Phaser.Scene {
     })
     
     this.towerLifeText && this.towerLifeText.setText('Tower Life: ' + this.towerLife);
-    this.goldText && this.goldText.setText('Gold: ' + this.playerGold);
+    this.goldText && this.goldText.setText('Gold: ' + this.player.currentGold);
     this.enemyRateText && this.enemyRateText.setText('Enemies per second: ' + this.enemyRate.toFixed(1));
     this.arrowRateText && this.arrowRateText.setText('Arrows per second: ' + this.arrowRate.toFixed(1));
   }
@@ -243,7 +240,7 @@ export default class GameStageScene extends Phaser.Scene {
 
   enemyDefeated(enemy: any) {
     enemy.destroy();
-    this.playerGold++;
+    this.player.currentGold++;
   }
 
   updateSpawnTimer() {
