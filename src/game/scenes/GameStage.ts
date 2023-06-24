@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import generateTextures from '../textures';
+import { generateTextures } from '../textures';
 import ShopBox from '../classes/shopBox';
 import { KeybindType } from '../types';
 import Player from '../classes/player';
@@ -11,8 +11,9 @@ export default class GameStageScene extends Phaser.Scene {
   private tower: Phaser.Physics.Arcade.Sprite | undefined;
   private arrows: Phaser.Physics.Arcade.Group | undefined;
   private player: Player = new Player();
-
   private shopBoxes: Phaser.GameObjects.Group | undefined;
+
+  private towerSprites: Phaser.GameObjects.Image[] = [];
 
   private towerLife: number = 100;
   private towerLifeText: Phaser.GameObjects.Text | undefined;
@@ -34,11 +35,16 @@ export default class GameStageScene extends Phaser.Scene {
   }
 
   preload() {
-    // ...for assets
+    this.load.spritesheet('towerSpriteSheet', 'sprites/tower.png', {
+      frameWidth: 64,
+      frameHeight: 128
+    });
   }
 
   create() {
     generateTextures(this.make);
+
+    this.extractSpriteFrames();
 
     if(this.input.keyboard) {
       this.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
@@ -50,8 +56,16 @@ export default class GameStageScene extends Phaser.Scene {
     const bg = this.add.tileSprite(0, 0, this.scale.width, this.scale.height, 'bgTexture');
     bg.setOrigin(0, 0);
 
-    this.tower = this.physics.add.sprite(400, 300, 'towerTexture');
+    if (this.towerSprites[0]) {
+      const towerImage = this.towerSprites[0];
+      const centerX = this.scale.width / 2;
+      const centerY = this.scale.height / 2;
+      this.tower = this.physics.add.sprite(centerX, centerY, 'towerSpriteSheet', towerImage.frame.name);
+    } else {
+      this.tower = this.physics.add.sprite(400, 300, 'towerTexture');
+    }
     this.tower.setImmovable(true);
+
     this.circle = this.physics.add.sprite(400, 200, 'circleTexture');
     this.circle.setImmovable(true);
     this.enemies = this.physics.add.group({
@@ -265,5 +279,15 @@ export default class GameStageScene extends Phaser.Scene {
       callbackScope: this,
       loop: true
     });
+  }
+
+  extractSpriteFrames() {
+    const frameNames = this.textures.get('towerSpriteSheet').getFrameNames();
+
+    for (const frameName of frameNames) {
+      const frame = this.textures.getFrame('towerSpriteSheet', frameName)
+      const image = this.add.image(frame.x, frame.y, 'towerSpriteSheet', frameName);
+      this.towerSprites.push(image)
+    }
   }
 }

@@ -1,4 +1,4 @@
-const generateTextures = (objectCreator: any) => {
+export const generateTextures = (objectCreator: any) => {
   let bgGraphic = objectCreator.graphics();
   bgGraphic.fillStyle(0x448811, 1);
   bgGraphic.fillRect(0, 0, 200, 200);
@@ -45,5 +45,3 @@ const generateTextures = (objectCreator: any) => {
   shopBoxTexture.fillRect(2, 2, 76, 76)
   shopBoxTexture.generateTexture('shopBoxTexture', 80, 80)
 }
-
-export default generateTextures;
