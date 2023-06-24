@@ -3,6 +3,7 @@ import { generateTextures } from '../textures';
 import ShopBox from '../classes/shopBox';
 import { KeybindType } from '../types';
 import Player from '../classes/player';
+import { extractSpriteFrames, loadSprites } from './helpers/spriteFunctions';
 
 export default class GameStageScene extends Phaser.Scene {
 
@@ -35,16 +36,12 @@ export default class GameStageScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.spritesheet('towerSpriteSheet', 'sprites/tower.png', {
-      frameWidth: 64,
-      frameHeight: 128
-    });
+    loadSprites(this);
   }
 
   create() {
     generateTextures(this.make);
-
-    this.extractSpriteFrames();
+    this.towerSprites = extractSpriteFrames(this);
 
     if(this.input.keyboard) {
       this.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
@@ -279,15 +276,5 @@ export default class GameStageScene extends Phaser.Scene {
       callbackScope: this,
       loop: true
     });
-  }
-
-  extractSpriteFrames() {
-    const frameNames = this.textures.get('towerSpriteSheet').getFrameNames();
-
-    for (const frameName of frameNames) {
-      const frame = this.textures.getFrame('towerSpriteSheet', frameName)
-      const image = this.add.image(frame.x, frame.y, 'towerSpriteSheet', frameName);
-      this.towerSprites.push(image)
-    }
   }
 }
