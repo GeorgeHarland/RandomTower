@@ -30,6 +30,7 @@ export default class GameStageScene extends Phaser.Scene {
   private keyQ: Phaser.Input.Keyboard.Key | null = null;
   private keyW: Phaser.Input.Keyboard.Key | null = null;
   private keyE: Phaser.Input.Keyboard.Key | null = null;
+  private keyU: Phaser.Input.Keyboard.Key | null = null;
 
   constructor() {
     super({ key: 'GameStage' });
@@ -45,9 +46,9 @@ export default class GameStageScene extends Phaser.Scene {
 
     if(this.input.keyboard) {
       this.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
-      console.log('Assigned keyQ:', this.keyQ);
       this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
       this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+      this.keyU = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.U);
     }
 
     const bg = this.add.tileSprite(0, 0, this.scale.width, this.scale.height, 'bgTexture');
@@ -152,6 +153,9 @@ export default class GameStageScene extends Phaser.Scene {
       shopBoxKeybinds[shopBox.getKeybind()] = shopBox;
     })
     if(this.input.keyboard) {
+      if(Phaser.Input.Keyboard.JustDown(this.keyU as Phaser.Input.Keyboard.Key)) {
+        this.playerTower.currentGold += 1000;
+      }
       if(Phaser.Input.Keyboard.JustDown(this.keyQ as Phaser.Input.Keyboard.Key)) {
         shopBoxKeybinds.Q.buyItem(this.playerTower)
       }
@@ -234,6 +238,7 @@ export default class GameStageScene extends Phaser.Scene {
     return closestEnemy;
   }
   
+  // @ts-ignore
   enemyTowerCollision(tower: any, enemy: any) {
     enemy.destroy();
     this.towerLife -= 5;
