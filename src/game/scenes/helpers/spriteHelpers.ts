@@ -6,12 +6,7 @@ export const loadSprites = (scene: Phaser.Scene): void => {
     frameHeight: 128
   });
 
-  // const images = importAll(require.context('./sprites/powerupicons', false, /\.(png)$/));
-  // for(const image of images) {
-  //   console.log(image);
-  //   const imageName = image.default.replace(/^.*[\\\/]/, '').split('.')[0] + 'Image';
-  //   scene.load.image(imageName, image.default);
-  // }
+  scene.load.image('arrowScope', 'sprites/powerupIcons/arrow-scope.png')
 }
 
 export const extractSpriteFrames = (scene: Phaser.Scene): Phaser.GameObjects.Image[] => {
@@ -25,7 +20,3 @@ export const extractSpriteFrames = (scene: Phaser.Scene): Phaser.GameObjects.Ima
   }
   return towerSprites;
 }
-
-// const importAll = (r: any) => {
-//   return r.keys().map(r);
-// }

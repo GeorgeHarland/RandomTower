@@ -13,17 +13,18 @@ interface ShopBoxConfig {
 
 export default class ShopBox extends Phaser.GameObjects.Sprite {
   private currentItem: Item | null;
+  private itemImage: Phaser.Physics.Arcade.Sprite | null = null;
   private keybind: KeybindType = 'K';
   private keybindText: Phaser.GameObjects.Text;
-  private priceText: Phaser.GameObjects.Text;
+  private priceText: Phaser.GameObjects.Text | null = null;
 
   constructor({scene, x, y, key, keybind}: ShopBoxConfig) {
     super(scene, x, y, key)
     this.currentItem = null;
     this.keybind = keybind;
     scene.add.existing(this)
-    this.keybindText = scene.add.text(x, y, keybind, { font: '16px Arial', color: '#FFFFFF' });
-    this.keybindText.setOrigin(0.5, -1);
+    this.keybindText = scene.add.text(x - 35, y + 20, keybind, { font: '16px Arial', color: '#FFFFFF' });
+    // this.keybindText.setOrigin(2, -1);
     this.priceText = scene.add.text(x, y, '', { font: '16px Arial', color: '#FFFFFF' });
     scene.add.existing(this.keybindText)
   }
@@ -31,8 +32,8 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
   public addItem = (item: Item = this.generateRandomItem() ): void => {
     // start with 3 Ds at start of game though
     this.currentItem = item;
-    this.priceText = this.scene.add.text(this.x, this.y, item.cost.toString(), { font: '16px Arial', color: '#000000' });
-    this.priceText.setOrigin(0.5, 0.5);
+    this.priceText = this.scene.add.text(this.x - 35, this.y - 35, item.cost.toString(), { font: '16px Arial', color: '#000000' });
+    this.itemImage = this.scene.physics.add.sprite(this.x, this.y, item.sprite);
 
     // generate random-ish values and add to item (cost, rank, etc.)
   }
@@ -40,6 +41,7 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
   public buyItem = (player: Player): Item | null => {
     if (this.currentItem && (player.currentGold >= this.currentItem.cost)) {
       this.priceText && this.priceText.destroy()
+      this.itemImage && this.itemImage.destroy()
       this.respawnItemTimer();
       player.currentGold -= this.currentItem.cost;
       return this.currentItem;
@@ -79,7 +81,7 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
 
     const itemCost = Math.floor(gradeCost[grade] * Math.random() * (1.3 - 0.7) + 0.7);
 
-    return new Item(this.scene, 0, 0, 'item0', grade, itemCost)
+    return new Item(this.scene, 0, 0, 'item0', grade, itemCost, 'arrowScope')
   }
 
   public getKeybind = (): KeybindType => {

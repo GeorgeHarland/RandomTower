@@ -63,7 +63,7 @@ export default class GameStageScene extends Phaser.Scene {
     }
     this.tower.setImmovable(true);
 
-    this.circle = this.physics.add.sprite(400, 200, 'circleTexture');
+    this.circle = this.physics.add.sprite(400, 280, 'circleTexture');
     this.circle.setImmovable(true);
     this.enemies = this.physics.add.group({
       classType: Phaser.GameObjects.Rectangle
