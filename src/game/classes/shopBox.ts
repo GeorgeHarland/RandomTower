@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import Item, { ItemGradeType } from './item';
 import { KeybindType } from "../types";
-import Player from "./player";
+import Player from "./playerTower";
 
 interface ShopBoxConfig {
   scene: Phaser.Scene;

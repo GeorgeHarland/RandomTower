@@ -1,9 +1,9 @@
 import Phaser from 'phaser';
-import { generateTextures } from '../textures';
+import PlayerTower from '../classes/playerTower';
 import ShopBox from '../classes/shopBox';
 import { KeybindType } from '../types';
-import Player from '../classes/player';
-import { extractSpriteFrames, loadSprites } from './helpers/spriteFunctions';
+import { generateTextures } from './helpers/textureHelpers';
+import { extractSpriteFrames, loadSprites } from './helpers/spriteHelpers';
 
 export default class GameStageScene extends Phaser.Scene {
 
@@ -11,7 +11,7 @@ export default class GameStageScene extends Phaser.Scene {
   private enemies: Phaser.Physics.Arcade.Group | undefined;
   private tower: Phaser.Physics.Arcade.Sprite | undefined;
   private arrows: Phaser.Physics.Arcade.Group | undefined;
-  private player: Player = new Player();
+  private playerTower: PlayerTower = new PlayerTower();
   private shopBoxes: Phaser.GameObjects.Group | undefined;
 
   private towerSprites: Phaser.GameObjects.Image[] = [];
@@ -92,7 +92,7 @@ export default class GameStageScene extends Phaser.Scene {
       fontSize: '24px',
       color: '#000000'
     });
-    this.goldText = this.add.text(10, 40, 'Gold: ' + this.player.currentGold, {
+    this.goldText = this.add.text(10, 40, 'Gold: ' + this.playerTower.currentGold, {
       fontSize: '24px',
       color: '#eeee00'
     });
@@ -153,13 +153,13 @@ export default class GameStageScene extends Phaser.Scene {
     })
     if(this.input.keyboard) {
       if(Phaser.Input.Keyboard.JustDown(this.keyQ as Phaser.Input.Keyboard.Key)) {
-        shopBoxKeybinds.Q.buyItem(this.player)
+        shopBoxKeybinds.Q.buyItem(this.playerTower)
       }
       if(Phaser.Input.Keyboard.JustDown(this.keyW as Phaser.Input.Keyboard.Key)) {
-        shopBoxKeybinds.W.buyItem(this.player)
+        shopBoxKeybinds.W.buyItem(this.playerTower)
       }
       if(Phaser.Input.Keyboard.JustDown(this.keyE as Phaser.Input.Keyboard.Key)) {
-        shopBoxKeybinds.E.buyItem(this.player)
+        shopBoxKeybinds.E.buyItem(this.playerTower)
       }
     }
 
@@ -167,9 +167,6 @@ export default class GameStageScene extends Phaser.Scene {
       this.tower && this.physics.moveToObject(enemy, this.tower, 80)
     });
 
-    // for each shopBox
-    // - if no item, add a new item - image + name + cost
-    // create random item
     this.shopBoxes?.children.entries.forEach((box) => {
       const shopBox = box as ShopBox;
       if((shopBox).getItem() === null) {
@@ -178,7 +175,7 @@ export default class GameStageScene extends Phaser.Scene {
     })
     
     this.towerLifeText && this.towerLifeText.setText('Tower Life: ' + this.towerLife);
-    this.goldText && this.goldText.setText('Gold: ' + this.player.currentGold);
+    this.goldText && this.goldText.setText('Gold: ' + this.playerTower.currentGold);
     this.enemyRateText && this.enemyRateText.setText('Enemies per second: ' + this.enemyRate.toFixed(1));
     this.arrowRateText && this.arrowRateText.setText('Arrows per second: ' + this.arrowRate.toFixed(1));
   }
@@ -197,7 +194,7 @@ export default class GameStageScene extends Phaser.Scene {
     const enemy = this.physics.add.sprite(x, y, 'enemyTexture');
     this.enemies?.add(enemy);
     console.log('Enemy spawned')
-    this.updateSpawnTimer();
+    this.updateEnemySpawnTimer();
   }
 
   spawnArrow() {
@@ -251,10 +248,10 @@ export default class GameStageScene extends Phaser.Scene {
 
   enemyDefeated(enemy: any) {
     enemy.destroy();
-    this.player.currentGold++;
+    this.playerTower.currentGold++;
   }
 
-  updateSpawnTimer() {
+  updateEnemySpawnTimer() {
     if (this.spawnEnemyTimer) {
       this.spawnEnemyTimer.destroy();
     }
