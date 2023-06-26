@@ -1,3 +1,4 @@
+import CircleWeapon from '../classes/circleWeapon';
 import Phaser from 'phaser';
 import PlayerTower from '../classes/playerTower';
 import ShopBox from '../classes/shopBox';
@@ -7,7 +8,7 @@ import { extractSpriteFrames, loadSprites } from './helpers/spriteHelpers';
 
 export default class GameStageScene extends Phaser.Scene {
 
-  private circle: Phaser.Physics.Arcade.Sprite | undefined;
+  private circleWeapon: CircleWeapon | undefined;
   private enemies: Phaser.Physics.Arcade.Group | undefined;
   private tower: Phaser.Physics.Arcade.Sprite | undefined;
   private arrows: Phaser.Physics.Arcade.Group | undefined;
@@ -64,8 +65,7 @@ export default class GameStageScene extends Phaser.Scene {
     }
     this.tower.setImmovable(true);
 
-    this.circle = this.physics.add.sprite(400, 280, 'circleTexture');
-    this.circle.setImmovable(true);
+    this.circleWeapon = new CircleWeapon({scene: this, x: 400, y: 280, texture: 'circleTexture'})
     this.enemies = this.physics.add.group({
       classType: Phaser.GameObjects.Rectangle
     });
@@ -107,7 +107,7 @@ export default class GameStageScene extends Phaser.Scene {
     });
     
     this.physics.add.collider(this.enemies, this.tower, (tower, enemy) => { this.enemyTowerCollision(tower, enemy) }); 
-    this.physics.add.collider(this.enemies, this.circle, (circle, enemy) => { this.enemyWeaponCollision(circle, enemy, false) }); 
+    this.physics.add.collider(this.enemies, this.circleWeapon, (circle, enemy) => { this.enemyWeaponCollision(circle, enemy, false) }); 
     this.physics.add.collider(this.enemies, this.arrows, (arrow, enemy) => { this.enemyWeaponCollision(arrow, enemy, true) }); 
 
     this.spawnEnemyTimer = this.time.addEvent({
@@ -135,17 +135,7 @@ export default class GameStageScene extends Phaser.Scene {
   update() {
     const cursors = this.input.keyboard?.createCursorKeys();
 
-    if (cursors?.up?.isDown) {
-        if(this.circle?.y !== undefined) this.circle.y = this.circle.y - 2;
-    } else if (cursors?.down?.isDown) {
-        if(this.circle?.y !== undefined) this.circle.y = this.circle.y + 2;
-    }
-
-    if (cursors?.left?.isDown) {
-        if(this.circle?.x !== undefined) this.circle.x = this.circle.x - 2;
-    } else if (cursors?.right?.isDown) {
-        if(this.circle?.x !== undefined) this.circle.x = this.circle.x + 2;
-    }
+    this.circleWeapon?.moveCircle(cursors);
 
     const shopBoxKeybinds: {[id: string]: ShopBox} = {}
     this.shopBoxes?.children.entries.forEach((gameObject: Phaser.GameObjects.GameObject) => {
