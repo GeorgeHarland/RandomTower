@@ -29,31 +29,27 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
     scene.add.existing(this.keybindText)
   }
 
-  public addItem = (item: Item = this.generateRandomItem() ): void => {
-    // start with 3 Ds at start of game though
+  public addItem = (item: Item | null = null): void => {
+    item = item || this.generateRandomItem() 
     this.currentItem = item;
+    this.priceText && this.priceText.destroy();
+    this.itemImage && this.itemImage.destroy();
     this.priceText = this.scene.add.text(this.x - 35, this.y - 35, item.cost.toString(), { font: '16px Arial', color: '#000000' });
     this.itemImage = this.scene.physics.add.sprite(this.x, this.y, item.sprite);
-
-    // generate random-ish values and add to item (cost, rank, etc.)
   }
 
   public buyItem = (player: Player): Item | null => {
     if (this.currentItem && (player.currentGold >= this.currentItem.cost)) {
-      this.priceText && this.priceText.destroy()
-      this.itemImage && this.itemImage.destroy()
-      this.respawnItemTimer();
-      player.currentGold -= this.currentItem.cost;
-      return this.currentItem;
-      // remove item + return Item
-      // from there, call restockItem / start timer until item restocked
+      const boughtItem = this.currentItem;
+      this.currentItem = null;
+      this.priceText && this.priceText.destroy();
+      this.itemImage && this.itemImage.destroy();
+      this.addItem();
+      player.currentGold -= boughtItem.cost;
+      return boughtItem;
     }
     return null
-  }
-
-  public respawnItemTimer = (): void => {
-    setTimeout(this.addItem, 3000)
-  }
+  }  
 
   public removeItem = (): void => {
     this.currentItem = null;
