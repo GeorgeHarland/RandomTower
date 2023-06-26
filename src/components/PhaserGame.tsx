@@ -13,7 +13,7 @@ const PhaserGame = () => {
           type: Phaser.AUTO,
           width: 800,
           height: 600,
-          scene: [GameStageScene, GameOverScene, MainMenuScene],
+          scene: [MainMenuScene, GameStageScene, GameOverScene],
           physics: {
             default: 'arcade',
             arcade: {

@@ -34,7 +34,7 @@ export default class GameStageScene extends Phaser.Scene {
   private keyU: Phaser.Input.Keyboard.Key | null = null;
 
   constructor() {
-    super({ key: 'GameStage' });
+    super({ key: 'GameStageScene' });
   }
 
   preload() {
