@@ -14,7 +14,7 @@ interface ShopBoxConfig {
 export default class ShopBox extends Phaser.GameObjects.Sprite {
   private currentItem: Item | null;
   private itemImage: Phaser.Physics.Arcade.Sprite | null = null;
-  private keybind: KeybindType = 'K';
+  private keybind: KeybindType = 'Z';
   private keybindText: Phaser.GameObjects.Text;
   private priceText: Phaser.GameObjects.Text | null = null;
 
