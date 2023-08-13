@@ -6,11 +6,14 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prettier": "prettier --write src/**/*.{js,jsx,ts,tsx,json,css,scss,md}"    
   },
   "dependencies": {
+    "eslint": "^8.47.0",
     "phaser": "^3.60.0",
-    "preact": "^10.13.2"
+    "preact": "^10.13.2",
+    "prettier": "^3.0.1"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.5.0",
