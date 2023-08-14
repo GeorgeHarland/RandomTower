@@ -8,7 +8,6 @@ import { extractSpriteFrames, loadSprites } from './helpers/spriteHelpers';
 import Item from '../classes/item';
 
 export default class GameStageScene extends Phaser.Scene {
-
   private circleWeapons: Phaser.Physics.Arcade.Group | undefined;
   private enemies: Phaser.Physics.Arcade.Group | undefined;
   private tower: Phaser.Physics.Arcade.Sprite | undefined;
@@ -47,7 +46,7 @@ export default class GameStageScene extends Phaser.Scene {
     generateTextures(this.make);
     this.towerSprites = extractSpriteFrames(this);
 
-    if(this.input.keyboard) {
+    if (this.input.keyboard) {
       this.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
       this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
       this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
@@ -55,29 +54,46 @@ export default class GameStageScene extends Phaser.Scene {
       this.keyK = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
     }
 
-    const bg = this.add.tileSprite(0, 0, this.scale.width, this.scale.height, 'bgTexture');
+    const bg = this.add.tileSprite(
+      0,
+      0,
+      this.scale.width,
+      this.scale.height,
+      'bgTexture',
+    );
     bg.setOrigin(0, 0);
 
     if (this.towerSprites[0]) {
       const towerImage = this.towerSprites[0];
       const centerX = this.scale.width / 2;
       const centerY = this.scale.height / 2;
-      this.tower = this.physics.add.sprite(centerX, centerY, 'towerSpriteSheet', towerImage.frame.name);
+      this.tower = this.physics.add.sprite(
+        centerX,
+        centerY,
+        'towerSpriteSheet',
+        towerImage.frame.name,
+      );
     } else {
       this.tower = this.physics.add.sprite(400, 300, 'towerTexture');
     }
     this.tower.setImmovable(true);
 
     this.circleWeapons = this.physics.add.group({
-      classType: CircleWeapon
+      classType: CircleWeapon,
     });
     let scale = 0;
-    for(let i = 0; i < 3; i++) {
-      const currentWeapon = new CircleWeapon({scene: this, x: 400, y: 280, texture: 'circleTexture', circleNumber: i});
-      if(i === 0) {
+    for (let i = 0; i < 3; i++) {
+      const currentWeapon = new CircleWeapon({
+        scene: this,
+        x: 400,
+        y: 280,
+        texture: 'circleTexture',
+        circleNumber: i,
+      });
+      if (i === 0) {
         scale = currentWeapon.scaleX;
       } else {
-        const newScale = scale*0.8;
+        const newScale = scale * 0.8;
         currentWeapon.scaleX = newScale;
         currentWeapon.scaleY = newScale;
         scale = newScale;
@@ -89,70 +105,108 @@ export default class GameStageScene extends Phaser.Scene {
     });
 
     this.enemies = this.physics.add.group({
-      classType: Phaser.GameObjects.Rectangle
+      classType: Phaser.GameObjects.Rectangle,
     });
     this.arrows = this.physics.add.group({
-      classType: Phaser.GameObjects.Rectangle
+      classType: Phaser.GameObjects.Rectangle,
     });
     this.shopBoxes = this.physics.add.group({
-      classType: ShopBox
-    })
+      classType: ShopBox,
+    });
 
-    for(let i = 0; i < 3; i++) {
-      let keybind : KeybindType = 'Z';
+    for (let i = 0; i < 3; i++) {
+      let keybind: KeybindType = 'Z';
       if (i === 0) keybind = 'Q';
       if (i === 1) keybind = 'W';
       if (i === 2) keybind = 'E';
       const shopBox = new ShopBox({
         scene: this,
-        x: 80+(100*i),
+        x: 80 + 100 * i,
         y: this.scale.height - 80,
         key: 'shopBoxTexture',
         keybind: keybind,
-      })
+      });
       this.shopBoxes?.add(shopBox);
     }
 
-    this.towerLifeText = this.add.text(10, 10, 'Tower Life: ' + this.towerLife, {
-      fontSize: '24px',
-      color: '#000000'
+    this.towerLifeText = this.add.text(
+      10,
+      10,
+      'Tower Life: ' + this.towerLife,
+      {
+        fontSize: '24px',
+        color: '#000000',
+      },
+    );
+    this.goldText = this.add.text(
+      10,
+      40,
+      'Gold: ' + this.playerTower.currentGold,
+      {
+        fontSize: '24px',
+        color: '#eeee00',
+      },
+    );
+    this.enemyRateText = this.add.text(
+      10,
+      70,
+      'Enemies per second: ' + this.enemyRate.toFixed(1),
+      {
+        fontSize: '24px',
+        color: '#cccccc',
+      },
+    );
+    this.arrowRateText = this.add.text(
+      10,
+      90,
+      'Arrows per second: ' + this.arrowRate.toFixed(1),
+      {
+        fontSize: '24px',
+        color: '#cccccc',
+      },
+    );
+
+    this.physics.add.collider(this.enemies, this.tower, (tower, enemy) => {
+      this.enemyTowerCollision(tower, enemy);
     });
-    this.goldText = this.add.text(10, 40, 'Gold: ' + this.playerTower.currentGold, {
-      fontSize: '24px',
-      color: '#eeee00'
+    this.physics.add.collider(
+      this.enemies,
+      this.circleWeapons,
+      (enemy, circle) => {
+        this.enemyWeaponCollision({
+          weapon: circle,
+          enemy: enemy,
+          weaponDestroyed: false,
+        });
+      },
+    );
+    this.physics.add.collider(this.enemies, this.arrows, (arrow, enemy) => {
+      this.enemyWeaponCollision({
+        weapon: arrow,
+        enemy: enemy,
+        weaponDestroyed: true,
+      });
     });
-    this.enemyRateText = this.add.text(10, 70, 'Enemies per second: ' + this.enemyRate.toFixed(1), {
-      fontSize: '24px',
-      color: '#cccccc'
-    });
-    this.arrowRateText = this.add.text(10, 90, 'Arrows per second: ' + this.arrowRate.toFixed(1), {
-      fontSize: '24px',
-      color: '#cccccc'
-    });
-    
-    this.physics.add.collider(this.enemies, this.tower, (tower, enemy) => { this.enemyTowerCollision(tower, enemy) }); 
-    this.physics.add.collider(this.enemies, this.circleWeapons, (enemy, circle) => { this.enemyWeaponCollision({weapon: circle, enemy: enemy, weaponDestroyed: false})}); 
-    this.physics.add.collider(this.enemies, this.arrows, (arrow, enemy) => { this.enemyWeaponCollision({weapon: arrow, enemy: enemy, weaponDestroyed: true})}); 
 
     this.spawnEnemyTimer = this.time.addEvent({
       delay: 1000 / this.enemyRate,
       callback: this.spawnEnemy,
       callbackScope: this,
-      loop: true
+      loop: true,
     });
 
     this.spawnArrowTimer = this.time.addEvent({
       delay: 1000 / this.arrowRate,
       callback: this.spawnArrow,
       callbackScope: this,
-      loop: true
+      loop: true,
     });
 
     this.time.addEvent({
       delay: 1000,
-      callback: () => this.enemyRate+=0.01,
+      callback: () => (this.enemyRate += 0.01),
       callbackScope: this,
-      loop: true
+      loop: true,
     });
   }
 
@@ -161,53 +215,73 @@ export default class GameStageScene extends Phaser.Scene {
 
     this.circleWeapons?.children.entries.forEach((circle) => {
       (circle as CircleWeapon)?.moveCircle(cursors);
-    })
+    });
 
-    const shopBoxKeybinds: {[id: string]: ShopBox} = {}
-    this.shopBoxes?.children.entries.forEach((gameObject: Phaser.GameObjects.GameObject) => {
-      let shopBox = gameObject as ShopBox;
-      shopBoxKeybinds[shopBox.getKeybind()] = shopBox;
-    })
+    const shopBoxKeybinds: { [id: string]: ShopBox } = {};
+    this.shopBoxes?.children.entries.forEach(
+      (gameObject: Phaser.GameObjects.GameObject) => {
+        let shopBox = gameObject as ShopBox;
+        shopBoxKeybinds[shopBox.getKeybind()] = shopBox;
+      },
+    );
     let itemBought = null;
-    if(this.input.keyboard) {
-      if(Phaser.Input.Keyboard.JustDown(this.keyU as Phaser.Input.Keyboard.Key)) {
+    if (this.input.keyboard) {
+      if (
+        Phaser.Input.Keyboard.JustDown(this.keyU as Phaser.Input.Keyboard.Key)
+      ) {
         this.playerTower.currentGold += 1000;
       }
-      if(Phaser.Input.Keyboard.JustDown(this.keyK as Phaser.Input.Keyboard.Key)) {
+      if (
+        Phaser.Input.Keyboard.JustDown(this.keyK as Phaser.Input.Keyboard.Key)
+      ) {
         this.enemyRate += 1;
       }
-      if(Phaser.Input.Keyboard.JustDown(this.keyQ as Phaser.Input.Keyboard.Key)) {
-        itemBought = shopBoxKeybinds.Q.buyItem(this.playerTower)
+      if (
+        Phaser.Input.Keyboard.JustDown(this.keyQ as Phaser.Input.Keyboard.Key)
+      ) {
+        itemBought = shopBoxKeybinds.Q.buyItem(this.playerTower);
       }
-      if(Phaser.Input.Keyboard.JustDown(this.keyW as Phaser.Input.Keyboard.Key)) {
-        itemBought = shopBoxKeybinds.W.buyItem(this.playerTower)
+      if (
+        Phaser.Input.Keyboard.JustDown(this.keyW as Phaser.Input.Keyboard.Key)
+      ) {
+        itemBought = shopBoxKeybinds.W.buyItem(this.playerTower);
       }
-      if(Phaser.Input.Keyboard.JustDown(this.keyE as Phaser.Input.Keyboard.Key)) {
-        itemBought = shopBoxKeybinds.E.buyItem(this.playerTower)
+      if (
+        Phaser.Input.Keyboard.JustDown(this.keyE as Phaser.Input.Keyboard.Key)
+      ) {
+        itemBought = shopBoxKeybinds.E.buyItem(this.playerTower);
       }
     }
     itemBought && this.addPowerup(itemBought);
 
     this.enemies?.children.entries.forEach((enemy) => {
-      this.tower && this.physics.moveToObject(enemy, this.tower, 80)
+      this.tower && this.physics.moveToObject(enemy, this.tower, 80);
     });
 
     this.shopBoxes?.children.entries.forEach((box) => {
       const shopBox = box as ShopBox;
-      if((shopBox).getItem() === null) {
-        (shopBox as ShopBox).addItem((shopBox as ShopBox).generateRandomItem())
+      if (shopBox.getItem() === null) {
+        (shopBox as ShopBox).addItem((shopBox as ShopBox).generateRandomItem());
       }
-    })
+    });
 
-    if(this.towerLife <= 0) {
+    if (this.towerLife <= 0) {
       this.scene.remove();
       this.scene.start('MainMenuScene');
     }
-    
-    this.towerLifeText && this.towerLifeText.setText('Tower Life: ' + this.towerLife);
-    this.goldText && this.goldText.setText('Gold: ' + this.playerTower.currentGold);
-    this.enemyRateText && this.enemyRateText.setText('Enemies per second: ' + this.enemyRate.toFixed(1));
-    this.arrowRateText && this.arrowRateText.setText('Arrows per second: ' + this.arrowRate.toFixed(1));
+
+    this.towerLifeText &&
+      this.towerLifeText.setText('Tower Life: ' + this.towerLife);
+    this.goldText &&
+      this.goldText.setText('Gold: ' + this.playerTower.currentGold);
+    this.enemyRateText &&
+      this.enemyRateText.setText(
+        'Enemies per second: ' + this.enemyRate.toFixed(1),
+      );
+    this.arrowRateText &&
+      this.arrowRateText.setText(
+        'Arrows per second: ' + this.arrowRate.toFixed(1),
+      );
   }
 
   spawnEnemy() {
@@ -223,14 +297,14 @@ export default class GameStageScene extends Phaser.Scene {
 
     const enemy = this.physics.add.sprite(x, y, 'enemyTexture');
     this.enemies?.add(enemy);
-    console.log('Enemy spawned')
+    console.log('Enemy spawned');
     this.updateEnemySpawnTimer();
   }
 
   spawnArrow() {
-    if(this.tower) {
-      const x = this.tower.x
-      const y = this.tower.y
+    if (this.tower) {
+      const x = this.tower.x;
+      const y = this.tower.y;
 
       const arrow = this.physics.add.sprite(x, y, 'arrowTexture');
       this.arrows?.add(arrow);
@@ -242,43 +316,50 @@ export default class GameStageScene extends Phaser.Scene {
         let angle = Phaser.Math.Between(0, 360);
         this.physics.velocityFromAngle(angle, 200, arrow.body.velocity);
       }
-  
+
       console.log('Arrow fired');
       this.updateArrowTimer();
-    } 
+    }
   }
-  
-  addPowerup(item: Item) { 
-    this.arrowRate += item.cost*0.01;
+
+  addPowerup(item: Item) {
+    this.arrowRate += item.cost * 0.01;
   }
 
   getClosestEnemy(origin: Phaser.Physics.Arcade.Sprite) {
     let closestEnemy = null;
     let closestDistance = Number.MAX_VALUE;
-  
-    this.enemies?.children.entries.forEach((enemy: Phaser.GameObjects.GameObject) => {
-      const enemySprite = enemy as Phaser.Physics.Arcade.Sprite;
-      let distance = Phaser.Math.Distance.Between(origin.x, origin.y, enemySprite.x, enemySprite.y);
-      if (distance < closestDistance) {
-        closestDistance = distance;
-        closestEnemy = enemySprite;
-      }
-    })
-  
+
+    this.enemies?.children.entries.forEach(
+      (enemy: Phaser.GameObjects.GameObject) => {
+        const enemySprite = enemy as Phaser.Physics.Arcade.Sprite;
+        let distance = Phaser.Math.Distance.Between(
+          origin.x,
+          origin.y,
+          enemySprite.x,
+          enemySprite.y,
+        );
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestEnemy = enemySprite;
+        }
+      },
+    );
+
     return closestEnemy;
   }
-  
+
   // @ts-ignore
   enemyTowerCollision(tower: any, enemy: any) {
     enemy.destroy();
     this.towerLife -= 5;
-    console.log('Tower collision')
+    console.log('Tower collision');
   }
 
-  enemyWeaponCollision({weapon, enemy, weaponDestroyed = false}: any) {
-    weaponDestroyed && weapon.destroy()
-    this.enemyDefeated(enemy)
-    console.log('Weapon collision')
+  enemyWeaponCollision({ weapon, enemy, weaponDestroyed = false }: any) {
+    weaponDestroyed && weapon.destroy();
+    this.enemyDefeated(enemy);
+    console.log('Weapon collision');
   }
 
   enemyDefeated(enemy: any) {
@@ -294,7 +375,7 @@ export default class GameStageScene extends Phaser.Scene {
       delay: 1000 / this.enemyRate,
       callback: this.spawnEnemy,
       callbackScope: this,
-      loop: true
+      loop: true,
     });
   }
 
@@ -306,7 +387,7 @@ export default class GameStageScene extends Phaser.Scene {
       delay: 1000 / this.arrowRate,
       callback: this.spawnArrow,
       callbackScope: this,
-      loop: true
+      loop: true,
     });
   }
 }

@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "prettier": "prettier --write src/**/*.{js,jsx,ts,tsx,json,css,scss,md}"
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
+    "prettier": "prettier --write src/**/*.{js,jsx,ts,tsx,json,css,scss,md}",
+    "preppush": "npm run prettier && npm run lint"
   },
   "dependencies": {
     "eslint": "^8.47.0",
