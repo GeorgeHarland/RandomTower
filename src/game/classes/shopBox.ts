@@ -87,8 +87,8 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
     if (randomNum > 98 && randomNum <= 100) grade = 'S';
 
     const itemCost = Math.floor(
-      gradeCost[grade] * Math.random() * (1.3 - 0.7) + 0.7,
-    );
+      gradeCost[grade] * Math.random() * 0.6 + 0.7,
+    ) + 1;
 
     return new Item(this.scene, 0, 0, 'item0', grade, itemCost, 'arrowScope');
   }
