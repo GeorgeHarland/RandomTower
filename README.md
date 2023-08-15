@@ -19,6 +19,7 @@ Q W E - Buy items
 Up Down Left Right - Move the orb
 
 U - Dev command for 1000 gold
+
 K - Dev command to increase enemy spawn speed by 1 per second.
 
 ## Gallery

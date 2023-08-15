@@ -27,7 +27,6 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
       font: '16px Arial',
       color: '#FFFFFF',
     });
-    // this.keybindText.setOrigin(2, -1);
     this.priceText = scene.add.text(x, y, '', {
       font: '16px Arial',
       color: '#FFFFFF',
