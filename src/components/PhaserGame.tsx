@@ -8,6 +8,17 @@ const PhaserGame = () => {
   const gameContainerRef = useRef<HTMLDivElement>(null);
   let game: Phaser.Game | null = null;
 
+  const resize = () => {
+    if (game) {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const scale = Math.min(width / 800, height / 600);
+
+      game.scale.setGameSize(800 * scale, 600 * scale);
+      // game.scale.updateScaleFactor();
+    }
+  };
+
   useEffect(() => {
     const config = {
       type: Phaser.AUTO,
@@ -28,12 +39,12 @@ const PhaserGame = () => {
 
     game = new Phaser.Game(config);
 
-    // window.addEventListener('resize', resize);
-    // resize();
+    window.addEventListener('resize', resize);
+    resize();
 
     return () => {
       game && game.destroy(true);
-      // window.removeEventListener('resize', resize);
+      window.removeEventListener('resize', resize);
     };
   }, []);
 
