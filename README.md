@@ -22,6 +22,14 @@ U - Dev command for 1000 gold
 
 K - Dev command to increase enemy spawn speed by 1 per second.
 
+## Credits
+
+All assets were free to use, but please check out the designers.
+
+Tower assets - https://foozlecc.itch.io/spire-tower-pack-2
+
+Spell icons - https://mythril-age.itch.io/mythril-age-spell-icons-v1
+
 ## Gallery
 
 ![image](https://github.com/GeorgeHarland/RandomTower/assets/37070520/29b8f13f-cea1-444a-8f25-7babe137759a)
