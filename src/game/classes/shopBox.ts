@@ -12,7 +12,7 @@ interface ShopBoxConfig {
 }
 
 export default class ShopBox extends Phaser.GameObjects.Sprite {
-  private currentItem: Item | null;
+  private currentItem: Item | null = null;
   private itemImage: Phaser.Physics.Arcade.Sprite | null = null;
   private keybind: KeybindType = 'Z';
   private keybindText: Phaser.GameObjects.Text;
@@ -20,14 +20,9 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
 
   constructor({ scene, x, y, key, keybind }: ShopBoxConfig) {
     super(scene, x, y, key);
-    this.currentItem = null;
     this.keybind = keybind;
     scene.add.existing(this);
     this.keybindText = scene.add.text(x - 35, y + 20, keybind, {
-      font: '16px Arial',
-      color: '#FFFFFF',
-    });
-    this.priceText = scene.add.text(x, y, '', {
       font: '16px Arial',
       color: '#FFFFFF',
     });
@@ -37,8 +32,8 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
   public addItem = (item: Item | null = null): void => {
     item = item || this.generateRandomItem();
     this.currentItem = item;
-    this.priceText && this.priceText.destroy();
-    this.itemImage && this.itemImage.destroy();
+    this.priceText?.destroy();
+    this.itemImage?.destroy();
     this.priceText = this.scene.add.text(
       this.x - 35,
       this.y - 35,

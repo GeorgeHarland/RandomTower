@@ -41,15 +41,15 @@ export default class CircleWeapon extends Phaser.Physics.Arcade.Sprite {
   };
 
   moveUp() {
-    if (this.y !== undefined) this.y = this.y - 1;
+    this.y -= 1;
   }
   moveDown() {
-    if (this.y !== undefined) this.y = this.y + 1;
+    this.y += 1;
   }
   moveLeft() {
-    if (this.y !== undefined) this.x = this.x - 1;
+    this.x -= 1;
   }
   moveRight() {
-    if (this.y !== undefined) this.x = this.x + 1;
+    this.x += 1;
   }
 }
