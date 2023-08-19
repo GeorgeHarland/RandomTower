@@ -5,7 +5,17 @@ export default class MainMenuScene extends Phaser.Scene {
     super({ key: 'MainMenuScene' });
   }
 
+  preload() {
+    this.load.image('background', 'sprites/background.png');
+  }
+
   create() {
+    const background = this.add.image(0, 0, 'background');
+    background.setOrigin(0, 0);
+    background.displayWidth = this.sys.canvas.width;
+    background.displayHeight = this.sys.canvas.height;
+    this.children.sendToBack(background);
+
     this.add
       .text(400, 300, 'Random Tower', { fontSize: '40px', color: '#ff0000' })
       .setOrigin(0.5);
