@@ -17,10 +17,18 @@ export default class MainMenuScene extends Phaser.Scene {
     this.children.sendToBack(background);
 
     this.add
-      .text(this.cameras.main.centerX, this.cameras.main.centerY - 50, 'Random Tower', { fontSize: '40px', color: '#ff0000' })
+      .text(
+        this.cameras.main.centerX,
+        this.cameras.main.centerY - 50,
+        'Random Tower',
+        { fontSize: '40px', color: '#ff0000' },
+      )
       .setOrigin(0.5);
     const button = this.add
-      .text(this.cameras.main.centerX, this.cameras.main.centerY, 'Start', { fontSize: '28px', color: '#FFFFFF' })
+      .text(this.cameras.main.centerX, this.cameras.main.centerY, 'Start', {
+        fontSize: '28px',
+        color: '#FFFFFF',
+      })
       .setOrigin(0.5);
     button.setInteractive({ useHandCursor: true });
     button.on(
