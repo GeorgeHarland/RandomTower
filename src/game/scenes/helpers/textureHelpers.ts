@@ -1,10 +1,9 @@
-export const generateTextures = (objectCreator: any) => {
+export const generateTextures = (objectCreator: Phaser.GameObjects.GameObjectCreator) => {
   let bgGraphic = objectCreator.graphics();
   bgGraphic.fillStyle(0x448811, 1);
   bgGraphic.fillRect(0, 0, 200, 200);
   // random grass texture
-  const grassCount = 1000;
-  for (let i = 0; i < grassCount; i++) {
+  for (let i = 0; i < 1000; i++) {
     let x = Math.random() * 200;
     let y = Math.random() * 200;
     let w = 1 + Math.random() * 2;
