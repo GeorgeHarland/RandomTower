@@ -1,0 +1,4 @@
+const ENEMY_BASE_DAMAGE = 5;
+const ENEMY_BASE_SPEED = 80;
+
+const ARROW_BASE_SPEED = 200;

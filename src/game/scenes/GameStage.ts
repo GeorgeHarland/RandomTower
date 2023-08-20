@@ -8,11 +8,11 @@ import { extractSpriteFrames, loadSprites } from './helpers/spriteHelpers';
 import Item from '../classes/item';
 
 export default class GameStageScene extends Phaser.Scene {
+  private playerTower: PlayerTower = new PlayerTower();
   private circleWeapons: Phaser.Physics.Arcade.Group | undefined;
   private enemies: Phaser.Physics.Arcade.Group | undefined;
   private tower: Phaser.Physics.Arcade.Sprite | undefined;
   private arrows: Phaser.Physics.Arcade.Group | undefined;
-  private playerTower: PlayerTower = new PlayerTower();
   private shopBoxes: Phaser.GameObjects.Group | undefined;
 
   private towerSprites: Phaser.GameObjects.Image[] = [];
@@ -46,13 +46,7 @@ export default class GameStageScene extends Phaser.Scene {
     generateTextures(this.make);
     this.towerSprites = extractSpriteFrames(this);
 
-    if (this.input.keyboard) {
-      this.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
-      this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-      this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
-      this.keyU = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.U);
-      this.keyK = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
-    }
+    this.setupKeybindings();
 
     const bg = this.add.tileSprite(
       0,
@@ -255,7 +249,7 @@ export default class GameStageScene extends Phaser.Scene {
     itemBought && this.addPowerup(itemBought);
 
     this.enemies?.children.entries.forEach((enemy) => {
-      this.tower && this.physics.moveToObject(enemy, this.tower, 80);
+      this.tower && this.physics.moveToObject(enemy, this.tower, ENEMY_BASE_SPEED);
     });
 
     this.shopBoxes?.children.entries.forEach((box) => {
@@ -282,6 +276,16 @@ export default class GameStageScene extends Phaser.Scene {
       this.arrowRateText.setText(
         'Arrows per second: ' + this.arrowRate.toFixed(1),
       );
+  }
+
+  setupKeybindings() {
+    if (this.input.keyboard) {
+      this.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
+      this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+      this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+      this.keyU = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.U);
+      this.keyK = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
+    }
   }
 
   spawnEnemy() {
@@ -311,7 +315,7 @@ export default class GameStageScene extends Phaser.Scene {
 
       let closestEnemy = this.getClosestEnemy(this.tower);
       if (closestEnemy) {
-        this.physics.moveToObject(arrow, closestEnemy, 200);
+        this.physics.moveToObject(arrow, closestEnemy, ARROW_BASE_SPEED);
       } else {
         let angle = Phaser.Math.Between(0, 360);
         this.physics.velocityFromAngle(angle, 200, arrow.body.velocity);
@@ -352,7 +356,7 @@ export default class GameStageScene extends Phaser.Scene {
   // @ts-ignore
   enemyTowerCollision(tower: any, enemy: any) {
     enemy.destroy();
-    this.towerLife -= 5;
+    this.towerLife -= ENEMY_BASE_DAMAGE;
     console.log('Tower collision');
   }
 
