@@ -10,6 +10,20 @@ export const loadSprites = (scene: Phaser.Scene): void => {
   scene.load.image('aura', 'sprites/powerupIcons/aura.png');
   scene.load.image('bladeDrag', 'sprites/powerupIcons/blade-drag.png');
   scene.load.image('clawSlashes', 'sprites/powerupIcons/claw-slashes.png');
+  scene.load.image(
+    'crossedAirFlows',
+    'sprites/powerupIcons/crossed-air-flows.png',
+  );
+  scene.load.image('eggDefense', 'sprites/powerupIcons/egg-defense.png');
+  scene.load.image(
+    'electricalCrescent',
+    'sprites/powerupIcons/electrical-crescent.png',
+  );
+  scene.load.image(
+    'embrassedEnergy',
+    'sprites/powerupIcons/embrassed-energy.png',
+  );
+  scene.load.image('eyestalk', 'sprites/powerupIcons/eyestalk.png');
 };
 
 export const extractSpriteFrames = (
