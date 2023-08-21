@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import Item, { ItemGradeType } from './item';
 import { KeybindType } from '../types';
 import Player from './playerTower';
+import { getArrayRandomElement } from '../../utils';
 
 interface ShopBoxConfig {
   scene: Phaser.Scene;
@@ -83,7 +84,10 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
     const itemCost =
       Math.floor(gradeCost[grade] * Math.random() * 0.6 + 0.7) + 1;
 
-    return new Item(this.scene, 0, 0, 'item0', grade, itemCost, 'arrowScope');
+    const itemSrcArray = ['arrowScope', 'aura', 'bladeDrag', 'clawSlashes']
+    const randomItemSrc = getArrayRandomElement(itemSrcArray)
+
+    return new Item(this.scene, 0, 0, 'item0', grade, itemCost, randomItemSrc);
   }
 
   public getKeybind = (): KeybindType => {

@@ -6,6 +6,7 @@ import { KeybindType } from '../types';
 import { generateTextures } from './helpers/textureHelpers';
 import { extractSpriteFrames, loadSprites } from './helpers/spriteHelpers';
 import Item from '../classes/item';
+import { ARROW_BASE_SPEED, ENEMY_BASE_DAMAGE, ENEMY_BASE_SPEED } from '../../constants';
 
 export default class GameStageScene extends Phaser.Scene {
   private playerTower: PlayerTower = new PlayerTower();
