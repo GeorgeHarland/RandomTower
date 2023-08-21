@@ -1,4 +1,6 @@
-export const generateTextures = (objectCreator: Phaser.GameObjects.GameObjectCreator) => {
+export const generateTextures = (
+  objectCreator: Phaser.GameObjects.GameObjectCreator,
+) => {
   let bgGraphic = objectCreator.graphics();
   bgGraphic.fillStyle(0x448811, 1);
   bgGraphic.fillRect(0, 0, 200, 200);

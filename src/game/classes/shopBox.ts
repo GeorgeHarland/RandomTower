@@ -84,8 +84,8 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
     const itemCost =
       Math.floor(gradeCost[grade] * Math.random() * 0.6 + 0.7) + 1;
 
-    const itemSrcArray = ['arrowScope', 'aura', 'bladeDrag', 'clawSlashes']
-    const randomItemSrc = getArrayRandomElement(itemSrcArray)
+    const itemSrcArray = ['arrowScope', 'aura', 'bladeDrag', 'clawSlashes'];
+    const randomItemSrc = getArrayRandomElement(itemSrcArray);
 
     return new Item(this.scene, 0, 0, 'item0', grade, itemCost, randomItemSrc);
   }
