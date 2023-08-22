@@ -32,6 +32,8 @@ Tower assets - https://foozlecc.itch.io/spire-tower-pack-2
 
 Spell icons - https://mythril-age.itch.io/mythril-age-spell-icons-v1
 
+Background music - Sands of Time, https://pixabay.com/users/juan_sanchez_music-8771929/
+
 ## Gallery
 
 ![image](https://github.com/GeorgeHarland/RandomTower/assets/37070520/29b8f13f-cea1-444a-8f25-7babe137759a)

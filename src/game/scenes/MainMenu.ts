@@ -6,10 +6,14 @@ export default class MainMenuScene extends Phaser.Scene {
   }
 
   preload() {
+    this.load.audio('backgroundMusic', 'audio/sandsOfTime.mp3');
     this.load.image('background', 'sprites/background.png');
   }
 
   create() {
+    const music = this.sound.add('backgroundMusic', { loop: true });
+    music.play();
+
     const background = this.add.image(0, 0, 'background');
     background.setOrigin(0, 0);
     background.displayWidth = this.sys.canvas.width;
