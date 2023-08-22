@@ -333,7 +333,16 @@ export default class GameStageScene extends Phaser.Scene {
   }
 
   addPowerup(item: Item) {
-    this.arrowRate += item.cost * 0.01;
+    if (item.powerup === 'arrowScope') this.arrowRate += item.cost * 0.01;
+    // power ups for:
+    // 'aura',
+    //   'bladeDrag',
+    //   'clawSlashes',
+    //   'crossedAirFlows',
+    //   'eggDefense',
+    //   'electricalCrescent',
+    //   'embrassedEnergy',
+    //   'eyestalk',
   }
 
   getClosestEnemy(origin: Phaser.Physics.Arcade.Sprite) {
