@@ -1,6 +1,5 @@
 import Phaser from 'phaser';
-
-export type ItemGradeType = 'S' | 'A' | 'B' | 'C' | 'D';
+import { ItemGradeType } from '../types';
 
 export default class Item extends Phaser.GameObjects.Sprite {
   public powerup: string;

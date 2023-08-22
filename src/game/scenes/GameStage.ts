@@ -333,7 +333,7 @@ export default class GameStageScene extends Phaser.Scene {
   }
 
   addPowerup(item: Item) {
-    if (item.powerup === 'arrowScope') this.arrowRate += item.cost * 0.01;
+    if (item.powerup === 'arrowRate') this.arrowRate += item.cost * 0.01;
     // power ups for:
     // 'aura',
     //   'bladeDrag',

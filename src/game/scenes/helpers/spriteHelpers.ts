@@ -6,7 +6,7 @@ export const loadSprites = (scene: Phaser.Scene): void => {
     frameHeight: 128,
   });
 
-  scene.load.image('arrowScope', 'sprites/powerupIcons/arrow-scope.png');
+  scene.load.image('arrowRate', 'sprites/powerupIcons/arrow-scope.png');
   scene.load.image('aura', 'sprites/powerupIcons/aura.png');
   scene.load.image('bladeDrag', 'sprites/powerupIcons/blade-drag.png');
   scene.load.image('clawSlashes', 'sprites/powerupIcons/claw-slashes.png');
