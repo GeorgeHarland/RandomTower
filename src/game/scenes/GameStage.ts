@@ -52,6 +52,7 @@ export default class GameStageScene extends Phaser.Scene {
     this.towerSprites = extractSpriteFrames(this);
 
     this.setupKeybindings();
+    this.setupAnimations();
 
     const bg = this.add.tileSprite(
       0,
@@ -294,6 +295,15 @@ export default class GameStageScene extends Phaser.Scene {
     }
   }
 
+  setupAnimations() {
+    this.anims.create({
+      key: 'tornadoRepeat',
+      frames: Array.from({ length: 9 }, (_, i) => ({ key: `tornadoRepeat${i}` })),
+      frameRate: 28,
+      repeat: -1,
+    });
+  }
+
   spawnEnemy() {
     let x: number;
     let y: number;
@@ -334,7 +344,11 @@ export default class GameStageScene extends Phaser.Scene {
 
   addPowerup(item: Item) {
     if (item.powerup === 'arrowRate') this.arrowRate += item.cost * 0.01;
-    if (item.powerup === 'tornado') console.log('Tornado spell bought')
+    if (item.powerup === 'tornado') {
+      const spellSprite = this.add.sprite(500, 500, 'tornadoRepeat1');
+      spellSprite.scale = 0.2;
+      spellSprite.play('tornadoRepeat');
+    }
     // power ups for:
     // 'aura',
     //   'bladeDrag',
