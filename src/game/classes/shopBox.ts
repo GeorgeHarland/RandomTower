@@ -94,6 +94,7 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
       'electricalCrescent',
       'embrassedEnergy',
       'eyestalk',
+      'tornado',
     ];
     const randomItem = getArrayRandomElement(itemArray);
 

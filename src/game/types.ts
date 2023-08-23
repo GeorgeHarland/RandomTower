@@ -9,6 +9,7 @@ export const PowerupRecord: Record<PowerupType, ItemGradeType> = {
   'electricalCrescent': 'S',
   'embrassedEnergy': 'C',
   'eyestalk': 'A',
+  'tornado': 'S',
 };
 
 // z is a temp default for the shop keybinds - no impact on game
@@ -25,4 +26,6 @@ export type PowerupType =
   | 'eggDefense'
   | 'electricalCrescent'
   | 'embrassedEnergy'
-  | 'eyestalk';
+  | 'eyestalk'
+  | 'tornado';
+  

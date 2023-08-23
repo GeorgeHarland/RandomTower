@@ -24,6 +24,11 @@ export const loadSprites = (scene: Phaser.Scene): void => {
     'sprites/powerupIcons/embrassed-energy.png',
   );
   scene.load.image('eyestalk', 'sprites/powerupIcons/eyestalk.png');
+  scene.load.image('tornado', 'sprites/powerupIcons/tornado.png');
+
+  for (let i = 0; i < 9; i++) {
+    scene.load.image(`tornadoRepeat${i}`, `sprites/spellEffects/wind/strong/windStrongRepeat${i}.png`);
+  }
 };
 
 export const extractSpriteFrames = (
