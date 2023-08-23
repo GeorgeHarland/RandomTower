@@ -38,3 +38,31 @@ Background music - Sands of Time, https://pixabay.com/users/juan_sanchez_music-8
 
 ![image](https://github.com/GeorgeHarland/RandomTower/assets/37070520/29b8f13f-cea1-444a-8f25-7babe137759a)
 
+## How to open the project on your computer:
+
+1. Install Node.js (if not done yet): download and install Node.js from the [official website](https://nodejs.org) following the installation instructions for your operating system.
+
+2. Clone the repository: navigate to the directory where you want to clone the repository and run the following command in your terminal:
+
+```
+$ git clone https://github.com/GeorgeHarland/RandomTower.git
+```
+
+3. Navigate into the downloaded repository folder:
+```
+$ cd RandomTower
+```
+
+4. Install dependencies by running the following command in your terminal:
+
+```
+$ npm install
+```
+
+5. Start the development server: type the following command in order to run the project locally:
+
+```
+$ npm run dev
+```
+
+6. Navigate to Vite's default server [port](http://localhost:5173) in your browser 
