@@ -32,6 +32,8 @@ Tower assets - https://foozlecc.itch.io/spire-tower-pack-2
 
 Spell icons - https://mythril-age.itch.io/mythril-age-spell-icons-v1
 
+Spell effects - Tornado, https://tiopalada.itch.io/spellbook-2d-v1
+
 Background music - Sands of Time, https://pixabay.com/users/juan_sanchez_music-8771929/
 
 ## Gallery

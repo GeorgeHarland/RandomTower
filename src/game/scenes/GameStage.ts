@@ -17,7 +17,8 @@ export default class GameStageScene extends Phaser.Scene {
   private circleWeapons: Phaser.Physics.Arcade.Group | undefined;
   private enemies: Phaser.Physics.Arcade.Group | undefined;
   private tower: Phaser.Physics.Arcade.Sprite | undefined;
-  private arrows: Phaser.Physics.Arcade.Group | undefined;
+  private weapons: Phaser.Physics.Arcade.Group | undefined;
+  private PermanentWeapons: Phaser.Physics.Arcade.Group | undefined;
   private shopBoxes: Phaser.GameObjects.Group | undefined;
 
   private towerSprites: Phaser.GameObjects.Image[] = [];
@@ -107,8 +108,11 @@ export default class GameStageScene extends Phaser.Scene {
     this.enemies = this.physics.add.group({
       classType: Phaser.GameObjects.Rectangle,
     });
-    this.arrows = this.physics.add.group({
+    this.weapons = this.physics.add.group({
       classType: Phaser.GameObjects.Rectangle,
+    });
+    this.PermanentWeapons = this.physics.add.group({
+      classType: Phaser.Physics.Arcade.Sprite,
     });
     this.shopBoxes = this.physics.add.group({
       classType: ShopBox,
@@ -180,11 +184,18 @@ export default class GameStageScene extends Phaser.Scene {
         });
       },
     );
-    this.physics.add.collider(this.enemies, this.arrows, (arrow, enemy) => {
+    this.physics.add.collider(this.enemies, this.weapons, (weapon, enemy) => {
       this.enemyWeaponCollision({
-        weapon: arrow,
+        weapon: weapon,
         enemy: enemy,
         weaponDestroyed: true,
+      });
+    });
+    this.physics.add.collider(this.enemies, this.PermanentWeapons, (enemy, weapon) => {
+      this.enemyWeaponCollision({
+        weapon: weapon,
+        enemy: enemy,
+        weaponDestroyed: false,
       });
     });
 
@@ -216,6 +227,14 @@ export default class GameStageScene extends Phaser.Scene {
     this.circleWeapons?.children.entries.forEach((circle) => {
       (circle as CircleWeapon)?.moveCircle(cursors);
     });
+
+    this.PermanentWeapons?.children.entries.forEach((tornado) => {
+      const dir = Math.random();
+      if (dir < 0.25) (tornado as Phaser.Physics.Arcade.Sprite).x += 3;
+      if (dir >= 0.25 && dir < 0.5) (tornado as Phaser.Physics.Arcade.Sprite).x -= 3;
+      if (dir >= 0.5 && dir < 0.75) (tornado as Phaser.Physics.Arcade.Sprite).y += 3;
+      if (dir >= 0.75) (tornado as Phaser.Physics.Arcade.Sprite).y -= 3;
+    })
 
     const shopBoxKeybinds: { [id: string]: ShopBox } = {};
     this.shopBoxes?.children.entries.forEach(
@@ -327,7 +346,7 @@ export default class GameStageScene extends Phaser.Scene {
       const y = this.tower.y;
 
       const arrow = this.physics.add.sprite(x, y, 'arrowTexture');
-      this.arrows?.add(arrow);
+      this.weapons?.add(arrow);
 
       let closestEnemy = this.getClosestEnemy(this.tower);
       if (closestEnemy) {
@@ -345,19 +364,15 @@ export default class GameStageScene extends Phaser.Scene {
   addPowerup(item: Item) {
     if (item.powerup === 'arrowRate') this.arrowRate += item.cost * 0.01;
     if (item.powerup === 'tornado') {
-      const spellSprite = this.add.sprite(500, 500, 'tornadoRepeat1');
-      spellSprite.scale = 0.2;
-      spellSprite.play('tornadoRepeat');
+      let x: number = this.scale.width * Math.random();
+      let y: number = this.scale.height * Math.random();
+      const tornadoSprite = this.physics.add.sprite(x, y, 'tornadoRepeat1');
+      tornadoSprite.scale = 0.2;
+      tornadoSprite.setOffset(200, 200);
+      this.PermanentWeapons?.add(tornadoSprite);
+      tornadoSprite.play('tornadoRepeat');
+      tornadoSprite.setImmovable(true);
     }
-    // power ups for:
-    // 'aura',
-    //   'bladeDrag',
-    //   'clawSlashes',
-    //   'crossedAirFlows',
-    //   'eggDefense',
-    //   'electricalCrescent',
-    //   'embrassedEnergy',
-    //   'eyestalk',
   }
 
   getClosestEnemy(origin: Phaser.Physics.Arcade.Sprite) {
@@ -391,7 +406,7 @@ export default class GameStageScene extends Phaser.Scene {
   }
 
   enemyWeaponCollision({ weapon, enemy, weaponDestroyed = false }: any) {
-    weaponDestroyed && weapon.destroy();
+    if(weaponDestroyed) weapon.destroy();
     this.enemyDefeated(enemy);
     console.log('Weapon collision');
   }

@@ -86,14 +86,6 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
 
     const itemArray: Array<PowerupType> = [
       'arrowRate',
-      'aura',
-      'bladeDrag',
-      'clawSlashes',
-      'crossedAirFlows',
-      'eggDefense',
-      'electricalCrescent',
-      'embrassedEnergy',
-      'eyestalk',
       'tornado',
     ];
     const randomItem = getArrayRandomElement(itemArray);
