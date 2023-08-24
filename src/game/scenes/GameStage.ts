@@ -191,13 +191,17 @@ export default class GameStageScene extends Phaser.Scene {
         weaponDestroyed: true,
       });
     });
-    this.physics.add.collider(this.enemies, this.PermanentWeapons, (enemy, weapon) => {
-      this.enemyWeaponCollision({
-        weapon: weapon,
-        enemy: enemy,
-        weaponDestroyed: false,
-      });
-    });
+    this.physics.add.collider(
+      this.enemies,
+      this.PermanentWeapons,
+      (enemy, weapon) => {
+        this.enemyWeaponCollision({
+          weapon: weapon,
+          enemy: enemy,
+          weaponDestroyed: false,
+        });
+      },
+    );
 
     this.spawnEnemyTimer = this.time.addEvent({
       delay: 1000 / this.enemyRate,
@@ -231,10 +235,12 @@ export default class GameStageScene extends Phaser.Scene {
     this.PermanentWeapons?.children.entries.forEach((tornado) => {
       const dir = Math.random();
       if (dir < 0.25) (tornado as Phaser.Physics.Arcade.Sprite).x += 3;
-      if (dir >= 0.25 && dir < 0.5) (tornado as Phaser.Physics.Arcade.Sprite).x -= 3;
-      if (dir >= 0.5 && dir < 0.75) (tornado as Phaser.Physics.Arcade.Sprite).y += 3;
+      if (dir >= 0.25 && dir < 0.5)
+        (tornado as Phaser.Physics.Arcade.Sprite).x -= 3;
+      if (dir >= 0.5 && dir < 0.75)
+        (tornado as Phaser.Physics.Arcade.Sprite).y += 3;
       if (dir >= 0.75) (tornado as Phaser.Physics.Arcade.Sprite).y -= 3;
-    })
+    });
 
     const shopBoxKeybinds: { [id: string]: ShopBox } = {};
     this.shopBoxes?.children.entries.forEach(
@@ -317,7 +323,9 @@ export default class GameStageScene extends Phaser.Scene {
   setupAnimations() {
     this.anims.create({
       key: 'tornadoRepeat',
-      frames: Array.from({ length: 9 }, (_, i) => ({ key: `tornadoRepeat${i}` })),
+      frames: Array.from({ length: 9 }, (_, i) => ({
+        key: `tornadoRepeat${i}`,
+      })),
       frameRate: 28,
       repeat: -1,
     });
@@ -336,7 +344,6 @@ export default class GameStageScene extends Phaser.Scene {
 
     const enemy = this.physics.add.sprite(x, y, 'enemyTexture');
     this.enemies?.add(enemy);
-    console.log('Enemy spawned');
     this.updateEnemySpawnTimer();
   }
 
@@ -356,7 +363,6 @@ export default class GameStageScene extends Phaser.Scene {
         this.physics.velocityFromAngle(angle, 200, arrow.body.velocity);
       }
 
-      console.log('Arrow fired');
       this.updateArrowTimer();
     }
   }
@@ -402,13 +408,11 @@ export default class GameStageScene extends Phaser.Scene {
   enemyTowerCollision(tower: any, enemy: any) {
     enemy.destroy();
     this.towerLife -= ENEMY_BASE_DAMAGE;
-    console.log('Tower collision');
   }
 
   enemyWeaponCollision({ weapon, enemy, weaponDestroyed = false }: any) {
-    if(weaponDestroyed) weapon.destroy();
+    if (weaponDestroyed) weapon.destroy();
     this.enemyDefeated(enemy);
-    console.log('Weapon collision');
   }
 
   enemyDefeated(enemy: any) {

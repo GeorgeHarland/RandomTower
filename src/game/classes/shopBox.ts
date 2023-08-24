@@ -41,7 +41,11 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
       item.cost.toString(),
       { font: '16px Arial', color: '#000000' },
     );
-    this.itemImage = this.scene.physics.add.sprite(this.x, this.y, item.powerup);
+    this.itemImage = this.scene.physics.add.sprite(
+      this.x,
+      this.y,
+      item.powerup,
+    );
   };
 
   public buyItem = (player: Player): Item | null => {
@@ -84,10 +88,7 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
     const itemCost =
       Math.floor(gradeCost[grade] * Math.random() * 0.6 + 0.7) + 1;
 
-    const itemArray: Array<PowerupType> = [
-      'arrowRate',
-      'tornado',
-    ];
+    const itemArray: Array<PowerupType> = ['arrowRate', 'tornado'];
     const randomItem = getArrayRandomElement(itemArray);
 
     return new Item(this.scene, 0, 0, 'item0', randomItem, grade, itemCost);
