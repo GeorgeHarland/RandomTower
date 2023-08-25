@@ -374,7 +374,6 @@ export default class GameStageScene extends Phaser.Scene {
       let y: number = this.scale.height * Math.random();
       const tornadoSprite = this.physics.add.sprite(x, y, 'tornadoRepeat1');
       tornadoSprite.scale = 0.2;
-      tornadoSprite.setOffset(200, 200);
       this.PermanentWeapons?.add(tornadoSprite);
       tornadoSprite.play('tornadoRepeat');
       tornadoSprite.setImmovable(true);
