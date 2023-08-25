@@ -10,6 +10,7 @@ import {
   ARROW_BASE_SPEED,
   ENEMY_BASE_DAMAGE,
   ENEMY_BASE_SPEED,
+  TORNADO_BASE_SHAKE_AMOUNT,
 } from '../../constants';
 
 export default class GameStageScene extends Phaser.Scene {
@@ -234,12 +235,12 @@ export default class GameStageScene extends Phaser.Scene {
 
     this.PermanentWeapons?.children.entries.forEach((tornado) => {
       const dir = Math.random();
-      if (dir < 0.25) (tornado as Phaser.Physics.Arcade.Sprite).x += 3;
+      if (dir < 0.25) (tornado as Phaser.Physics.Arcade.Sprite).x += TORNADO_BASE_SHAKE_AMOUNT;
       if (dir >= 0.25 && dir < 0.5)
-        (tornado as Phaser.Physics.Arcade.Sprite).x -= 3;
+        (tornado as Phaser.Physics.Arcade.Sprite).x -= TORNADO_BASE_SHAKE_AMOUNT;
       if (dir >= 0.5 && dir < 0.75)
-        (tornado as Phaser.Physics.Arcade.Sprite).y += 3;
-      if (dir >= 0.75) (tornado as Phaser.Physics.Arcade.Sprite).y -= 3;
+        (tornado as Phaser.Physics.Arcade.Sprite).y += TORNADO_BASE_SHAKE_AMOUNT;
+      if (dir >= 0.75) (tornado as Phaser.Physics.Arcade.Sprite).y -= TORNADO_BASE_SHAKE_AMOUNT;
     });
 
     const shopBoxKeybinds: { [id: string]: ShopBox } = {};
