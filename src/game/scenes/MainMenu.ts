@@ -14,6 +14,8 @@ export default class MainMenuScene extends Phaser.Scene {
     const music = this.sound.add('backgroundMusic', { loop: true });
     music.play();
 
+    this.setupKeybindings();
+
     const background = this.add.image(0, 0, 'background');
     background.setOrigin(0, 0);
     background.displayWidth = this.sys.canvas.width;
@@ -38,11 +40,26 @@ export default class MainMenuScene extends Phaser.Scene {
     button.on(
       'pointerup',
       () => {
-        !this.scene.get('GameStageScene') &&
-          this.scene.add('GameStageScene', GameStageScene);
-        this.scene.start('GameStageScene');
+        this.startGame();
       },
       this,
     );
+  }
+
+  startGame() {
+    !this.scene.get('GameStageScene') &&
+      this.scene.add('GameStageScene', GameStageScene);
+    this.scene.start('GameStageScene');
+  }
+
+  setupKeybindings() {
+    const enterKey = this.input.keyboard?.addKey(
+      Phaser.Input.Keyboard.KeyCodes.ENTER,
+    );
+    enterKey?.on('down', this.startGame, this);
+    const spacebar = this.input.keyboard?.addKey(
+      Phaser.Input.Keyboard.KeyCodes.SPACE,
+    );
+    spacebar?.on('down', this.startGame, this);
   }
 }

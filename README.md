@@ -14,6 +14,8 @@ You can buy powerups, but these do nothing yet.
 
 ## Controls
 
+Enter/Space - Start the game
+
 Q W E - Buy items
 
 Up Down Left Right - Move the orb
