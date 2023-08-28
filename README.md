@@ -10,7 +10,7 @@ Enemies spawn in increasing numbers
 
 Enemies are destroyed by the tower's automatic arrows, or the player's big circle weapon.
 
-You can buy powerups, but these do nothing yet.
+There are several loose powerups that can be improved on. Try them out by pressing Q W E.
 
 ## Controls
 
@@ -34,7 +34,11 @@ Tower assets - https://foozlecc.itch.io/spire-tower-pack-2
 
 Spell icons - https://mythril-age.itch.io/mythril-age-spell-icons-v1
 
-Spell effects - Tornado, https://tiopalada.itch.io/spellbook-2d-v1
+Spell effects:
+
+- Tornado, https://tiopalada.itch.io/spellbook-2d-v1
+
+- Time Slow, https://pipoya.itch.io/pipoya-free-vfx-time-magic
 
 Background music - Sands of Time, https://pixabay.com/users/juan_sanchez_music-8771929/
 

@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import Item from './item';
-import { ItemGradeType, KeybindType, PowerupType } from '../types';
+import { ItemGradeType, KeybindType, PowerupRecord, PowerupType } from '../types';
 import Player from './playerTower';
 import { getArrayRandomElement } from '../../utils';
 
@@ -70,28 +70,27 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
   };
 
   generateRandomItem(): Item {
-    const gradeCost = {
-      D: 20,
-      C: 40,
-      B: 60,
-      A: 80,
-      S: 120,
+    const gradeCost: Record<ItemGradeType, number> = {
+      D: 10,
+      C: 15,
+      B: 20,
+      A: 25,
+      S: 30,
     };
 
-    const randomNum = Math.random() * 100;
-    let grade: ItemGradeType = 'D';
-    if (randomNum > 40 && randomNum <= 70) grade = 'C';
-    if (randomNum > 70 && randomNum <= 90) grade = 'B';
-    if (randomNum > 90 && randomNum <= 98) grade = 'A';
-    if (randomNum > 98 && randomNum <= 100) grade = 'S';
+    // const randomNum = Math.random() * 100;
+    // let grade: ItemGradeType = 'D';
+    // if (randomNum > 40 && randomNum <= 70) grade = 'C';
+    // if (randomNum > 70 && randomNum <= 90) grade = 'B';
+    // if (randomNum > 90 && randomNum <= 98) grade = 'A';
+    // if (randomNum > 98 && randomNum <= 100) grade = 'S';
 
-    const itemCost =
-      Math.floor(gradeCost[grade] * Math.random() * 0.6 + 0.7) + 1;
+    const randomPowerup = getArrayRandomElement(Object.keys(PowerupRecord));
+    const itemGrade = PowerupRecord[randomPowerup as PowerupType]
+    const modifier = 0.7 + (Math.random() * 0.6); // 70-130%
+    const itemCost = Math.round(gradeCost[itemGrade] * modifier);
 
-    const itemArray: Array<PowerupType> = ['arrowRate', 'circleSpeed', 'tornado'];
-    const randomItem = getArrayRandomElement(itemArray);
-
-    return new Item(this.scene, 0, 0, 'item0', randomItem, grade, itemCost);
+    return new Item(this.scene, 0, 0, 'item0', randomPowerup, itemGrade, itemCost);
   }
 
   public getKeybind = (): KeybindType => {

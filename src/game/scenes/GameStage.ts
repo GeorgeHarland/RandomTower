@@ -383,6 +383,7 @@ export default class GameStageScene extends Phaser.Scene {
         (circle as CircleWeapon).circleSpeed += CIRCLE_SPEED_INCREASE;
       });
     }
+    if (item.powerup === 'timeSlow') console.log('timeSlow placeholder')
     if (item.powerup === 'tornado') {
       let x: number = this.scale.width * Math.random();
       let y: number = this.scale.height * Math.random();

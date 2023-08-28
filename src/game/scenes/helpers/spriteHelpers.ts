@@ -25,6 +25,7 @@ export const loadSprites = (scene: Phaser.Scene): void => {
   // );
   // scene.load.image('eyestalk', 'sprites/powerupIcons/eyestalk.png');
   scene.load.image('circleSpeed', 'sprites/powerupIcons/magic-swirl.png');
+  scene.load.image('timeSlow', 'sprites/powerupIcons/aura.png');
   scene.load.image('tornado', 'sprites/powerupIcons/tornado.png');
 
   for (let i = 0; i < 9; i++) {
