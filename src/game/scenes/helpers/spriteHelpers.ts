@@ -5,6 +5,10 @@ export const loadSprites = (scene: Phaser.Scene): void => {
     frameWidth: 64,
     frameHeight: 128,
   });
+  scene.load.spritesheet('timeSlowAnimationSheet', 'sprites/spellEffects/time/pipo-btleffect214_480.png', {
+    frameWidth: 480,
+    frameHeight: 480,
+  });
 
   scene.load.image('arrowRate', 'sprites/powerupIcons/arrow-scope.png');
   // scene.load.image('aura', 'sprites/powerupIcons/aura.png');

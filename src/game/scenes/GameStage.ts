@@ -331,12 +331,10 @@ export default class GameStageScene extends Phaser.Scene {
 
   setupAnimations() {
     this.anims.create({
-      key: 'tornadoRepeat',
-      frames: Array.from({ length: 9 }, (_, i) => ({
-        key: `tornadoRepeat${i}`,
-      })),
+      key: 'timeSlowAnimation',
+      frames: this.anims.generateFrameNumbers('timeSlowAnimationSheet', { start: 0, end: 14 }),
       frameRate: 28,
-      repeat: -1,
+      repeat: 1,
     });
   }
 
@@ -383,7 +381,19 @@ export default class GameStageScene extends Phaser.Scene {
         (circle as CircleWeapon).circleSpeed += CIRCLE_SPEED_INCREASE;
       });
     }
-    if (item.powerup === 'timeSlow') console.log('timeSlow placeholder')
+    if (item.powerup === 'timeSlow') {
+      // at the moment just plays the animation when powerup is bought. should go onto a 30s timer or something
+      // try out a depth system so it appears below the player tower
+      let x: number = this.scale.width / 2;
+      let y: number = this.scale.height / 2;
+      const timeSlowSprite = this.physics.add.sprite(x, y, 'timeSlowSpriteSheet');
+      timeSlowSprite.scale = 0.5;
+      timeSlowSprite.play('timeSlowAnimation');
+      timeSlowSprite.setImmovable(true);
+      timeSlowSprite.on('animationcomplete', () => {
+        timeSlowSprite.destroy();
+    });
+    }
     if (item.powerup === 'tornado') {
       let x: number = this.scale.width * Math.random();
       let y: number = this.scale.height * Math.random();
