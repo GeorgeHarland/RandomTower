@@ -18,7 +18,7 @@ Enter/Space - Start the game
 
 Q W E - Buy items
 
-Up Down Left Right - Move the orb
+Up Down Left Right - Move the circle weapon
 
 U - Dev command for 1000 gold
 

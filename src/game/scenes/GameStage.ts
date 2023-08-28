@@ -8,6 +8,8 @@ import { extractSpriteFrames, loadSprites } from './helpers/spriteHelpers';
 import Item from '../classes/item';
 import {
   ARROW_BASE_SPEED,
+  ARROW_RATE_INCREASE,
+  CIRCLE_SPEED_INCREASE,
   ENEMY_BASE_DAMAGE,
   ENEMY_BASE_SPEED,
   TORNADO_BASE_SHAKE_AMOUNT,
@@ -375,7 +377,12 @@ export default class GameStageScene extends Phaser.Scene {
   }
 
   addPowerup(item: Item) {
-    if (item.powerup === 'arrowRate') this.arrowRate += item.cost * 0.01;
+    if (item.powerup === 'arrowRate') this.arrowRate += item.cost * ARROW_RATE_INCREASE;
+    if (item.powerup === 'circleSpeed') {
+      this.circleWeapons?.children.entries.forEach((circle) => {
+        (circle as CircleWeapon).circleSpeed += CIRCLE_SPEED_INCREASE;
+      });
+    }
     if (item.powerup === 'tornado') {
       let x: number = this.scale.width * Math.random();
       let y: number = this.scale.height * Math.random();

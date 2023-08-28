@@ -1,6 +1,7 @@
 // powerup, grade
 export const PowerupRecord: Record<PowerupType, ItemGradeType> = {
   arrowRate: 'D',
+  circleSpeed: 'B',
   tornado: 'S',
 };
 
@@ -9,4 +10,4 @@ export type KeybindType = 'Q' | 'W' | 'E' | 'Z';
 
 export type ItemGradeType = 'S' | 'A' | 'B' | 'C' | 'D';
 
-export type PowerupType = 'arrowRate' | 'tornado';
+export type PowerupType = 'arrowRate' | 'circleSpeed' | 'tornado';

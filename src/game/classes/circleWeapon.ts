@@ -8,6 +8,7 @@ type Props = {
 
 export default class CircleWeapon extends Phaser.Physics.Arcade.Sprite {
   private circleNumber: number = 0;
+  public circleSpeed: number = 1;
 
   constructor({ scene, x, y, texture, circleNumber }: Props) {
     super(scene, x, y, texture);
@@ -41,15 +42,15 @@ export default class CircleWeapon extends Phaser.Physics.Arcade.Sprite {
   };
 
   moveUp() {
-    this.y -= 1;
+    this.y -= this.circleSpeed;
   }
   moveDown() {
-    this.y += 1;
+    this.y += this.circleSpeed;
   }
   moveLeft() {
-    this.x -= 1;
+    this.x -= this.circleSpeed;
   }
   moveRight() {
-    this.x += 1;
+    this.x += this.circleSpeed;
   }
 }
