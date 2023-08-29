@@ -12,6 +12,7 @@ import {
   CIRCLE_SPEED_INCREASE,
   ENEMY_BASE_DAMAGE,
   ENEMY_BASE_SPEED,
+  TIME_SLOW_LEVELUP_COOLDOWN_REDUCTION,
   TORNADO_BASE_SHAKE_AMOUNT,
 } from '../../constants';
 
@@ -33,9 +34,11 @@ export default class GameStageScene extends Phaser.Scene {
   private enemyRateText: Phaser.GameObjects.Text | undefined;
   private arrowRate: number = 0.2;
   private arrowRateText: Phaser.GameObjects.Text | undefined;
+  private timeSlowCooldown: number = 30000;
 
   private spawnArrowTimer: Phaser.Time.TimerEvent | undefined;
   private spawnEnemyTimer: Phaser.Time.TimerEvent | undefined;
+  private timeSlowTimer: Phaser.Time.TimerEvent | undefined;
 
   private enemyCurrentSpeed: number = ENEMY_BASE_SPEED;
 
@@ -220,7 +223,7 @@ export default class GameStageScene extends Phaser.Scene {
       callback: this.spawnArrow,
       callbackScope: this,
       loop: true,
-    });
+    });   
 
     this.time.addEvent({
       delay: 1000,
@@ -398,20 +401,8 @@ export default class GameStageScene extends Phaser.Scene {
       });
     }
     if (item.powerup === 'timeSlow') {
-      // at the moment just plays the animation when powerup is bought. should go onto a 30s timer or something
-      // try out a depth system so it appears below the player tower
-      let x: number = this.scale.width / 2;
-      let y: number = this.scale.height / 2;
-      const timeSlowSprite = this.physics.add.sprite(x, y, 'timeSlowSpriteSheet');
-      this.PermanentWeapons?.add(timeSlowSprite);
-      timeSlowSprite.scale = 0.5;
-      timeSlowSprite.setData('type', 'timeSlow');
-      timeSlowSprite.play('timeSlowAnimation');
-      timeSlowSprite.setImmovable(true);
-      timeSlowSprite.on('animationcomplete', () => {
-        timeSlowSprite.destroy();
-        this.enemyCurrentSpeed = ENEMY_BASE_SPEED;
-    });
+      this.timeSlowCooldown *= TIME_SLOW_LEVELUP_COOLDOWN_REDUCTION;
+      this.spawnTimeSlow();
     }
     if (item.powerup === 'tornado') {
       let x: number = this.scale.width * Math.random();
@@ -485,6 +476,30 @@ export default class GameStageScene extends Phaser.Scene {
       callback: this.spawnArrow,
       callbackScope: this,
       loop: true,
+    });
+  }
+
+  spawnTimeSlow() {
+    if (this.timeSlowTimer) {
+      this.timeSlowTimer.destroy();
+    }
+    let x: number = this.scale.width / 2;
+    let y: number = this.scale.height / 2;
+    const timeSlowSprite = this.physics.add.sprite(x, y, 'timeSlowTexture');
+    timeSlowSprite.scale = 0.5;
+    timeSlowSprite.setData('type', 'timeSlow');
+    timeSlowSprite.play('timeSlowAnimation');
+    timeSlowSprite.setImmovable(true);
+    this.PermanentWeapons?.add(timeSlowSprite);
+    timeSlowSprite.on('animationcomplete', () => {
+      timeSlowSprite.destroy();
+      this.enemyCurrentSpeed = ENEMY_BASE_SPEED;
+      this.timeSlowTimer = this.time.addEvent({
+        delay: this.timeSlowCooldown,
+        callback: this.spawnTimeSlow,
+        callbackScope: this,
+        loop: false,
+      }); 
     });
   }
 }
