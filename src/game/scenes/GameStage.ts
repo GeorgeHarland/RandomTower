@@ -37,6 +37,8 @@ export default class GameStageScene extends Phaser.Scene {
   private spawnArrowTimer: Phaser.Time.TimerEvent | undefined;
   private spawnEnemyTimer: Phaser.Time.TimerEvent | undefined;
 
+  private enemyCurrentSpeed: number = ENEMY_BASE_SPEED;
+
   private keyQ: Phaser.Input.Keyboard.Key | null = null;
   private keyW: Phaser.Input.Keyboard.Key | null = null;
   private keyE: Phaser.Input.Keyboard.Key | null = null;
@@ -252,6 +254,9 @@ export default class GameStageScene extends Phaser.Scene {
           (weapon as Phaser.Physics.Arcade.Sprite).y -=
             TORNADO_BASE_SHAKE_AMOUNT;
       }
+      if(weapon.getData('type') === 'timeSlow') {
+        this.enemyCurrentSpeed *= 0.95;
+      }
     });
 
     const shopBoxKeybinds: { [id: string]: ShopBox } = {};
@@ -293,7 +298,7 @@ export default class GameStageScene extends Phaser.Scene {
 
     this.enemies?.children.entries.forEach((enemy) => {
       this.tower &&
-        this.physics.moveToObject(enemy, this.tower, ENEMY_BASE_SPEED);
+        this.physics.moveToObject(enemy, this.tower, this.enemyCurrentSpeed);
     });
 
     this.shopBoxes?.children.entries.forEach((box) => {
@@ -337,7 +342,7 @@ export default class GameStageScene extends Phaser.Scene {
       key: 'timeSlowAnimation',
       frames: this.anims.generateFrameNumbers('timeSlowAnimationSheet', { start: 0, end: 14 }),
       frameRate: 14,
-      repeat: 0,
+      repeat: 1,
     });
     this.anims.create({
       key: 'tornadoAnimation',
@@ -400,10 +405,12 @@ export default class GameStageScene extends Phaser.Scene {
       const timeSlowSprite = this.physics.add.sprite(x, y, 'timeSlowSpriteSheet');
       this.PermanentWeapons?.add(timeSlowSprite);
       timeSlowSprite.scale = 0.5;
+      timeSlowSprite.setData('type', 'timeSlow');
       timeSlowSprite.play('timeSlowAnimation');
       timeSlowSprite.setImmovable(true);
       timeSlowSprite.on('animationcomplete', () => {
         timeSlowSprite.destroy();
+        this.enemyCurrentSpeed = ENEMY_BASE_SPEED;
     });
     }
     if (item.powerup === 'tornado') {
