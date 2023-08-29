@@ -1,6 +1,11 @@
 import Phaser from 'phaser';
 import Item from './item';
-import { ItemGradeType, KeybindType, PowerupRecord, PowerupType } from '../types';
+import {
+  ItemGradeType,
+  KeybindType,
+  PowerupRecord,
+  PowerupType,
+} from '../types';
 import Player from './playerTower';
 import { getArrayRandomElement } from '../../utils';
 
@@ -86,11 +91,19 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
     // if (randomNum > 98 && randomNum <= 100) grade = 'S';
 
     const randomPowerup = getArrayRandomElement(Object.keys(PowerupRecord));
-    const itemGrade = PowerupRecord[randomPowerup as PowerupType]
-    const modifier = 0.7 + (Math.random() * 0.6); // 70-130%
+    const itemGrade = PowerupRecord[randomPowerup as PowerupType];
+    const modifier = 0.7 + Math.random() * 0.6; // 70-130%
     const itemCost = Math.round(gradeCost[itemGrade] * modifier);
 
-    return new Item(this.scene, 0, 0, 'item0', randomPowerup, itemGrade, itemCost);
+    return new Item(
+      this.scene,
+      0,
+      0,
+      'item0',
+      randomPowerup,
+      itemGrade,
+      itemCost,
+    );
   }
 
   public getKeybind = (): KeybindType => {

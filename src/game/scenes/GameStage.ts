@@ -223,7 +223,7 @@ export default class GameStageScene extends Phaser.Scene {
       callback: this.spawnArrow,
       callbackScope: this,
       loop: true,
-    });   
+    });
 
     this.time.addEvent({
       delay: 1000,
@@ -242,7 +242,7 @@ export default class GameStageScene extends Phaser.Scene {
 
     this.PermanentWeapons?.children.entries.forEach((weapon) => {
       // maybe best to make a type for these weapons inc sprite and name/type
-      if(weapon.getData('type') === 'tornado') {
+      if (weapon.getData('type') === 'tornado') {
         const dir = Math.random();
         if (dir < 0.25)
           (weapon as Phaser.Physics.Arcade.Sprite).x +=
@@ -257,7 +257,7 @@ export default class GameStageScene extends Phaser.Scene {
           (weapon as Phaser.Physics.Arcade.Sprite).y -=
             TORNADO_BASE_SHAKE_AMOUNT;
       }
-      if(weapon.getData('type') === 'timeSlow') {
+      if (weapon.getData('type') === 'timeSlow') {
         this.enemyCurrentSpeed *= 0.95;
       }
     });
@@ -343,7 +343,10 @@ export default class GameStageScene extends Phaser.Scene {
   setupAnimations() {
     this.anims.create({
       key: 'timeSlowAnimation',
-      frames: this.anims.generateFrameNumbers('timeSlowAnimationSheet', { start: 0, end: 14 }),
+      frames: this.anims.generateFrameNumbers('timeSlowAnimationSheet', {
+        start: 0,
+        end: 14,
+      }),
       frameRate: 14,
       repeat: 1,
     });
@@ -394,7 +397,8 @@ export default class GameStageScene extends Phaser.Scene {
   }
 
   addPowerup(item: Item) {
-    if (item.powerup === 'arrowRate') this.arrowRate += item.cost * ARROW_RATE_INCREASE;
+    if (item.powerup === 'arrowRate')
+      this.arrowRate += item.cost * ARROW_RATE_INCREASE;
     if (item.powerup === 'circleSpeed') {
       this.circleWeapons?.children.entries.forEach((circle) => {
         (circle as CircleWeapon).circleSpeed += CIRCLE_SPEED_INCREASE;
@@ -499,7 +503,7 @@ export default class GameStageScene extends Phaser.Scene {
         callback: this.spawnTimeSlow,
         callbackScope: this,
         loop: false,
-      }); 
+      });
     });
   }
 }
