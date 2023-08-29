@@ -235,20 +235,23 @@ export default class GameStageScene extends Phaser.Scene {
       (circle as CircleWeapon)?.moveCircle(cursors);
     });
 
-    this.PermanentWeapons?.children.entries.forEach((tornado) => {
-      const dir = Math.random();
-      if (dir < 0.25)
-        (tornado as Phaser.Physics.Arcade.Sprite).x +=
-          TORNADO_BASE_SHAKE_AMOUNT;
-      if (dir >= 0.25 && dir < 0.5)
-        (tornado as Phaser.Physics.Arcade.Sprite).x -=
-          TORNADO_BASE_SHAKE_AMOUNT;
-      if (dir >= 0.5 && dir < 0.75)
-        (tornado as Phaser.Physics.Arcade.Sprite).y +=
-          TORNADO_BASE_SHAKE_AMOUNT;
-      if (dir >= 0.75)
-        (tornado as Phaser.Physics.Arcade.Sprite).y -=
-          TORNADO_BASE_SHAKE_AMOUNT;
+    this.PermanentWeapons?.children.entries.forEach((weapon) => {
+      // maybe best to make a type for these weapons inc sprite and name/type
+      if(weapon.getData('type') === 'tornado') {
+        const dir = Math.random();
+        if (dir < 0.25)
+          (weapon as Phaser.Physics.Arcade.Sprite).x +=
+            TORNADO_BASE_SHAKE_AMOUNT;
+        if (dir >= 0.25 && dir < 0.5)
+          (weapon as Phaser.Physics.Arcade.Sprite).x -=
+            TORNADO_BASE_SHAKE_AMOUNT;
+        if (dir >= 0.5 && dir < 0.75)
+          (weapon as Phaser.Physics.Arcade.Sprite).y +=
+            TORNADO_BASE_SHAKE_AMOUNT;
+        if (dir >= 0.75)
+          (weapon as Phaser.Physics.Arcade.Sprite).y -=
+            TORNADO_BASE_SHAKE_AMOUNT;
+      }
     });
 
     const shopBoxKeybinds: { [id: string]: ShopBox } = {};
@@ -333,8 +336,16 @@ export default class GameStageScene extends Phaser.Scene {
     this.anims.create({
       key: 'timeSlowAnimation',
       frames: this.anims.generateFrameNumbers('timeSlowAnimationSheet', { start: 0, end: 14 }),
+      frameRate: 14,
+      repeat: 0,
+    });
+    this.anims.create({
+      key: 'tornadoAnimation',
+      frames: Array.from({ length: 9 }, (_, i) => ({
+        key: `tornadoRepeat${i}`,
+      })),
       frameRate: 28,
-      repeat: 1,
+      repeat: -1,
     });
   }
 
@@ -387,6 +398,7 @@ export default class GameStageScene extends Phaser.Scene {
       let x: number = this.scale.width / 2;
       let y: number = this.scale.height / 2;
       const timeSlowSprite = this.physics.add.sprite(x, y, 'timeSlowSpriteSheet');
+      this.PermanentWeapons?.add(timeSlowSprite);
       timeSlowSprite.scale = 0.5;
       timeSlowSprite.play('timeSlowAnimation');
       timeSlowSprite.setImmovable(true);
@@ -399,8 +411,9 @@ export default class GameStageScene extends Phaser.Scene {
       let y: number = this.scale.height * Math.random();
       const tornadoSprite = this.physics.add.sprite(x, y, 'tornadoRepeat1');
       tornadoSprite.scale = 0.2;
+      tornadoSprite.setData('type', 'tornado');
       this.PermanentWeapons?.add(tornadoSprite);
-      tornadoSprite.play('tornadoRepeat');
+      tornadoSprite.play('tornadoAnimation');
       tornadoSprite.setImmovable(true);
     }
   }

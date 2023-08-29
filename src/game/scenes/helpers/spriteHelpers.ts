@@ -32,7 +32,7 @@ export const loadSprites = (scene: Phaser.Scene): void => {
   scene.load.image('timeSlow', 'sprites/powerupIcons/aura.png');
   scene.load.image('tornado', 'sprites/powerupIcons/tornado.png');
 
-  for (let i = 0; i < 9; i++) {
+  for (let i = 1; i <= 9; i++) {
     scene.load.image(
       `tornadoRepeat${i}`,
       `sprites/spellEffects/wind/strong/windStrongRepeat000${i}.png`,
