@@ -142,40 +142,42 @@ export default class GameStageScene extends Phaser.Scene {
       this.shopBoxes?.add(shopBox);
     }
 
+    const topTextSize = Math.floor(this.sys.canvas.width / 25);
+
     this.towerLifeText = this.add.text(
-      10,
-      10,
+      this.scale.width / 40,
+      this.scale.height / 40,
       'Tower Life: ' + this.towerLife,
       {
-        fontSize: '24px',
+        fontSize: `${topTextSize}px`,
         color: '#000000',
       },
     );
     this.goldText = this.add.text(
-      10,
-      40,
+      this.scale.width / 40,
+      this.scale.height / 10,
       'Gold: ' + this.playerTower.currentGold,
       {
-        fontSize: '24px',
+        fontSize: `${topTextSize}px`,
         color: '#eeee00',
       },
     );
     if(DEV_TEXT_AT_TOP) {
       this.enemyRateText = this.add.text(
-        10,
-        70,
+        this.scale.width / 40,
+        this.scale.height / 6,
         'Enemies per second: ' + this.enemyRate.toFixed(1),
         {
-          fontSize: '24px',
+          fontSize: `${topTextSize}px`,
           color: '#cccccc',
         },
       );
       this.arrowRateText = this.add.text(
-        10,
-        90,
+        this.scale.width / 40,
+        this.scale.height / 4,
         'Arrows per second: ' + this.arrowRate.toFixed(1),
         {
-          fontSize: '24px',
+          fontSize: `${topTextSize}px`,
           color: '#cccccc',
         },
       );
