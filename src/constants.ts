@@ -1,3 +1,7 @@
+// Dev settings
+
+export const DEV_TEXT_AT_TOP = false;
+
 // Enemies
 
 export const ENEMY_BASE_DAMAGE = 5;

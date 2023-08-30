@@ -10,6 +10,7 @@ import {
   ARROW_BASE_SPEED,
   ARROW_RATE_INCREASE,
   CIRCLE_SPEED_INCREASE,
+  DEV_TEXT_AT_TOP,
   ENEMY_BASE_DAMAGE,
   ENEMY_BASE_SPEED,
   TIME_SLOW_LEVELUP_COOLDOWN_REDUCTION,
@@ -159,24 +160,26 @@ export default class GameStageScene extends Phaser.Scene {
         color: '#eeee00',
       },
     );
-    this.enemyRateText = this.add.text(
-      10,
-      70,
-      'Enemies per second: ' + this.enemyRate.toFixed(1),
-      {
-        fontSize: '24px',
-        color: '#cccccc',
-      },
-    );
-    this.arrowRateText = this.add.text(
-      10,
-      90,
-      'Arrows per second: ' + this.arrowRate.toFixed(1),
-      {
-        fontSize: '24px',
-        color: '#cccccc',
-      },
-    );
+    if(DEV_TEXT_AT_TOP) {
+      this.enemyRateText = this.add.text(
+        10,
+        70,
+        'Enemies per second: ' + this.enemyRate.toFixed(1),
+        {
+          fontSize: '24px',
+          color: '#cccccc',
+        },
+      );
+      this.arrowRateText = this.add.text(
+        10,
+        90,
+        'Arrows per second: ' + this.arrowRate.toFixed(1),
+        {
+          fontSize: '24px',
+          color: '#cccccc',
+        },
+      );
+    }
 
     this.physics.add.collider(this.enemies, this.tower, (tower, enemy) => {
       this.enemyTowerCollision(tower, enemy);
@@ -320,14 +323,16 @@ export default class GameStageScene extends Phaser.Scene {
       this.towerLifeText.setText('Tower Life: ' + this.towerLife);
     this.goldText &&
       this.goldText.setText('Gold: ' + this.playerTower.currentGold);
-    this.enemyRateText &&
-      this.enemyRateText.setText(
-        'Enemies per second: ' + this.enemyRate.toFixed(1),
-      );
-    this.arrowRateText &&
-      this.arrowRateText.setText(
-        'Arrows per second: ' + this.arrowRate.toFixed(1),
-      );
+    if(DEV_TEXT_AT_TOP) {
+      this.enemyRateText &&
+        this.enemyRateText.setText(
+          'Enemies per second: ' + this.enemyRate.toFixed(1),
+        );
+      this.arrowRateText &&
+        this.arrowRateText.setText(
+          'Arrows per second: ' + this.arrowRate.toFixed(1),
+        );
+    }
   }
 
   setupKeybindings() {
