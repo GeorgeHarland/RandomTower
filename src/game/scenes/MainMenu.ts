@@ -22,17 +22,20 @@ export default class MainMenuScene extends Phaser.Scene {
     background.displayHeight = this.sys.canvas.height;
     this.children.sendToBack(background);
 
+    const titleFontSize = Math.floor(this.sys.canvas.width / 20);
+    const buttonFontSize = Math.floor(this.sys.canvas.width / 25);
+
     this.add
       .text(
         this.cameras.main.centerX,
-        this.cameras.main.centerY - 50,
+        this.cameras.main.centerY - this.scale.height / 10,
         'Random Tower',
-        { fontSize: '40px', color: '#ff0000' },
+        { fontSize: `${titleFontSize}px`, color: '#ff0000' },
       )
       .setOrigin(0.5);
     const button = this.add
       .text(this.cameras.main.centerX, this.cameras.main.centerY, 'Start', {
-        fontSize: '28px',
+        fontSize: `${buttonFontSize}px`,
         color: '#FFFFFF',
       })
       .setOrigin(0.5);
