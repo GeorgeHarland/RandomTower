@@ -1,4 +1,4 @@
-import { ItemGradeType, PowerupType } from "./game/types";
+import { ItemGradeType, PowerupType } from './game/types';
 
 // Dev settings
 

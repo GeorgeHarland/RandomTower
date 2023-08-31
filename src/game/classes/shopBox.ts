@@ -1,10 +1,6 @@
 import Phaser from 'phaser';
 import Item from './item';
-import {
-  ItemGradeType,
-  KeybindType,
-  PowerupType,
-} from '../types';
+import { ItemGradeType, KeybindType, PowerupType } from '../types';
 import Player from './playerTower';
 import { getArrayRandomElement } from '../../utils';
 import { PowerupRecord } from '../../constants';
@@ -82,13 +78,6 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
       A: 25,
       S: 30,
     };
-
-    // const randomNum = Math.random() * 100;
-    // let grade: ItemGradeType = 'D';
-    // if (randomNum > 40 && randomNum <= 70) grade = 'C';
-    // if (randomNum > 70 && randomNum <= 90) grade = 'B';
-    // if (randomNum > 90 && randomNum <= 98) grade = 'A';
-    // if (randomNum > 98 && randomNum <= 100) grade = 'S';
 
     const randomPowerup = getArrayRandomElement(Object.keys(PowerupRecord));
     const itemGrade = PowerupRecord[randomPowerup as PowerupType];

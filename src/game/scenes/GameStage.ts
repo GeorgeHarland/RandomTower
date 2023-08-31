@@ -162,7 +162,7 @@ export default class GameStageScene extends Phaser.Scene {
         color: '#eeee00',
       },
     );
-    if(DEV_TEXT_AT_TOP) {
+    if (DEV_TEXT_AT_TOP) {
       this.enemyRateText = this.add.text(
         this.scale.width / 40,
         this.scale.height / 6,
@@ -325,7 +325,7 @@ export default class GameStageScene extends Phaser.Scene {
       this.towerLifeText.setText('Tower Life: ' + this.towerLife);
     this.goldText &&
       this.goldText.setText('Gold: ' + this.playerTower.currentGold);
-    if(DEV_TEXT_AT_TOP) {
+    if (DEV_TEXT_AT_TOP) {
       this.enemyRateText &&
         this.enemyRateText.setText(
           'Enemies per second: ' + this.enemyRate.toFixed(1),
