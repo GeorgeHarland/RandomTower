@@ -3,11 +3,11 @@ import Item from './item';
 import {
   ItemGradeType,
   KeybindType,
-  PowerupRecord,
   PowerupType,
 } from '../types';
 import Player from './playerTower';
 import { getArrayRandomElement } from '../../utils';
+import { PowerupRecord } from '../../constants';
 
 interface ShopBoxConfig {
   scene: Phaser.Scene;

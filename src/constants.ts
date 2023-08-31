@@ -1,3 +1,5 @@
+import { ItemGradeType, PowerupType } from "./game/types";
+
 // Dev settings
 
 export const DEV_TEXT_AT_TOP = false;
@@ -8,6 +10,12 @@ export const ENEMY_BASE_DAMAGE = 5;
 export const ENEMY_BASE_SPEED = 80;
 
 // Powerups
+export const PowerupRecord: Record<PowerupType, ItemGradeType> = {
+  arrowRate: 'D',
+  circleSpeed: 'B',
+  timeSlow: 'A',
+  tornado: 'S',
+};
 
 export const ARROW_BASE_SPEED = 200;
 export const ARROW_RATE_INCREASE = 0.1;
