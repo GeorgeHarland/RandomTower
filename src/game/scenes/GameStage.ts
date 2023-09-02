@@ -7,14 +7,18 @@ import { generateTextures } from './helpers/textureHelpers';
 import { extractSpriteFrames, loadSprites } from './helpers/spriteHelpers';
 import Item from '../classes/item';
 import {
+  ARROW_BASE_RATE,
   ARROW_BASE_SPEED,
   ARROW_RATE_INCREASE,
   CIRCLE_SPEED_INCREASE,
   DEV_TEXT_AT_TOP,
   ENEMY_BASE_DAMAGE,
+  ENEMY_BASE_RATE,
   ENEMY_BASE_SPEED,
-  TIME_SLOW_LEVELUP_COOLDOWN_REDUCTION,
+  TIMESLOW_BASE_COOLDOWN,
+  TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER,
   TORNADO_BASE_SHAKE_AMOUNT,
+  TOWER_BASE_HITPOINTs,
 } from '../../constants';
 
 export default class GameStageScene extends Phaser.Scene {
@@ -28,14 +32,14 @@ export default class GameStageScene extends Phaser.Scene {
 
   private towerSprites: Phaser.GameObjects.Image[] = [];
 
-  private towerLife: number = 100;
+  private towerLife: number = TOWER_BASE_HITPOINTs;
   private towerLifeText: Phaser.GameObjects.Text | undefined;
   private goldText: Phaser.GameObjects.Text | undefined;
-  private enemyRate: number = 0.5;
+  private enemyRate: number = ENEMY_BASE_RATE;
   private enemyRateText: Phaser.GameObjects.Text | undefined;
-  private arrowRate: number = 0.2;
+  private arrowRate: number = ARROW_BASE_RATE;
   private arrowRateText: Phaser.GameObjects.Text | undefined;
-  private timeSlowCooldown: number = 30000;
+  private timeSlowCooldown: number = TIMESLOW_BASE_COOLDOWN;
 
   private spawnArrowTimer: Phaser.Time.TimerEvent | undefined;
   private spawnEnemyTimer: Phaser.Time.TimerEvent | undefined;
@@ -412,7 +416,7 @@ export default class GameStageScene extends Phaser.Scene {
       });
     }
     if (item.powerup === 'timeSlow') {
-      this.timeSlowCooldown *= TIME_SLOW_LEVELUP_COOLDOWN_REDUCTION;
+      this.timeSlowCooldown *= TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER;
       this.spawnTimeSlow();
     }
     if (item.powerup === 'tornado') {
