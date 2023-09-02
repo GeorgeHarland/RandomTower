@@ -13,6 +13,7 @@ import {
   CIRCLE_SPEED_INCREASE,
   DEV_TEXT_AT_TOP,
   ENEMY_BASE_DAMAGE,
+  ENEMY_BASE_GOLD_VALUE,
   ENEMY_BASE_RATE,
   ENEMY_BASE_SPEED,
   TIMESLOW_BASE_COOLDOWN,
@@ -250,7 +251,6 @@ export default class GameStageScene extends Phaser.Scene {
     });
 
     this.PermanentWeapons?.children.entries.forEach((weapon) => {
-      // maybe best to make a type for these weapons inc sprite and name/type
       if (weapon.getData('type') === 'tornado') {
         const dir = Math.random();
         if (dir < 0.25)
@@ -467,7 +467,7 @@ export default class GameStageScene extends Phaser.Scene {
 
   enemyDefeated(enemy: any) {
     enemy.destroy();
-    this.playerTower.currentGold++;
+    this.playerTower.currentGold + ENEMY_BASE_GOLD_VALUE;
   }
 
   updateEnemySpawnTimer() {

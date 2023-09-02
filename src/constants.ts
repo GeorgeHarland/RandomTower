@@ -9,12 +9,14 @@ export const DEV_TEXT_AT_TOP = false;
 export const ENEMY_BASE_DAMAGE = 5;
 export const ENEMY_BASE_RATE = 0.5;
 export const ENEMY_BASE_SPEED = 80;
+export const ENEMY_BASE_GOLD_VALUE = 1;
 
 // Player / Tower
 
 export const TOWER_BASE_HITPOINTs = 100;
 
 // Powerups
+
 export const PowerupRecord: Record<PowerupType, ItemGradeType> = {
   arrowRate: 'D',
   circleSpeed: 'B',
