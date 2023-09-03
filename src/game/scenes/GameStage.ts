@@ -11,6 +11,8 @@ import {
   ARROW_BASE_SPEED,
   ARROW_RATE_INCREASE,
   CIRCLE_SPEED_INCREASE,
+  DARKBLAST_BASE_ANGLE_CHANGE,
+  DARKBLAST_BASE_COOLDOWN,
   DEV_TEXT_AT_TOP,
   ENEMY_BASE_DAMAGE,
   ENEMY_BASE_GOLD_VALUE,
@@ -40,10 +42,14 @@ export default class GameStageScene extends Phaser.Scene {
   private enemyRateText: Phaser.GameObjects.Text | undefined;
   private arrowRate: number = ARROW_BASE_RATE;
   private arrowRateText: Phaser.GameObjects.Text | undefined;
+  private darkBlastCooldown: number = DARKBLAST_BASE_COOLDOWN;
+  private darkBlastDirection: number = 0;
+  private darkBlastAngleChange: number = DARKBLAST_BASE_ANGLE_CHANGE;
   private timeSlowCooldown: number = TIMESLOW_BASE_COOLDOWN;
 
   private spawnArrowTimer: Phaser.Time.TimerEvent | undefined;
   private spawnEnemyTimer: Phaser.Time.TimerEvent | undefined;
+  private darkBlastTimer: Phaser.Time.TimerEvent | undefined;
   private timeSlowTimer: Phaser.Time.TimerEvent | undefined;
 
   private enemyCurrentSpeed: number = ENEMY_BASE_SPEED;
@@ -250,6 +256,12 @@ export default class GameStageScene extends Phaser.Scene {
       (circle as CircleWeapon)?.moveCircle(cursors);
     });
 
+    this.weapons?.children.entries.forEach((weapon) => {
+      if (weapon.getData('type') === 'darkBlast') {
+        // (weapon as Phaser.Physics.Arcade.Sprite).x += 1;
+      }
+    })
+
     this.PermanentWeapons?.children.entries.forEach((weapon) => {
       if (weapon.getData('type') === 'tornado') {
         const dir = Math.random();
@@ -358,6 +370,14 @@ export default class GameStageScene extends Phaser.Scene {
 
   setupAnimations() {
     this.anims.create({
+      key: 'darkBlastAnimation',
+      frames: Array.from({ length: 15 }, (_, i) => ({
+        key: `darkBlastSprite${i}`,
+      })),
+      frameRate: 14,
+      repeat: -1,
+    });
+    this.anims.create({
       key: 'timeSlowAnimation',
       frames: this.anims.generateFrameNumbers('timeSlowAnimationSheet', {
         start: 0,
@@ -423,7 +443,8 @@ export default class GameStageScene extends Phaser.Scene {
         });
         break;
       case('darkBlast'):
-        console.log('darkblast');
+        // if timer exists, instead lower it and the angle change a bit?
+        this.spawnDarkBlast();
         break;
       case('timeSlow'):
         this.timeSlowCooldown *= TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER;
@@ -497,6 +518,36 @@ export default class GameStageScene extends Phaser.Scene {
       callback: this.spawnArrow,
       callbackScope: this,
       loop: true,
+    });
+  }
+
+  spawnDarkBlast() {
+    if (this.darkBlastTimer) {
+      this.darkBlastTimer.destroy();
+    }
+    let x: number = this.scale.width / 2;
+    let y: number = this.scale.height / 2;
+    const darkBlastSprite = this.physics.add.sprite(x, y, 'darkBlastSprite1');
+    darkBlastSprite.scale = 2;
+    darkBlastSprite.setData('type', 'darkBlast');
+    darkBlastSprite.play('darkBlastAnimation');
+
+    // Delay the velocity setting by 1 ms
+    this.time.delayedCall(1, () => {
+      // let angle = Phaser.Math.Between(0, 360);
+
+      this.physics.velocityFromAngle(this.darkBlastDirection, 200, darkBlastSprite.body.velocity);
+      darkBlastSprite.angle = this.darkBlastDirection;
+      if(this.darkBlastDirection + this.darkBlastAngleChange < 360) this.darkBlastDirection += this.darkBlastAngleChange;
+      else this.darkBlastDirection = 0;
+    });
+
+    this.weapons?.add(darkBlastSprite);
+    this.darkBlastTimer = this.time.addEvent({
+      delay: this.darkBlastCooldown,
+      callback: this.spawnDarkBlast,
+      callbackScope: this,
+      loop: false,
     });
   }
 

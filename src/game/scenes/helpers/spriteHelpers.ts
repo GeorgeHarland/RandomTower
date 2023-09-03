@@ -46,7 +46,7 @@ export const loadSprites = (scene: Phaser.Scene): void => {
 
   for(let i = 1; i <= 15; i++) {
     scene.load.image(
-      `darkBlast${i}`,
+      `darkBlastSprite${i}`,
       `sprites/spellEffects/dark/6/1_${i-1}.png`,
     )
   }
