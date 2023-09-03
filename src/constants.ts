@@ -18,10 +18,11 @@ export const TOWER_BASE_HITPOINTs = 100;
 // Powerups
 
 export const PowerupRecord: Record<PowerupType, ItemGradeType> = {
-  arrowRate: 'D',
-  circleSpeed: 'B',
-  timeSlow: 'A',
-  tornado: 'S',
+  arrowRate: 'C',
+  circleSpeed: 'D',
+  darkBlast: 'B',
+  timeSlow: 'S',
+  tornado: 'A',
 };
 
 export const ARROW_BASE_SPEED = 200;

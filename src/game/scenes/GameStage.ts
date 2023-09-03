@@ -4,7 +4,7 @@ import PlayerTower from '../classes/playerTower';
 import ShopBox from '../classes/shopBox';
 import { KeybindType } from '../types';
 import { generateTextures } from './helpers/textureHelpers';
-import { extractSpriteFrames, loadSprites } from './helpers/spriteHelpers';
+import { extractTowerFrames, loadSprites } from './helpers/spriteHelpers';
 import Item from '../classes/item';
 import {
   ARROW_BASE_RATE,
@@ -64,7 +64,7 @@ export default class GameStageScene extends Phaser.Scene {
 
   create() {
     generateTextures(this.make);
-    this.towerSprites = extractSpriteFrames(this);
+    this.towerSprites = extractTowerFrames(this);
 
     this.setupKeybindings();
     this.setupAnimations();
@@ -413,26 +413,27 @@ export default class GameStageScene extends Phaser.Scene {
   }
 
   addPowerup(item: Item) {
-    if (item.powerup === 'arrowRate')
-      this.arrowRate += item.cost * ARROW_RATE_INCREASE;
-    if (item.powerup === 'circleSpeed') {
-      this.circleWeapons?.children.entries.forEach((circle) => {
-        (circle as CircleWeapon).circleSpeed += CIRCLE_SPEED_INCREASE;
-      });
-    }
-    if (item.powerup === 'timeSlow') {
-      this.timeSlowCooldown *= TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER;
-      this.spawnTimeSlow();
-    }
-    if (item.powerup === 'tornado') {
-      let x: number = this.scale.width * Math.random();
-      let y: number = this.scale.height * Math.random();
-      const tornadoSprite = this.physics.add.sprite(x, y, 'tornadoRepeat1');
-      tornadoSprite.scale = 0.2;
-      tornadoSprite.setData('type', 'tornado');
-      this.PermanentWeapons?.add(tornadoSprite);
-      tornadoSprite.play('tornadoAnimation');
-      tornadoSprite.setImmovable(true);
+    switch(item.powerup) {
+      case('arrowRate'):
+        this.arrowRate += item.cost * ARROW_RATE_INCREASE;
+        break;
+      case('circleSpeed'):
+        this.circleWeapons?.children.entries.forEach((circle) => {
+          (circle as CircleWeapon).circleSpeed += CIRCLE_SPEED_INCREASE;
+        });
+        break;
+      case('darkBlast'):
+        console.log('darkblast');
+        break;
+      case('timeSlow'):
+        this.timeSlowCooldown *= TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER;
+        this.spawnTimeSlow();
+        break;
+      case('tornado'):
+        this.spawnTornado();
+        break;
+      default:
+        break;
     }
   }
 
@@ -521,5 +522,16 @@ export default class GameStageScene extends Phaser.Scene {
         loop: false,
       });
     });
+  }
+
+  spawnTornado = () => {
+    let x: number = this.scale.width * Math.random();
+    let y: number = this.scale.height * Math.random();
+    const tornadoSprite = this.physics.add.sprite(x, y, 'tornadoRepeat1');
+    tornadoSprite.scale = 0.2;
+    tornadoSprite.setData('type', 'tornado');
+    this.PermanentWeapons?.add(tornadoSprite);
+    tornadoSprite.play('tornadoAnimation');
+    tornadoSprite.setImmovable(true);
   }
 }

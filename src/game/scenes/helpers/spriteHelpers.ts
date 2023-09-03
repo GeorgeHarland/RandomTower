@@ -33,7 +33,8 @@ export const loadSprites = (scene: Phaser.Scene): void => {
   // );
   // scene.load.image('eyestalk', 'sprites/powerupIcons/eyestalk.png');
   scene.load.image('circleSpeed', 'sprites/powerupIcons/magic-swirl.png');
-  scene.load.image('timeSlow', 'sprites/powerupIcons/aura.png');
+  scene.load.image('darkBlast', 'sprites/powerupIcons/foamy-disc.png');
+  scene.load.image('timeSlow', 'sprites/powerupIcons/embrassed-energy.png');
   scene.load.image('tornado', 'sprites/powerupIcons/tornado.png');
 
   for (let i = 1; i <= 9; i++) {
@@ -42,9 +43,16 @@ export const loadSprites = (scene: Phaser.Scene): void => {
       `sprites/spellEffects/wind/strong/windStrongRepeat000${i}.png`,
     );
   }
+
+  for(let i = 1; i <= 15; i++) {
+    scene.load.image(
+      `darkBlast${i}`,
+      `sprites/spellEffects/dark/6/1_${i-1}.png`,
+    )
+  }
 };
 
-export const extractSpriteFrames = (
+export const extractTowerFrames = (
   scene: Phaser.Scene,
 ): Phaser.GameObjects.Image[] => {
   const frameNames = scene.textures.get('towerSpriteSheet').getFrameNames();
