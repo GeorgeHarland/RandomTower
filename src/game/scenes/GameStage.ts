@@ -306,7 +306,12 @@ export default class GameStageScene extends Phaser.Scene {
         itemBought = shopBoxKeybinds.E.buyItem(this.playerTower);
       }
     }
-    itemBought && this.addPowerup(itemBought);
+    if (itemBought) {
+      this.addPowerup(itemBought);
+      this.shopBoxes?.children.entries.forEach((shopbox) => {
+        (shopbox as ShopBox).rerollItem();
+      })
+    }
 
     this.enemies?.children.entries.forEach((enemy) => {
       this.tower &&
@@ -467,7 +472,7 @@ export default class GameStageScene extends Phaser.Scene {
 
   enemyDefeated(enemy: any) {
     enemy.destroy();
-    this.playerTower.currentGold + ENEMY_BASE_GOLD_VALUE;
+    this.playerTower.currentGold = this.playerTower.currentGold + ENEMY_BASE_GOLD_VALUE;
   }
 
   updateEnemySpawnTimer() {
