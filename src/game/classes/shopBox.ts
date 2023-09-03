@@ -75,7 +75,7 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
   public rerollItem = (): void => {
     this.removeItem();
     this.generateRandomItem();
-  }
+  };
 
   public generateRandomItem(): Item {
     const gradeCost: Record<ItemGradeType, number> = {

@@ -3,4 +3,9 @@ export type KeybindType = 'Q' | 'W' | 'E' | 'Z';
 
 export type ItemGradeType = 'S' | 'A' | 'B' | 'C' | 'D';
 
-export type PowerupType = 'arrowRate' | 'circleSpeed' | 'darkBlast' | 'timeSlow' | 'tornado';
+export type PowerupType =
+  | 'arrowRate'
+  | 'circleSpeed'
+  | 'darkBlast'
+  | 'timeSlow'
+  | 'tornado';

@@ -260,7 +260,7 @@ export default class GameStageScene extends Phaser.Scene {
       if (weapon.getData('type') === 'darkBlast') {
         // (weapon as Phaser.Physics.Arcade.Sprite).x += 1;
       }
-    })
+    });
 
     this.PermanentWeapons?.children.entries.forEach((weapon) => {
       if (weapon.getData('type') === 'tornado') {
@@ -322,7 +322,7 @@ export default class GameStageScene extends Phaser.Scene {
       this.addPowerup(itemBought);
       this.shopBoxes?.children.entries.forEach((shopbox) => {
         (shopbox as ShopBox).rerollItem();
-      })
+      });
     }
 
     this.enemies?.children.entries.forEach((enemy) => {
@@ -433,24 +433,24 @@ export default class GameStageScene extends Phaser.Scene {
   }
 
   addPowerup(item: Item) {
-    switch(item.powerup) {
-      case('arrowRate'):
+    switch (item.powerup) {
+      case 'arrowRate':
         this.arrowRate += item.cost * ARROW_RATE_INCREASE;
         break;
-      case('circleSpeed'):
+      case 'circleSpeed':
         this.circleWeapons?.children.entries.forEach((circle) => {
           (circle as CircleWeapon).circleSpeed += CIRCLE_SPEED_INCREASE;
         });
         break;
-      case('darkBlast'):
+      case 'darkBlast':
         // if timer exists, instead lower it and the angle change a bit?
         this.spawnDarkBlast();
         break;
-      case('timeSlow'):
+      case 'timeSlow':
         this.timeSlowCooldown *= TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER;
         this.spawnTimeSlow();
         break;
-      case('tornado'):
+      case 'tornado':
         this.spawnTornado();
         break;
       default:
@@ -494,7 +494,8 @@ export default class GameStageScene extends Phaser.Scene {
 
   enemyDefeated(enemy: any) {
     enemy.destroy();
-    this.playerTower.currentGold = this.playerTower.currentGold + ENEMY_BASE_GOLD_VALUE;
+    this.playerTower.currentGold =
+      this.playerTower.currentGold + ENEMY_BASE_GOLD_VALUE;
   }
 
   updateEnemySpawnTimer() {
@@ -536,9 +537,14 @@ export default class GameStageScene extends Phaser.Scene {
     this.time.delayedCall(1, () => {
       // let angle = Phaser.Math.Between(0, 360);
 
-      this.physics.velocityFromAngle(this.darkBlastDirection, 200, darkBlastSprite.body.velocity);
+      this.physics.velocityFromAngle(
+        this.darkBlastDirection,
+        200,
+        darkBlastSprite.body.velocity,
+      );
       darkBlastSprite.angle = this.darkBlastDirection;
-      if(this.darkBlastDirection + this.darkBlastAngleChange < 360) this.darkBlastDirection += this.darkBlastAngleChange;
+      if (this.darkBlastDirection + this.darkBlastAngleChange < 360)
+        this.darkBlastDirection += this.darkBlastAngleChange;
       else this.darkBlastDirection = 0;
     });
 
@@ -584,5 +590,5 @@ export default class GameStageScene extends Phaser.Scene {
     this.PermanentWeapons?.add(tornadoSprite);
     tornadoSprite.play('tornadoAnimation');
     tornadoSprite.setImmovable(true);
-  }
+  };
 }
