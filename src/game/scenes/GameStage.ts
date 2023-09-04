@@ -20,10 +20,12 @@ import {
   ENEMY_BASE_GOLD_VALUE,
   ENEMY_BASE_RATE,
   ENEMY_BASE_SPEED,
+  REGEN_BASE_COOLDOWN,
+  REGEN_BASE_HEAL_AMOUNT,
   TIMESLOW_BASE_COOLDOWN,
   TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER,
   TORNADO_BASE_SHAKE_AMOUNT,
-  TOWER_BASE_HITPOINTs,
+  TOWER_BASE_HITPOINTS,
 } from '../../constants';
 
 export default class GameStageScene extends Phaser.Scene {
@@ -37,7 +39,7 @@ export default class GameStageScene extends Phaser.Scene {
 
   private towerSprites: Phaser.GameObjects.Image[] = [];
 
-  private towerLife: number = TOWER_BASE_HITPOINTs;
+  private towerLife: number = TOWER_BASE_HITPOINTS;
   private towerLifeText: Phaser.GameObjects.Text | undefined;
   private goldText: Phaser.GameObjects.Text | undefined;
   private enemyRate: number = ENEMY_BASE_RATE;
@@ -47,11 +49,13 @@ export default class GameStageScene extends Phaser.Scene {
   private darkBlastCooldown: number = DARKBLAST_BASE_COOLDOWN;
   private darkBlastDirection: number = 0;
   private darkBlastAngleChange: number = DARKBLAST_BASE_ANGLE_CHANGE;
+  private regenCooldown: number = REGEN_BASE_COOLDOWN;
   private timeSlowCooldown: number = TIMESLOW_BASE_COOLDOWN;
 
   private spawnArrowTimer: Phaser.Time.TimerEvent | undefined;
   private spawnEnemyTimer: Phaser.Time.TimerEvent | undefined;
   private darkBlastTimer: Phaser.Time.TimerEvent | undefined;
+  private regenTimer: Phaser.Time.TimerEvent | undefined;
   private timeSlowTimer: Phaser.Time.TimerEvent | undefined;
 
   private enemyCurrentSpeed: number = ENEMY_BASE_SPEED;
@@ -380,6 +384,15 @@ export default class GameStageScene extends Phaser.Scene {
       repeat: -1,
     });
     this.anims.create({
+      key: 'regenAnimation',
+      frames: this.anims.generateFrameNumbers('healEffectSheet', {
+        start: 0,
+        end: 15,
+      }),
+      frameRate: 12,
+      repeat: 0,
+    });
+    this.anims.create({
       key: 'timeSlowAnimation',
       frames: this.anims.generateFrameNumbers('timeSlowAnimationSheet', {
         start: 0,
@@ -450,6 +463,9 @@ export default class GameStageScene extends Phaser.Scene {
           this.darkBlastAngleChange = this.darkBlastAngleChange * DARKBLAST_LEVELUP_ANGLE_MULTIPLIER;
         }
         this.spawnDarkBlast();
+        break;
+      case 'regen':
+        this.spawnRegen();
         break;
       case 'timeSlow':
         this.timeSlowCooldown *= TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER;
@@ -559,6 +575,33 @@ export default class GameStageScene extends Phaser.Scene {
       callback: this.spawnDarkBlast,
       callbackScope: this,
       loop: false,
+    });
+  }
+
+  spawnRegen() {
+    if (this.regenTimer) {
+      this.regenTimer.destroy();
+    }
+    let x: number = this.scale.width / 2;
+    let y: number = this.scale.height / 2.3;
+    const regenSprite = this.physics.add.sprite(x, y, 'regen');
+    regenSprite.scale = 1.2;
+    regenSprite.setData('type', 'regen');
+    regenSprite.play('regenAnimation');
+    regenSprite.setImmovable(true);
+    // this.PermanentWeapons?.add(regenSprite);
+    if(this.towerLife <= 94) {
+      this.towerLife += REGEN_BASE_HEAL_AMOUNT;
+    }
+    regenSprite.on('animationcomplete', () => {
+      regenSprite.destroy();
+      // this.enemyCurrentSpeed = ENEMY_BASE_SPEED;
+      this.regenTimer = this.time.addEvent({
+        delay: this.regenCooldown,
+        callback: this.spawnRegen,
+        callbackScope: this,
+        loop: false,
+      });
     });
   }
 

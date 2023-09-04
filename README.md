@@ -10,7 +10,7 @@ Enemies spawn in increasing numbers
 
 Enemies are destroyed by the player's circle weapon or the tower's automatic arrow or powerup attacks.
 
-There are currently five powerups in the game. Try them out by pressing Q W E when you have enough gold.
+There are currently 6 powerups in the game. Try them out by pressing Q W E when you have enough gold.
 
 ## Controls
 
@@ -37,6 +37,8 @@ Spell icons - https://mythril-age.itch.io/mythril-age-spell-icons-v1
 Spell effects:
 
 - Dark Blast, https://xyezawr.itch.io/free-pixel-effects-pack8
+
+- Regen, https://pimen.itch.io/cutting-and-healing
 
 - Tornado, https://tiopalada.itch.io/spellbook-2d-v1
 

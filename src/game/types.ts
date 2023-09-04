@@ -7,5 +7,6 @@ export type PowerupType =
   | 'arrowRate'
   | 'circleSpeed'
   | 'darkBlast'
+  | 'regen'
   | 'timeSlow'
   | 'tornado';

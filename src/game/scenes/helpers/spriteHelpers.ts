@@ -13,27 +13,19 @@ export const loadSprites = (scene: Phaser.Scene): void => {
       frameHeight: 480,
     },
   );
+  scene.load.spritesheet(
+    'healEffectSheet',
+    'sprites/spellEffects/heal/heal-effect-sprite-sheet.png',
+    {
+      frameWidth: 128,
+      frameHeight: 128,
+    },
+  );
 
   scene.load.image('arrowRate', 'sprites/powerupIcons/arrow-scope.png');
-  // scene.load.image('aura', 'sprites/powerupIcons/aura.png');
-  // scene.load.image('bladeDrag', 'sprites/powerupIcons/blade-drag.png');
-  // scene.load.image('clawSlashes', 'sprites/powerupIcons/claw-slashes.png');
-  // scene.load.image(
-  //   'crossedAirFlows',
-  //   'sprites/powerupIcons/crossed-air-flows.png',
-  // );
-  // scene.load.image('eggDefense', 'sprites/powerupIcons/egg-defense.png');
-  // scene.load.image(
-  //   'electricalCrescent',
-  //   'sprites/powerupIcons/electrical-crescent.png',
-  // );
-  // scene.load.image(
-  //   'embrassedEnergy',
-  //   'sprites/powerupIcons/embrassed-energy.png',
-  // );
-  // scene.load.image('eyestalk', 'sprites/powerupIcons/eyestalk.png');
   scene.load.image('circleSpeed', 'sprites/powerupIcons/magic-swirl.png');
   scene.load.image('darkBlast', 'sprites/powerupIcons/foamy-disc.png');
+  scene.load.image('regen', 'sprites/powerupIcons/nested-hearts.png');
   scene.load.image('timeSlow', 'sprites/powerupIcons/embrassed-energy.png');
   scene.load.image('tornado', 'sprites/powerupIcons/tornado.png');
 

@@ -13,7 +13,7 @@ export const ENEMY_BASE_GOLD_VALUE = 1;
 
 // Player / Tower
 
-export const TOWER_BASE_HITPOINTs = 100;
+export const TOWER_BASE_HITPOINTS = 100;
 
 // Powerups
 
@@ -21,6 +21,7 @@ export const PowerupRecord: Record<PowerupType, ItemGradeType> = {
   arrowRate: 'C',
   circleSpeed: 'D',
   darkBlast: 'B',
+  regen: 'C',
   timeSlow: 'S',
   tornado: 'C',
 };
@@ -35,6 +36,9 @@ export const DARKBLAST_BASE_ANGLE_CHANGE = 45;
 export const DARKBLAST_BASE_COOLDOWN = 1000;
 export const DARKBLAST_LEVELUP_ANGLE_MULTIPLIER = 0.8;
 export const DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER = 0.8;
+
+export const REGEN_BASE_COOLDOWN = 5000;
+export const REGEN_BASE_HEAL_AMOUNT = 5;
 
 export const TIMESLOW_BASE_COOLDOWN = 30000;
 export const TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER = 0.85;
