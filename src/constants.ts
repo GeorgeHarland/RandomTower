@@ -18,11 +18,11 @@ export const TOWER_BASE_HITPOINTs = 100;
 // Powerups
 
 export const PowerupRecord: Record<PowerupType, ItemGradeType> = {
-  arrowRate: 'C',
+  arrowRate: 'A',
   circleSpeed: 'D',
   darkBlast: 'B',
   timeSlow: 'S',
-  tornado: 'A',
+  tornado: 'C',
 };
 
 export const ARROW_BASE_SPEED = 200;
@@ -33,8 +33,10 @@ export const CIRCLE_SPEED_INCREASE = 0.35;
 
 export const DARKBLAST_BASE_ANGLE_CHANGE = 45;
 export const DARKBLAST_BASE_COOLDOWN = 1000;
+export const DARKBLAST_LEVELUP_ANGLE_MULTIPLIER = 0.8;
+export const DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER = 0.8;
 
 export const TIMESLOW_BASE_COOLDOWN = 30000;
-export const TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER = 0.75;
+export const TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER = 0.85;
 
 export const TORNADO_BASE_SHAKE_AMOUNT = 4;

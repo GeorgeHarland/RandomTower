@@ -1,6 +1,6 @@
 # RandomTower
 
-A small hobby. Making an idle(ish) tower game with TypeScript, Preact, and Phaser.JS.
+A small hobby. Making a tower survival game with TypeScript, Preact, and Phaser.JS.
 
 Code is messy. I'm not following any designs, but I'm doing small refactors each time I work on it.
 
@@ -8,9 +8,9 @@ Code is messy. I'm not following any designs, but I'm doing small refactors each
 
 Enemies spawn in increasing numbers
 
-Enemies are destroyed by the tower's automatic arrows, or the player's big circle weapon.
+Enemies are destroyed by the player's circle weapon or the tower's automatic arrow or powerup attacks.
 
-There are several loose powerups that can be improved on. Try them out by pressing Q W E.
+There are five powerups currently in the game. Try them out by pressing Q W E.
 
 ## Controls
 
@@ -35,6 +35,8 @@ Tower assets - https://foozlecc.itch.io/spire-tower-pack-2
 Spell icons - https://mythril-age.itch.io/mythril-age-spell-icons-v1
 
 Spell effects:
+
+- Dark Blast, https://xyezawr.itch.io/free-pixel-effects-pack8
 
 - Tornado, https://tiopalada.itch.io/spellbook-2d-v1
 

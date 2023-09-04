@@ -13,6 +13,8 @@ import {
   CIRCLE_SPEED_INCREASE,
   DARKBLAST_BASE_ANGLE_CHANGE,
   DARKBLAST_BASE_COOLDOWN,
+  DARKBLAST_LEVELUP_ANGLE_MULTIPLIER,
+  DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER,
   DEV_TEXT_AT_TOP,
   ENEMY_BASE_DAMAGE,
   ENEMY_BASE_GOLD_VALUE,
@@ -443,7 +445,10 @@ export default class GameStageScene extends Phaser.Scene {
         });
         break;
       case 'darkBlast':
-        // if timer exists, instead lower it and the angle change a bit?
+        if(this.darkBlastTimer) {
+          this.darkBlastCooldown = this.darkBlastCooldown * DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER;
+          this.darkBlastAngleChange = this.darkBlastAngleChange * DARKBLAST_LEVELUP_ANGLE_MULTIPLIER;
+        }
         this.spawnDarkBlast();
         break;
       case 'timeSlow':
