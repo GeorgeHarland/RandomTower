@@ -2,7 +2,7 @@
 
 A small hobby. Making a tower survival game with TypeScript, Preact, and Phaser.JS.
 
-Code is messy. I'm not following any designs, but I'm doing small refactors each time I work on it.
+I'm not following any designs, but I'm doing small refactors each time I work on it.
 
 ## Current State
 
@@ -10,7 +10,7 @@ Enemies spawn in increasing numbers
 
 Enemies are destroyed by the player's circle weapon or the tower's automatic arrow or powerup attacks.
 
-There are five powerups currently in the game. Try them out by pressing Q W E.
+There are currently five powerups in the game. Try them out by pressing Q W E when you have enough gold.
 
 ## Controls
 
@@ -46,7 +46,7 @@ Background music - Sands of Time, https://pixabay.com/users/juan_sanchez_music-8
 
 ## Gallery
 
-![image](https://github.com/GeorgeHarland/RandomTower/assets/37070520/29b8f13f-cea1-444a-8f25-7babe137759a)
+![image](https://github.com/GeorgeHarland/RandomTower/assets/37070520/e6f0baf8-138e-416b-8d70-cc475f5276eb)
 
 ## How to open the project on your computer:
 
