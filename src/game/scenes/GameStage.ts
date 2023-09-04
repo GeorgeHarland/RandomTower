@@ -281,7 +281,7 @@ export default class GameStageScene extends Phaser.Scene {
             TORNADO_BASE_SHAKE_AMOUNT;
       }
       if (weapon.getData('type') === 'timeSlow') {
-        this.enemyCurrentSpeed *= 0.95;
+        this.enemyCurrentSpeed *= 0.975;
       }
     });
 
@@ -385,7 +385,7 @@ export default class GameStageScene extends Phaser.Scene {
         start: 0,
         end: 14,
       }),
-      frameRate: 14,
+      frameRate: 12,
       repeat: 1,
     });
     this.anims.create({

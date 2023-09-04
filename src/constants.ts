@@ -18,7 +18,7 @@ export const TOWER_BASE_HITPOINTs = 100;
 // Powerups
 
 export const PowerupRecord: Record<PowerupType, ItemGradeType> = {
-  arrowRate: 'A',
+  arrowRate: 'C',
   circleSpeed: 'D',
   darkBlast: 'B',
   timeSlow: 'S',
@@ -27,7 +27,7 @@ export const PowerupRecord: Record<PowerupType, ItemGradeType> = {
 
 export const ARROW_BASE_SPEED = 200;
 export const ARROW_BASE_RATE = 0.2;
-export const ARROW_RATE_INCREASE = 0.1;
+export const ARROW_RATE_INCREASE = 0.025;
 
 export const CIRCLE_SPEED_INCREASE = 0.35;
 
