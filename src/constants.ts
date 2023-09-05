@@ -21,7 +21,7 @@ export const PowerupRecord: Record<PowerupType, ItemGradeType> = {
   arrowRate: 'C',
   circleSpeed: 'D',
   darkBlast: 'B',
-  regen: 'C',
+  regen: 'D',
   timeSlow: 'S',
   tornado: 'C',
 };

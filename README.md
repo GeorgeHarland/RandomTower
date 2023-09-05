@@ -10,7 +10,7 @@ Enemies spawn in increasing numbers
 
 Enemies are destroyed by the player's circle weapon or the tower's automatic arrow or powerup attacks.
 
-There are currently 6 powerups in the game. Try them out by pressing Q W E when you have enough gold.
+There are currently 6 powerups in the game. Powerup details are in POWERUPS.md.
 
 ## Controls
 
