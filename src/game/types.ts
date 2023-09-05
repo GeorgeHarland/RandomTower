@@ -10,3 +10,8 @@ export type PowerupType =
   | 'regen'
   | 'timeSlow'
   | 'tornado';
+
+export type CoordinateType = {
+  x: number
+  y: number
+}

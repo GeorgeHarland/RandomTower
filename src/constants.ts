@@ -11,6 +11,12 @@ export const ENEMY_BASE_RATE = 0.5;
 export const ENEMY_BASE_SPEED = 80;
 export const ENEMY_BASE_GOLD_VALUE = 1;
 
+export const BOSS_BASE_DAMAGE = 30;
+export const BOSS_SECONDS_TO_SPAWN = 30;
+export const BOSS_BASE_GOLD_VALUE = 20;
+export const BOSS_BASE_HITPOINTS = 50;
+export const BOSS_SPEED_MULTIPLIER = 0.25;
+
 // Player / Tower
 
 export const TOWER_BASE_HITPOINTS = 100;
@@ -40,6 +46,7 @@ export const DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER = 0.8;
 export const REGEN_BASE_COOLDOWN = 5000;
 export const REGEN_BASE_HEAL_AMOUNT = 5;
 export const REGEN_LEVELUP_COOLDOWN_MULTIPLIER = 0.8;
+export const REGEN_LEVELUP_HEAL_INCREASE = 1;
 
 export const TIMESLOW_BASE_COOLDOWN = 30000;
 export const TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER = 0.85;

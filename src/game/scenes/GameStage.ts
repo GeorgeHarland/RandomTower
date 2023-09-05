@@ -10,6 +10,11 @@ import {
   ARROW_BASE_RATE,
   ARROW_BASE_SPEED,
   ARROW_RATE_INCREASE,
+  BOSS_BASE_DAMAGE,
+  BOSS_BASE_GOLD_VALUE,
+  BOSS_BASE_HITPOINTS,
+  BOSS_SECONDS_TO_SPAWN,
+  BOSS_SPEED_MULTIPLIER,
   CIRCLE_SPEED_INCREASE,
   DARKBLAST_BASE_ANGLE_CHANGE,
   DARKBLAST_BASE_COOLDOWN,
@@ -23,11 +28,13 @@ import {
   REGEN_BASE_COOLDOWN,
   REGEN_BASE_HEAL_AMOUNT,
   REGEN_LEVELUP_COOLDOWN_MULTIPLIER,
+  REGEN_LEVELUP_HEAL_INCREASE,
   TIMESLOW_BASE_COOLDOWN,
   TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER,
   TORNADO_BASE_SHAKE_AMOUNT,
   TOWER_BASE_HITPOINTS,
 } from '../../constants';
+import { getRandomEdgeOfScreen } from './helpers/gameHelpers';
 
 export default class GameStageScene extends Phaser.Scene {
   private playerTower: PlayerTower = new PlayerTower();
@@ -54,9 +61,11 @@ export default class GameStageScene extends Phaser.Scene {
   private timeSlowCooldown: number = TIMESLOW_BASE_COOLDOWN;
 
   private spawnArrowTimer: Phaser.Time.TimerEvent | undefined;
+  private spawnBossTimer: Phaser.Time.TimerEvent | undefined;
   private spawnEnemyTimer: Phaser.Time.TimerEvent | undefined;
   private darkBlastTimer: Phaser.Time.TimerEvent | undefined;
   private regenTimer: Phaser.Time.TimerEvent | undefined;
+  private regenAmount: number = REGEN_BASE_HEAL_AMOUNT;
   private timeSlowTimer: Phaser.Time.TimerEvent | undefined;
 
   private enemyCurrentSpeed: number = ENEMY_BASE_SPEED;
@@ -234,16 +243,23 @@ export default class GameStageScene extends Phaser.Scene {
       },
     );
 
-    this.spawnEnemyTimer = this.time.addEvent({
-      delay: 1000 / this.enemyRate,
-      callback: this.spawnEnemy,
+    this.spawnArrowTimer = this.time.addEvent({
+      delay: 1000 / this.arrowRate,
+      callback: this.spawnArrow,
       callbackScope: this,
       loop: true,
     });
 
-    this.spawnArrowTimer = this.time.addEvent({
-      delay: 1000 / this.arrowRate,
-      callback: this.spawnArrow,
+    this.spawnBossTimer = this.time.addEvent({
+      delay: 1000 * BOSS_SECONDS_TO_SPAWN,
+      callback: this.spawnBoss,
+      callbackScope: this,
+      loop: true,
+    });
+
+    this.spawnEnemyTimer = this.time.addEvent({
+      delay: 1000 / this.enemyRate,
+      callback: this.spawnEnemy,
       callbackScope: this,
       loop: true,
     });
@@ -333,8 +349,10 @@ export default class GameStageScene extends Phaser.Scene {
     }
 
     this.enemies?.children.entries.forEach((enemy) => {
-      this.tower &&
-        this.physics.moveToObject(enemy, this.tower, this.enemyCurrentSpeed);
+      if(this.tower) {
+        if(enemy.getData('type') === 'boss') this.physics.moveToObject(enemy, this.tower, this.enemyCurrentSpeed * BOSS_SPEED_MULTIPLIER);
+        else this.physics.moveToObject(enemy, this.tower, this.enemyCurrentSpeed);
+      }
     });
 
     this.shopBoxes?.children.entries.forEach((box) => {
@@ -412,20 +430,36 @@ export default class GameStageScene extends Phaser.Scene {
     });
   }
 
-  spawnEnemy() {
-    let x: number;
-    let y: number;
-    if (Math.random() < 0.5) {
-      x = Math.random() < 0.5 ? -50 : this.scale.width + 50;
-      y = Math.random() * this.scale.height;
-    } else {
-      x = Math.random() * this.scale.width;
-      y = Math.random() < 0.5 ? -50 : this.scale.height + 50;
+  spawnBoss() {
+    const {x, y} = getRandomEdgeOfScreen(this);
+    const boss = this.physics.add.sprite(x, y, 'bossTexture');
+    boss.setData('type', 'boss')
+    boss.setData('hitpoints', BOSS_BASE_HITPOINTS)
+    this.enemies?.add(boss);
+    if (this.spawnBossTimer) {
+      this.spawnBossTimer.destroy();
     }
+    this.spawnBossTimer = this.time.addEvent({
+      delay: 1000 * BOSS_SECONDS_TO_SPAWN,
+      callback: this.spawnBoss,
+      callbackScope: this,
+      loop: true,
+    });
+  }
 
+  spawnEnemy() {
+    const {x, y} = getRandomEdgeOfScreen(this);
     const enemy = this.physics.add.sprite(x, y, 'enemyTexture');
     this.enemies?.add(enemy);
-    this.updateEnemySpawnTimer();
+    if (this.spawnEnemyTimer) {
+      this.spawnEnemyTimer.destroy();
+    }
+    this.spawnEnemyTimer = this.time.addEvent({
+      delay: 1000 / this.enemyRate,
+      callback: this.spawnEnemy,
+      callbackScope: this,
+      loop: true,
+    });
   }
 
   spawnArrow() {
@@ -468,6 +502,7 @@ export default class GameStageScene extends Phaser.Scene {
       case 'regen':
         if(this.regenTimer) {
           this.regenCooldown *= REGEN_LEVELUP_COOLDOWN_MULTIPLIER;
+          this.regenAmount += REGEN_LEVELUP_HEAL_INCREASE;
         }
         this.spawnRegen();
         break;
@@ -511,30 +546,25 @@ export default class GameStageScene extends Phaser.Scene {
   // @ts-ignore
   enemyTowerCollision(tower: any, enemy: any) {
     enemy.destroy();
-    this.towerLife -= ENEMY_BASE_DAMAGE;
+    if(enemy.getData('type') === 'boss') this.towerLife -= BOSS_BASE_DAMAGE;
+    else this.towerLife -= ENEMY_BASE_DAMAGE;
   }
 
   enemyWeaponCollision({ weapon, enemy, weaponDestroyed = false }: any) {
+
+    console.log(enemy.getData('hitpoints'));
+    console.log(enemy.getData('type'));
     if (weaponDestroyed) weapon.destroy();
-    this.enemyDefeated(enemy);
+    if(enemy.getData('type') === 'boss' && enemy.getData('hitpoints') > 0) {
+      enemy.setData('hitpoints', enemy.getData('hitpoints') - 5);
+    }
+    else this.enemyDefeated(enemy);
   }
 
   enemyDefeated(enemy: any) {
     enemy.destroy();
-    this.playerTower.currentGold =
-      this.playerTower.currentGold + ENEMY_BASE_GOLD_VALUE;
-  }
-
-  updateEnemySpawnTimer() {
-    if (this.spawnEnemyTimer) {
-      this.spawnEnemyTimer.destroy();
-    }
-    this.spawnEnemyTimer = this.time.addEvent({
-      delay: 1000 / this.enemyRate,
-      callback: this.spawnEnemy,
-      callbackScope: this,
-      loop: true,
-    });
+    if(enemy.getData('type') === 'boss') this.playerTower.currentGold += BOSS_BASE_GOLD_VALUE;
+    else this.playerTower.currentGold += ENEMY_BASE_GOLD_VALUE;
   }
 
   updateArrowTimer() {
@@ -596,7 +626,7 @@ export default class GameStageScene extends Phaser.Scene {
     regenSprite.play('regenAnimation');
     regenSprite.setImmovable(true);
     if(this.towerLife <= 94) {
-      this.towerLife += REGEN_BASE_HEAL_AMOUNT;
+      this.towerLife += this.regenAmount;
     }
     regenSprite.on('animationcomplete', () => {
       regenSprite.destroy();

@@ -34,6 +34,13 @@ export const generateTextures = (
   enemyGraphic.fillRect(1, 1, 8, 8);
   enemyGraphic.generateTexture('enemyTexture', 10, 10);
 
+  let bossGraphic = objectCreator.graphics();
+  bossGraphic.fillStyle(0x000000, 1);
+  bossGraphic.fillRect(0, 0, 20, 20);
+  bossGraphic.fillStyle(0xdd33dd, 1);
+  bossGraphic.fillRect(1, 1, 18, 18);
+  bossGraphic.generateTexture('bossTexture', 20, 20);
+
   let arrowGraphic = objectCreator.graphics();
   arrowGraphic.fillStyle(0x000000, 1);
   arrowGraphic.fillRect(0, 0, 12, 3);
