@@ -22,6 +22,7 @@ import {
   ENEMY_BASE_SPEED,
   REGEN_BASE_COOLDOWN,
   REGEN_BASE_HEAL_AMOUNT,
+  REGEN_LEVELUP_COOLDOWN_MULTIPLIER,
   TIMESLOW_BASE_COOLDOWN,
   TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER,
   TORNADO_BASE_SHAKE_AMOUNT,
@@ -465,10 +466,15 @@ export default class GameStageScene extends Phaser.Scene {
         this.spawnDarkBlast();
         break;
       case 'regen':
+        if(this.regenTimer) {
+          this.regenCooldown *= REGEN_LEVELUP_COOLDOWN_MULTIPLIER;
+        }
         this.spawnRegen();
         break;
       case 'timeSlow':
-        this.timeSlowCooldown *= TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER;
+        if(this.timeSlowTimer) {
+          this.timeSlowCooldown *= TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER;
+        }
         this.spawnTimeSlow();
         break;
       case 'tornado':
@@ -589,13 +595,11 @@ export default class GameStageScene extends Phaser.Scene {
     regenSprite.setData('type', 'regen');
     regenSprite.play('regenAnimation');
     regenSprite.setImmovable(true);
-    // this.PermanentWeapons?.add(regenSprite);
     if(this.towerLife <= 94) {
       this.towerLife += REGEN_BASE_HEAL_AMOUNT;
     }
     regenSprite.on('animationcomplete', () => {
       regenSprite.destroy();
-      // this.enemyCurrentSpeed = ENEMY_BASE_SPEED;
       this.regenTimer = this.time.addEvent({
         delay: this.regenCooldown,
         callback: this.spawnRegen,
