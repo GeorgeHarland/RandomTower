@@ -561,7 +561,7 @@ export default class GameStageScene extends Phaser.Scene {
 
   enemyWeaponCollision({ weapon, enemy, weaponDestroyed = false }: any) {
     const currentTime = Date.now();
-    const hitCooldown = 500;
+    const hitCooldown = 200; // milliseconds
     const weaponId = weapon.getData('id');
     const bossId = enemy.getData('id');
 
@@ -572,15 +572,15 @@ export default class GameStageScene extends Phaser.Scene {
     }
     this.weaponBossHitMap.set(compositeKey, currentTime);
 
-    if (weaponDestroyed) {
-        weapon.destroy();
-    }
-
     if (enemy.getData('type') === 'boss' && enemy.getData('hitpoints') > 0) {
         enemy.setData('hitpoints', enemy.getData('hitpoints') - 5);
         console.log(enemy.getData('hitpoints'))
     } else {
         this.enemyDefeated(enemy);
+    }
+
+    if (weaponDestroyed) {
+      weapon.destroy();
     }
   }
 
