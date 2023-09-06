@@ -62,6 +62,7 @@ export default class GameStageScene extends Phaser.Scene {
 
   private spawnArrowTimer: Phaser.Time.TimerEvent | undefined;
   private spawnBossTimer: Phaser.Time.TimerEvent | undefined;
+  private weaponBossHitMap = new Map();
   private spawnEnemyTimer: Phaser.Time.TimerEvent | undefined;
   private darkBlastTimer: Phaser.Time.TimerEvent | undefined;
   private regenTimer: Phaser.Time.TimerEvent | undefined;
@@ -69,6 +70,8 @@ export default class GameStageScene extends Phaser.Scene {
   private timeSlowTimer: Phaser.Time.TimerEvent | undefined;
 
   private enemyCurrentSpeed: number = ENEMY_BASE_SPEED;
+  private weaponCounter: number = 0;
+  private enemyCounter: number = 0;
 
   private keyQ: Phaser.Input.Keyboard.Key | null = null;
   private keyW: Phaser.Input.Keyboard.Key | null = null;
@@ -435,6 +438,8 @@ export default class GameStageScene extends Phaser.Scene {
     const boss = this.physics.add.sprite(x, y, 'bossTexture');
     boss.setData('type', 'boss')
     boss.setData('hitpoints', BOSS_BASE_HITPOINTS)
+    boss.setData('id', `enemy-${this.enemyCounter++}`);
+    boss.setImmovable(true)
     this.enemies?.add(boss);
     if (this.spawnBossTimer) {
       this.spawnBossTimer.destroy();
@@ -450,6 +455,8 @@ export default class GameStageScene extends Phaser.Scene {
   spawnEnemy() {
     const {x, y} = getRandomEdgeOfScreen(this);
     const enemy = this.physics.add.sprite(x, y, 'enemyTexture');
+    enemy.setImmovable(true)
+    enemy.setData('id', `enemy-${this.enemyCounter++}`);
     this.enemies?.add(enemy);
     if (this.spawnEnemyTimer) {
       this.spawnEnemyTimer.destroy();
@@ -468,6 +475,8 @@ export default class GameStageScene extends Phaser.Scene {
       const y = this.tower.y;
 
       const arrow = this.physics.add.sprite(x, y, 'arrowTexture');
+      arrow.setData('id', `weapon-${this.weaponCounter++}`);
+
       this.weapons?.add(arrow);
 
       let closestEnemy = this.getClosestEnemy(this.tower);
@@ -551,14 +560,28 @@ export default class GameStageScene extends Phaser.Scene {
   }
 
   enemyWeaponCollision({ weapon, enemy, weaponDestroyed = false }: any) {
+    const currentTime = Date.now();
+    const hitCooldown = 500;
+    const weaponId = weapon.getData('id');
+    const bossId = enemy.getData('id');
 
-    console.log(enemy.getData('hitpoints'));
-    console.log(enemy.getData('type'));
-    if (weaponDestroyed) weapon.destroy();
-    if(enemy.getData('type') === 'boss' && enemy.getData('hitpoints') > 0) {
-      enemy.setData('hitpoints', enemy.getData('hitpoints') - 5);
+    const compositeKey = `${weaponId}-${bossId}`;
+    const lastHitTime = this.weaponBossHitMap.get(compositeKey) || 0;
+    if (currentTime - lastHitTime < hitCooldown) {
+        return;
     }
-    else this.enemyDefeated(enemy);
+    this.weaponBossHitMap.set(compositeKey, currentTime);
+
+    if (weaponDestroyed) {
+        weapon.destroy();
+    }
+
+    if (enemy.getData('type') === 'boss' && enemy.getData('hitpoints') > 0) {
+        enemy.setData('hitpoints', enemy.getData('hitpoints') - 5);
+        console.log(enemy.getData('hitpoints'))
+    } else {
+        this.enemyDefeated(enemy);
+    }
   }
 
   enemyDefeated(enemy: any) {
@@ -588,6 +611,7 @@ export default class GameStageScene extends Phaser.Scene {
     const darkBlastSprite = this.physics.add.sprite(x, y, 'darkBlastSprite1');
     darkBlastSprite.scale = 2;
     darkBlastSprite.setData('type', 'darkBlast');
+    darkBlastSprite.setData('id', `weapon-${this.weaponCounter++}`);
     darkBlastSprite.play('darkBlastAnimation');
 
     // Delay the velocity setting by 1 ms
@@ -669,6 +693,7 @@ export default class GameStageScene extends Phaser.Scene {
     const tornadoSprite = this.physics.add.sprite(x, y, 'tornadoRepeat1');
     tornadoSprite.scale = 0.2;
     tornadoSprite.setData('type', 'tornado');
+    tornadoSprite.setData('id', `weapon-${this.weaponCounter++}`);
     this.PermanentWeapons?.add(tornadoSprite);
     tornadoSprite.play('tornadoAnimation');
     tornadoSprite.setImmovable(true);
