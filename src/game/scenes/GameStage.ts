@@ -352,9 +352,15 @@ export default class GameStageScene extends Phaser.Scene {
     }
 
     this.enemies?.children.entries.forEach((enemy) => {
-      if(this.tower) {
-        if(enemy.getData('type') === 'boss') this.physics.moveToObject(enemy, this.tower, this.enemyCurrentSpeed * BOSS_SPEED_MULTIPLIER);
-        else this.physics.moveToObject(enemy, this.tower, this.enemyCurrentSpeed);
+      if (this.tower) {
+        if (enemy.getData('type') === 'boss')
+          this.physics.moveToObject(
+            enemy,
+            this.tower,
+            this.enemyCurrentSpeed * BOSS_SPEED_MULTIPLIER,
+          );
+        else
+          this.physics.moveToObject(enemy, this.tower, this.enemyCurrentSpeed);
       }
     });
 
@@ -434,12 +440,12 @@ export default class GameStageScene extends Phaser.Scene {
   }
 
   spawnBoss() {
-    const {x, y} = getRandomEdgeOfScreen(this);
+    const { x, y } = getRandomEdgeOfScreen(this);
     const boss = this.physics.add.sprite(x, y, 'bossTexture');
-    boss.setData('type', 'boss')
-    boss.setData('hitpoints', BOSS_BASE_HITPOINTS)
+    boss.setData('type', 'boss');
+    boss.setData('hitpoints', BOSS_BASE_HITPOINTS);
     boss.setData('id', `enemy-${this.enemyCounter++}`);
-    boss.setImmovable(true)
+    boss.setImmovable(true);
     this.enemies?.add(boss);
     if (this.spawnBossTimer) {
       this.spawnBossTimer.destroy();
@@ -453,9 +459,9 @@ export default class GameStageScene extends Phaser.Scene {
   }
 
   spawnEnemy() {
-    const {x, y} = getRandomEdgeOfScreen(this);
+    const { x, y } = getRandomEdgeOfScreen(this);
     const enemy = this.physics.add.sprite(x, y, 'enemyTexture');
-    enemy.setImmovable(true)
+    enemy.setImmovable(true);
     enemy.setData('id', `enemy-${this.enemyCounter++}`);
     this.enemies?.add(enemy);
     if (this.spawnEnemyTimer) {
@@ -502,21 +508,23 @@ export default class GameStageScene extends Phaser.Scene {
         });
         break;
       case 'darkBlast':
-        if(this.darkBlastTimer) {
-          this.darkBlastCooldown = this.darkBlastCooldown * DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER;
-          this.darkBlastAngleChange = this.darkBlastAngleChange * DARKBLAST_LEVELUP_ANGLE_MULTIPLIER;
+        if (this.darkBlastTimer) {
+          this.darkBlastCooldown =
+            this.darkBlastCooldown * DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER;
+          this.darkBlastAngleChange =
+            this.darkBlastAngleChange * DARKBLAST_LEVELUP_ANGLE_MULTIPLIER;
         }
         this.spawnDarkBlast();
         break;
       case 'regen':
-        if(this.regenTimer) {
+        if (this.regenTimer) {
           this.regenCooldown *= REGEN_LEVELUP_COOLDOWN_MULTIPLIER;
           this.regenAmount += REGEN_LEVELUP_HEAL_INCREASE;
         }
         this.spawnRegen();
         break;
       case 'timeSlow':
-        if(this.timeSlowTimer) {
+        if (this.timeSlowTimer) {
           this.timeSlowCooldown *= TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER;
         }
         this.spawnTimeSlow();
@@ -555,7 +563,7 @@ export default class GameStageScene extends Phaser.Scene {
   // @ts-ignore
   enemyTowerCollision(tower: any, enemy: any) {
     enemy.destroy();
-    if(enemy.getData('type') === 'boss') this.towerLife -= BOSS_BASE_DAMAGE;
+    if (enemy.getData('type') === 'boss') this.towerLife -= BOSS_BASE_DAMAGE;
     else this.towerLife -= ENEMY_BASE_DAMAGE;
   }
 
@@ -568,15 +576,15 @@ export default class GameStageScene extends Phaser.Scene {
     const compositeKey = `${weaponId}-${bossId}`;
     const lastHitTime = this.weaponBossHitMap.get(compositeKey) || 0;
     if (currentTime - lastHitTime < hitCooldown) {
-        return;
+      return;
     }
     this.weaponBossHitMap.set(compositeKey, currentTime);
 
     if (enemy.getData('type') === 'boss' && enemy.getData('hitpoints') > 0) {
-        enemy.setData('hitpoints', enemy.getData('hitpoints') - 5);
-        console.log(enemy.getData('hitpoints'))
+      enemy.setData('hitpoints', enemy.getData('hitpoints') - 5);
+      console.log(enemy.getData('hitpoints'));
     } else {
-        this.enemyDefeated(enemy);
+      this.enemyDefeated(enemy);
     }
 
     if (weaponDestroyed) {
@@ -586,7 +594,8 @@ export default class GameStageScene extends Phaser.Scene {
 
   enemyDefeated(enemy: any) {
     enemy.destroy();
-    if(enemy.getData('type') === 'boss') this.playerTower.currentGold += BOSS_BASE_GOLD_VALUE;
+    if (enemy.getData('type') === 'boss')
+      this.playerTower.currentGold += BOSS_BASE_GOLD_VALUE;
     else this.playerTower.currentGold += ENEMY_BASE_GOLD_VALUE;
   }
 
@@ -649,9 +658,10 @@ export default class GameStageScene extends Phaser.Scene {
     regenSprite.setData('type', 'regen');
     regenSprite.play('regenAnimation');
     regenSprite.setImmovable(true);
-      this.towerLife += this.regenAmount;
-      if(this.towerLife > TOWER_BASE_HITPOINTS) this.towerLife === TOWER_BASE_HITPOINTS;
-      regenSprite.on('animationcomplete', () => {
+    this.towerLife += this.regenAmount;
+    if (this.towerLife > TOWER_BASE_HITPOINTS)
+      this.towerLife === TOWER_BASE_HITPOINTS;
+    regenSprite.on('animationcomplete', () => {
       regenSprite.destroy();
       this.regenTimer = this.time.addEvent({
         delay: this.regenCooldown,

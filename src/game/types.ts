@@ -12,6 +12,6 @@ export type PowerupType =
   | 'tornado';
 
 export type CoordinateType = {
-  x: number
-  y: number
-}
+  x: number;
+  y: number;
+};

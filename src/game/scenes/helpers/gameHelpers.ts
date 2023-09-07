@@ -1,4 +1,4 @@
-import { CoordinateType } from "../../types";
+import { CoordinateType } from '../../types';
 
 export const getRandomEdgeOfScreen = (scene: Phaser.Scene): CoordinateType => {
   let x: number;
@@ -10,5 +10,5 @@ export const getRandomEdgeOfScreen = (scene: Phaser.Scene): CoordinateType => {
     x = Math.random() * scene.scale.width;
     y = Math.random() < 0.5 ? -50 : scene.scale.height + 50;
   }
-  return {x, y};
-}
+  return { x, y };
+};
