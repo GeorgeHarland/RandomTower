@@ -89,8 +89,12 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
 
     let randomPowerup: PowerupType;
     do {
-      randomPowerup = getArrayRandomElement(Object.keys(PowerupRecord)) as PowerupType;
-    } while ((this.scene as GameStageScene).generatedItems.includes(randomPowerup))
+      randomPowerup = getArrayRandomElement(
+        Object.keys(PowerupRecord),
+      ) as PowerupType;
+    } while (
+      (this.scene as GameStageScene).generatedItems.includes(randomPowerup)
+    );
 
     const itemGrade = PowerupRecord[randomPowerup as PowerupType];
     const modifier = 0.7 + Math.random() * 0.6; // 70-130%

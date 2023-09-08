@@ -372,7 +372,7 @@ export default class GameStageScene extends Phaser.Scene {
         (shopBox as ShopBox).addItem((shopBox as ShopBox).generateRandomItem());
       }
       if (shopBox.getItem != null) {
-        this.generatedItems.push((shopBox.getItem() as Item).powerup)
+        this.generatedItems.push((shopBox.getItem() as Item).powerup);
       }
     });
 
