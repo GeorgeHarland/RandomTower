@@ -2,7 +2,7 @@ import CircleWeapon from '../classes/circleWeapon';
 import Phaser from 'phaser';
 import PlayerTower from '../classes/playerTower';
 import ShopBox from '../classes/shopBox';
-import { KeybindType } from '../types';
+import { KeybindType, PowerupType } from '../types';
 import { generateTextures } from './helpers/textureHelpers';
 import { extractTowerFrames, loadSprites } from './helpers/spriteHelpers';
 import Item from '../classes/item';
@@ -44,6 +44,7 @@ export default class GameStageScene extends Phaser.Scene {
   private weapons: Phaser.Physics.Arcade.Group | undefined;
   private PermanentWeapons: Phaser.Physics.Arcade.Group | undefined;
   private shopBoxes: Phaser.GameObjects.Group | undefined;
+  public generatedItems: PowerupType[] = [];
 
   private towerSprites: Phaser.GameObjects.Image[] = [];
 
@@ -346,6 +347,7 @@ export default class GameStageScene extends Phaser.Scene {
     }
     if (itemBought) {
       this.addPowerup(itemBought);
+      this.generatedItems = [];
       this.shopBoxes?.children.entries.forEach((shopbox) => {
         (shopbox as ShopBox).rerollItem();
       });
@@ -368,6 +370,9 @@ export default class GameStageScene extends Phaser.Scene {
       const shopBox = box as ShopBox;
       if (shopBox.getItem() === null) {
         (shopBox as ShopBox).addItem((shopBox as ShopBox).generateRandomItem());
+      }
+      if (shopBox.getItem != null) {
+        this.generatedItems.push((shopBox.getItem() as Item).powerup)
       }
     });
 

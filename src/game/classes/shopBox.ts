@@ -4,6 +4,7 @@ import { ItemGradeType, KeybindType, PowerupType } from '../types';
 import Player from './playerTower';
 import { getArrayRandomElement } from '../../utils';
 import { PowerupRecord } from '../../constants';
+import GameStageScene from '../scenes/GameStage';
 
 interface ShopBoxConfig {
   scene: Phaser.Scene;
@@ -86,7 +87,11 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
       S: 30,
     };
 
-    const randomPowerup = getArrayRandomElement(Object.keys(PowerupRecord));
+    let randomPowerup: PowerupType;
+    do {
+      randomPowerup = getArrayRandomElement(Object.keys(PowerupRecord)) as PowerupType;
+    } while ((this.scene as GameStageScene).generatedItems.includes(randomPowerup))
+
     const itemGrade = PowerupRecord[randomPowerup as PowerupType];
     const modifier = 0.7 + Math.random() * 0.6; // 70-130%
     const itemCost = Math.round(gradeCost[itemGrade] * modifier);

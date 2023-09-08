@@ -1,8 +1,8 @@
 import Phaser from 'phaser';
-import { ItemGradeType } from '../types';
+import { ItemGradeType, PowerupType } from '../types';
 
 export default class Item extends Phaser.GameObjects.Sprite {
-  public powerup: string;
+  public powerup: PowerupType;
   public cost: number;
   public grade: ItemGradeType;
 
@@ -11,7 +11,7 @@ export default class Item extends Phaser.GameObjects.Sprite {
     x: number,
     y: number,
     key: string,
-    powerup: string,
+    powerup: PowerupType,
     grade: ItemGradeType,
     cost: number,
   ) {
