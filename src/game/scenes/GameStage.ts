@@ -231,7 +231,7 @@ export default class GameStageScene extends Phaser.Scene {
       },
     );
 
-    this.physics.add.collider(this.enemies, this.weapons, (weapon, enemy) => {
+    this.physics.add.collider(this.enemies, this.weapons, (enemy, weapon) => {
       this.enemyWeaponCollision(
         weapon as Phaser.Types.Physics.Arcade.GameObjectWithBody,
         enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody,
@@ -454,6 +454,7 @@ export default class GameStageScene extends Phaser.Scene {
     boss.setData('hitpoints', BOSS_BASE_HITPOINTS);
     boss.setData('id', `enemy-${this.enemyCounter++}`);
     boss.setImmovable(true);
+
     this.enemies?.add(boss);
     if (this.spawnBossTimer) {
       this.spawnBossTimer.destroy();
@@ -571,9 +572,9 @@ export default class GameStageScene extends Phaser.Scene {
   private enemyTowerCollision(
     enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody,
   ) {
-    enemy.destroy();
     if (enemy.getData('type') === 'boss') this.towerLife -= BOSS_BASE_DAMAGE;
     else this.towerLife -= ENEMY_BASE_DAMAGE;
+    enemy.destroy();
   }
 
   private enemyWeaponCollision(
@@ -606,10 +607,10 @@ export default class GameStageScene extends Phaser.Scene {
   }
 
   private enemyDefeated(enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody) {
-    enemy.destroy();
     if (enemy.getData('type') === 'boss')
       this.playerTower.currentGold += BOSS_BASE_GOLD_VALUE;
     else this.playerTower.currentGold += ENEMY_BASE_GOLD_VALUE;
+    enemy.destroy();
   }
 
   private updateArrowTimer() {
