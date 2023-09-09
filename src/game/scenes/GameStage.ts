@@ -671,7 +671,8 @@ export default class GameStageScene extends Phaser.Scene {
     regenSprite.setData('type', 'regen');
     regenSprite.play('regenAnimation');
     regenSprite.setImmovable(true);
-    this.towerLife += this.regenAmount;
+    if (this.towerLife + this.regenAmount >= TOWER_BASE_HITPOINTS) this.towerLife = TOWER_BASE_HITPOINTS; 
+    else this.towerLife += this.regenAmount;
     if (this.towerLife > TOWER_BASE_HITPOINTS)
       this.towerLife === TOWER_BASE_HITPOINTS;
     regenSprite.on('animationcomplete', () => {
