@@ -7,15 +7,17 @@ export const DEV_TEXT_AT_TOP = false;
 // Enemies
 
 export const ENEMY_BASE_DAMAGE = 5;
-export const ENEMY_BASE_RATE = 0.5;
+export const ENEMY_BASE_RATE = 0.4;
+export const ENEMY_RATE_MULTIPLER = 1.015;
 export const ENEMY_BASE_SPEED = 80;
 export const ENEMY_BASE_GOLD_VALUE = 1;
 
-export const BOSS_BASE_DAMAGE = 30;
-export const BOSS_SECONDS_TO_SPAWN = 30;
-export const BOSS_BASE_GOLD_VALUE = 20;
-export const BOSS_BASE_HITPOINTS = 50;
-export const BOSS_SPEED_MULTIPLIER = 0.25;
+export const JUGGERNAUT_BASE_DAMAGE = 30;
+export const JUGGERNAUT_SECONDS_TO_SPAWN = 30;
+export const JUGGERNAUT_SECONDS_TO_SPAWN_SCALE = 0.9;
+export const JUGGERNAUT_BASE_GOLD_VALUE = 15;
+export const JUGGERNAUT_BASE_HITPOINTS = 50;
+export const JUGGERNAUT_SPEED_MULTIPLIER = 0.25;
 
 // Player / Tower
 
@@ -40,7 +42,7 @@ export const CIRCLE_SPEED_INCREASE = 0.35;
 
 export const DARKBLAST_BASE_ANGLE_CHANGE = 45;
 export const DARKBLAST_BASE_COOLDOWN = 1000;
-export const DARKBLAST_LEVELUP_ANGLE_MULTIPLIER = 0.8;
+export const DARKBLAST_LEVELUP_ANGLE_MULTIPLIER = 0.9;
 export const DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER = 0.8;
 
 export const REGEN_BASE_COOLDOWN = 5000;

@@ -10,11 +10,11 @@ import {
   ARROW_BASE_RATE,
   ARROW_BASE_SPEED,
   ARROW_RATE_INCREASE,
-  BOSS_BASE_DAMAGE,
-  BOSS_BASE_GOLD_VALUE,
-  BOSS_BASE_HITPOINTS,
-  BOSS_SECONDS_TO_SPAWN,
-  BOSS_SPEED_MULTIPLIER,
+  JUGGERNAUT_BASE_DAMAGE,
+  JUGGERNAUT_BASE_GOLD_VALUE,
+  JUGGERNAUT_BASE_HITPOINTS,
+  JUGGERNAUT_SECONDS_TO_SPAWN,
+  JUGGERNAUT_SPEED_MULTIPLIER,
   CIRCLE_SPEED_INCREASE,
   DARKBLAST_BASE_ANGLE_CHANGE,
   DARKBLAST_BASE_COOLDOWN,
@@ -24,6 +24,7 @@ import {
   ENEMY_BASE_DAMAGE,
   ENEMY_BASE_GOLD_VALUE,
   ENEMY_BASE_RATE,
+  ENEMY_RATE_MULTIPLER,
   ENEMY_BASE_SPEED,
   REGEN_BASE_COOLDOWN,
   REGEN_BASE_HEAL_AMOUNT,
@@ -33,6 +34,7 @@ import {
   TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER,
   TORNADO_BASE_SHAKE_AMOUNT,
   TOWER_BASE_HITPOINTS,
+  JUGGERNAUT_SECONDS_TO_SPAWN_SCALE,
 } from '../../constants';
 import { getRandomEdgeOfScreen } from './helpers/gameHelpers';
 
@@ -62,8 +64,8 @@ export default class GameStageScene extends Phaser.Scene {
   private timeSlowCooldown: number = TIMESLOW_BASE_COOLDOWN;
 
   private spawnArrowTimer: Phaser.Time.TimerEvent | undefined;
-  private spawnBossTimer: Phaser.Time.TimerEvent | undefined;
-  private weaponBossHitMap = new Map();
+  private spawnJuggernautTimer: Phaser.Time.TimerEvent | undefined;
+  private weaponJuggernautHitMap = new Map();
   private spawnEnemyTimer: Phaser.Time.TimerEvent | undefined;
   private darkBlastTimer: Phaser.Time.TimerEvent | undefined;
   private regenTimer: Phaser.Time.TimerEvent | undefined;
@@ -257,9 +259,9 @@ export default class GameStageScene extends Phaser.Scene {
       loop: true,
     });
 
-    this.spawnBossTimer = this.time.addEvent({
-      delay: 1000 * BOSS_SECONDS_TO_SPAWN,
-      callback: this.spawnBoss,
+    this.spawnJuggernautTimer = this.time.addEvent({
+      delay: 1000 * JUGGERNAUT_SECONDS_TO_SPAWN,
+      callback: this.spawnJuggernaut,
       callbackScope: this,
       loop: true,
     });
@@ -273,13 +275,14 @@ export default class GameStageScene extends Phaser.Scene {
 
     this.time.addEvent({
       delay: 1000,
-      callback: () => (this.enemyRate += 0.01),
+      callback: () => (this.enemyRate *= ENEMY_RATE_MULTIPLER),
       callbackScope: this,
       loop: true,
     });
   }
-
+  
   public update() {
+    console.log(this.enemyRate);
     const cursors = this.input.keyboard?.createCursorKeys();
 
     this.circleWeapons?.children.entries.forEach((circle) => {
@@ -358,11 +361,11 @@ export default class GameStageScene extends Phaser.Scene {
 
     this.enemies?.children.entries.forEach((enemy) => {
       if (this.tower) {
-        if (enemy.getData('type') === 'boss')
+        if (enemy.getData('type') === 'juggernaut')
           this.physics.moveToObject(
             enemy,
             this.tower,
-            this.enemyCurrentSpeed * BOSS_SPEED_MULTIPLIER,
+            this.enemyCurrentSpeed * JUGGERNAUT_SPEED_MULTIPLIER,
           );
         else
           this.physics.moveToObject(enemy, this.tower, this.enemyCurrentSpeed);
@@ -447,21 +450,21 @@ export default class GameStageScene extends Phaser.Scene {
     });
   }
 
-  private spawnBoss() {
+  private spawnJuggernaut() {
     const { x, y } = getRandomEdgeOfScreen(this);
-    const boss = this.physics.add.sprite(x, y, 'bossTexture');
-    boss.setData('type', 'boss');
-    boss.setData('hitpoints', BOSS_BASE_HITPOINTS);
-    boss.setData('id', `enemy-${this.enemyCounter++}`);
-    boss.setImmovable(true);
+    const juggernaut = this.physics.add.sprite(x, y, 'juggernautTexture');
+    juggernaut.setData('type', 'juggernaut');
+    juggernaut.setData('hitpoints', JUGGERNAUT_BASE_HITPOINTS);
+    juggernaut.setData('id', `enemy-${this.enemyCounter++}`);
+    juggernaut.setImmovable(true);
 
-    this.enemies?.add(boss);
-    if (this.spawnBossTimer) {
-      this.spawnBossTimer.destroy();
+    this.enemies?.add(juggernaut);
+    if (this.spawnJuggernautTimer) {
+      this.spawnJuggernautTimer.destroy();
     }
-    this.spawnBossTimer = this.time.addEvent({
-      delay: 1000 * BOSS_SECONDS_TO_SPAWN,
-      callback: this.spawnBoss,
+    this.spawnJuggernautTimer = this.time.addEvent({
+      delay: 1000 * JUGGERNAUT_SECONDS_TO_SPAWN * JUGGERNAUT_SECONDS_TO_SPAWN_SCALE,
+      callback: this.spawnJuggernaut,
       callbackScope: this,
       loop: true,
     });
@@ -572,7 +575,7 @@ export default class GameStageScene extends Phaser.Scene {
   private enemyTowerCollision(
     enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody,
   ) {
-    if (enemy.getData('type') === 'boss') this.towerLife -= BOSS_BASE_DAMAGE;
+    if (enemy.getData('type') === 'juggernaut') this.towerLife -= JUGGERNAUT_BASE_DAMAGE;
     else this.towerLife -= ENEMY_BASE_DAMAGE;
     enemy.destroy();
   }
@@ -585,16 +588,16 @@ export default class GameStageScene extends Phaser.Scene {
     const currentTime = Date.now();
     const hitCooldown = 200; // milliseconds
     const weaponId = weapon.getData('id');
-    const bossId = enemy.getData('id');
+    const juggernautId = enemy.getData('id');
 
-    const compositeKey = `${weaponId}-${bossId}`;
-    const lastHitTime = this.weaponBossHitMap.get(compositeKey) || 0;
+    const compositeKey = `${weaponId}-${juggernautId}`;
+    const lastHitTime = this.weaponJuggernautHitMap.get(compositeKey) || 0;
     if (currentTime - lastHitTime < hitCooldown) {
       return;
     }
-    this.weaponBossHitMap.set(compositeKey, currentTime);
+    this.weaponJuggernautHitMap.set(compositeKey, currentTime);
 
-    if (enemy.getData('type') === 'boss' && enemy.getData('hitpoints') > 0) {
+    if (enemy.getData('type') === 'juggernaut' && enemy.getData('hitpoints') > 0) {
       enemy.setData('hitpoints', enemy.getData('hitpoints') - 5);
       console.log(enemy.getData('hitpoints'));
     } else {
@@ -607,8 +610,8 @@ export default class GameStageScene extends Phaser.Scene {
   }
 
   private enemyDefeated(enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody) {
-    if (enemy.getData('type') === 'boss')
-      this.playerTower.currentGold += BOSS_BASE_GOLD_VALUE;
+    if (enemy.getData('type') === 'juggernaut')
+      this.playerTower.currentGold += JUGGERNAUT_BASE_GOLD_VALUE;
     else this.playerTower.currentGold += ENEMY_BASE_GOLD_VALUE;
     enemy.destroy();
   }
