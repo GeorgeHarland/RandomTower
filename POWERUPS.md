@@ -17,6 +17,11 @@ Powerups are rated as D,C,B,A, or S. The better grade, the more expensive the po
 - Grade: B
 - Fires projectiles from the tower in a clockwise direction. Leveling up makes the cooldown and angle difference smaller.
 
+### FireBlast
+
+- Grade: B
+- Fires projectiles from the tower in a counter-clockwise direction. Leveling up makes the cooldown and angle difference smaller.
+
 ### Regen
 
 - Grade: D

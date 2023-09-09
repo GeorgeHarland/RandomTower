@@ -23,6 +23,7 @@ export const loadSprites = (scene: Phaser.Scene): void => {
   scene.load.image('arrowRate', 'sprites/powerupIcons/arrow-scope.png');
   scene.load.image('circleSpeed', 'sprites/powerupIcons/magic-swirl.png');
   scene.load.image('darkBlast', 'sprites/powerupIcons/foamy-disc.png');
+  scene.load.image('fireBlast', 'sprites/powerupIcons/flaming-sheet.png');
   scene.load.image('regen', 'sprites/powerupIcons/nested-hearts.png');
   scene.load.image('timeSlow', 'sprites/powerupIcons/embrassed-energy.png');
   scene.load.image('tornado', 'sprites/powerupIcons/tornado.png');
@@ -38,6 +39,13 @@ export const loadSprites = (scene: Phaser.Scene): void => {
     scene.load.image(
       `darkBlastSprite${i}`,
       `sprites/spellEffects/dark/6/1_${i - 1}.png`,
+    );
+  }
+
+  for (let i = 1; i <= 15; i++) {
+    scene.load.image(
+      `fireBlastSprite${i}`,
+      `sprites/spellEffects/fire/1/1_${i - 1}.png`,
     );
   }
 };

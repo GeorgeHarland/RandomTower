@@ -19,6 +19,10 @@ import {
   DARKBLAST_BASE_COOLDOWN,
   DARKBLAST_LEVELUP_ANGLE_MULTIPLIER,
   DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER,
+  FIREBLAST_BASE_ANGLE_CHANGE,
+  FIREBLAST_BASE_COOLDOWN,
+  FIREBLAST_LEVELUP_ANGLE_MULTIPLIER,
+  FIREBLAST_LEVELUP_COOLDOWN_MULTIPLIER,
   DEV_TEXT_AT_TOP,
   ENEMY_BASE_DAMAGE,
   ENEMY_BASE_GOLD_VALUE,
@@ -55,13 +59,16 @@ export default class GameStageScene extends Phaser.Scene {
   private towerLifeText: Phaser.GameObjects.Text | undefined;
   private goldText: Phaser.GameObjects.Text | undefined;
   private enemyRate: number = ENEMY_BASE_RATE;
-  private juggernautRate: number = JUGGERNAUT_BASE_RATE
+  private juggernautRate: number = JUGGERNAUT_BASE_RATE;
   private enemyRateText: Phaser.GameObjects.Text | undefined;
   private arrowRate: number = ARROW_BASE_RATE;
   private arrowRateText: Phaser.GameObjects.Text | undefined;
   private darkBlastCooldown: number = DARKBLAST_BASE_COOLDOWN;
   private darkBlastDirection: number = 0;
   private darkBlastAngleChange: number = DARKBLAST_BASE_ANGLE_CHANGE;
+  private fireBlastCooldown: number = FIREBLAST_BASE_COOLDOWN;
+  private fireBlastDirection: number = 180;
+  private fireBlastAngleChange: number = FIREBLAST_BASE_ANGLE_CHANGE;
   private regenCooldown: number = REGEN_BASE_COOLDOWN;
   private timeSlowCooldown: number = TIMESLOW_BASE_COOLDOWN;
 
@@ -70,6 +77,7 @@ export default class GameStageScene extends Phaser.Scene {
   private weaponJuggernautHitMap = new Map();
   private spawnEnemyTimer: Phaser.Time.TimerEvent | undefined;
   private darkBlastTimer: Phaser.Time.TimerEvent | undefined;
+  private fireBlastTimer: Phaser.Time.TimerEvent | undefined;
   private regenTimer: Phaser.Time.TimerEvent | undefined;
   private regenAmount: number = REGEN_BASE_HEAL_AMOUNT;
   private timeSlowTimer: Phaser.Time.TimerEvent | undefined;
@@ -277,25 +285,23 @@ export default class GameStageScene extends Phaser.Scene {
 
     this.time.addEvent({
       delay: 1000,
-      callback: () => (this.updateRates()),
+      callback: () => this.updateRates(),
       callbackScope: this,
       loop: true,
     });
   }
-  
+
   public update() {
-    console.log(this.enemyRate)
+    console.log(this.enemyRate);
     const cursors = this.input.keyboard?.createCursorKeys();
 
     this.circleWeapons?.children.entries.forEach((circle) => {
       (circle as CircleWeapon)?.moveCircle(cursors);
     });
 
-    this.weapons?.children.entries.forEach((weapon) => {
-      if (weapon.getData('type') === 'darkBlast') {
-        // (weapon as Phaser.Physics.Arcade.Sprite).x += 1;
-      }
-    });
+    // this.weapons?.children.entries.forEach((weapon) => {
+    //   if (weapon.getData('type') === 'darkBlast') { }
+    // });
 
     this.PermanentWeapons?.children.entries.forEach((weapon) => {
       if (weapon.getData('type') === 'tornado') {
@@ -426,6 +432,14 @@ export default class GameStageScene extends Phaser.Scene {
       repeat: -1,
     });
     this.anims.create({
+      key: 'fireBlastAnimation',
+      frames: Array.from({ length: 15 }, (_, i) => ({
+        key: `fireBlastSprite${i}`,
+      })),
+      frameRate: 14,
+      repeat: -1,
+    });
+    this.anims.create({
       key: 'regenAnimation',
       frames: this.anims.generateFrameNumbers('healEffectSheet', {
         start: 0,
@@ -531,6 +545,15 @@ export default class GameStageScene extends Phaser.Scene {
         }
         this.spawnDarkBlast();
         break;
+      case 'fireBlast':
+        if (this.fireBlastTimer) {
+          this.fireBlastCooldown =
+            this.fireBlastCooldown * FIREBLAST_LEVELUP_COOLDOWN_MULTIPLIER;
+          this.fireBlastAngleChange =
+            this.fireBlastAngleChange * FIREBLAST_LEVELUP_ANGLE_MULTIPLIER;
+        }
+        this.spawnFireBlast();
+        break;
       case 'regen':
         if (this.regenTimer) {
           this.regenCooldown *= REGEN_LEVELUP_COOLDOWN_MULTIPLIER;
@@ -578,7 +601,8 @@ export default class GameStageScene extends Phaser.Scene {
   private enemyTowerCollision(
     enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody,
   ) {
-    if (enemy.getData('type') === 'juggernaut') this.towerLife -= JUGGERNAUT_BASE_DAMAGE;
+    if (enemy.getData('type') === 'juggernaut')
+      this.towerLife -= JUGGERNAUT_BASE_DAMAGE;
     else this.towerLife -= ENEMY_BASE_DAMAGE;
     enemy.destroy();
   }
@@ -600,7 +624,10 @@ export default class GameStageScene extends Phaser.Scene {
     }
     this.weaponJuggernautHitMap.set(compositeKey, currentTime);
 
-    if (enemy.getData('type') === 'juggernaut' && enemy.getData('hitpoints') > 0) {
+    if (
+      enemy.getData('type') === 'juggernaut' &&
+      enemy.getData('hitpoints') > 0
+    ) {
       enemy.setData('hitpoints', enemy.getData('hitpoints') - 5);
     } else {
       this.enemyDefeated(enemy);
@@ -642,10 +669,7 @@ export default class GameStageScene extends Phaser.Scene {
     darkBlastSprite.setData('id', `weapon-${this.weaponCounter++}`);
     darkBlastSprite.play('darkBlastAnimation');
 
-    // Delay the velocity setting by 1 ms
     this.time.delayedCall(1, () => {
-      // let angle = Phaser.Math.Between(0, 360);
-
       this.physics.velocityFromAngle(
         this.darkBlastDirection,
         200,
@@ -666,6 +690,39 @@ export default class GameStageScene extends Phaser.Scene {
     });
   }
 
+  private spawnFireBlast() {
+    if (this.fireBlastTimer) {
+      this.fireBlastTimer.destroy();
+    }
+    const x: number = this.scale.width / 2;
+    const y: number = this.scale.height / 2;
+    const fireBlastSprite = this.physics.add.sprite(x, y, 'fireBlastSprite1');
+    fireBlastSprite.scale = 2;
+    fireBlastSprite.setData('type', 'fireBlast');
+    fireBlastSprite.setData('id', `weapon-${this.weaponCounter++}`);
+    fireBlastSprite.play('fireBlastAnimation');
+
+    this.time.delayedCall(1, () => {
+      this.physics.velocityFromAngle(
+        this.fireBlastDirection,
+        200,
+        fireBlastSprite.body.velocity,
+      );
+      fireBlastSprite.angle = this.fireBlastDirection;
+      if (this.fireBlastDirection + this.fireBlastAngleChange > 0)
+        this.fireBlastDirection -= this.fireBlastAngleChange;
+      else this.fireBlastDirection = 360;
+    });
+
+    this.weapons?.add(fireBlastSprite);
+    this.fireBlastTimer = this.time.addEvent({
+      delay: this.fireBlastCooldown,
+      callback: this.spawnFireBlast,
+      callbackScope: this,
+      loop: false,
+    });
+  }
+
   private spawnRegen() {
     if (this.regenTimer) {
       this.regenTimer.destroy();
@@ -677,7 +734,8 @@ export default class GameStageScene extends Phaser.Scene {
     regenSprite.setData('type', 'regen');
     regenSprite.play('regenAnimation');
     regenSprite.setImmovable(true);
-    if (this.towerLife + this.regenAmount >= TOWER_BASE_HITPOINTS) this.towerLife = TOWER_BASE_HITPOINTS; 
+    if (this.towerLife + this.regenAmount >= TOWER_BASE_HITPOINTS)
+      this.towerLife = TOWER_BASE_HITPOINTS;
     else this.towerLife += this.regenAmount;
     if (this.towerLife > TOWER_BASE_HITPOINTS)
       this.towerLife === TOWER_BASE_HITPOINTS;
@@ -729,7 +787,7 @@ export default class GameStageScene extends Phaser.Scene {
   };
 
   private updateRates = () => {
-    this.enemyRate *= ENEMY_RATE_MULTIPLER
-    this.juggernautRate *= JUGGERNAUT_RATE_MULTIPLIER
-  }
+    this.enemyRate *= ENEMY_RATE_MULTIPLER;
+    this.juggernautRate *= JUGGERNAUT_RATE_MULTIPLIER;
+  };
 }

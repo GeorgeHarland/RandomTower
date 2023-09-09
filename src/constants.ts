@@ -29,6 +29,7 @@ export const PowerupRecord: Record<PowerupType, ItemGradeType> = {
   arrowRate: 'C',
   circleSpeed: 'D',
   darkBlast: 'B',
+  fireBlast: 'B',
   regen: 'D',
   timeSlow: 'S',
   tornado: 'C',
@@ -44,6 +45,11 @@ export const DARKBLAST_BASE_ANGLE_CHANGE = 45;
 export const DARKBLAST_BASE_COOLDOWN = 1000;
 export const DARKBLAST_LEVELUP_ANGLE_MULTIPLIER = 0.9;
 export const DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER = 0.8;
+
+export const FIREBLAST_BASE_ANGLE_CHANGE = 45;
+export const FIREBLAST_BASE_COOLDOWN = 1000;
+export const FIREBLAST_LEVELUP_ANGLE_MULTIPLIER = 0.9;
+export const FIREBLAST_LEVELUP_COOLDOWN_MULTIPLIER = 0.8;
 
 export const REGEN_BASE_COOLDOWN = 5000;
 export const REGEN_BASE_HEAL_AMOUNT = 5;

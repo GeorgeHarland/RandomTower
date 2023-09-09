@@ -99,7 +99,9 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
 
     const itemGrade = PowerupRecord[randomPowerup as PowerupType];
     const modifier = 0.7 + Math.random() * 0.6; // 70-130%
-    const itemCost = Math.round(gradeCost[itemGrade] * modifier) + (this.scene as GameStageScene).additionalPrice;
+    const itemCost =
+      Math.round(gradeCost[itemGrade] * modifier) +
+      (this.scene as GameStageScene).additionalPrice;
 
     return new Item(
       this.scene,
