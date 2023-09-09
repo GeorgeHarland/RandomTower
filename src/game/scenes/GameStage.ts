@@ -13,7 +13,6 @@ import {
   JUGGERNAUT_BASE_DAMAGE,
   JUGGERNAUT_BASE_GOLD_VALUE,
   JUGGERNAUT_BASE_HITPOINTS,
-  JUGGERNAUT_SECONDS_TO_SPAWN,
   JUGGERNAUT_SPEED_MULTIPLIER,
   CIRCLE_SPEED_INCREASE,
   DARKBLAST_BASE_ANGLE_CHANGE,
@@ -34,7 +33,8 @@ import {
   TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER,
   TORNADO_BASE_SHAKE_AMOUNT,
   TOWER_BASE_HITPOINTS,
-  JUGGERNAUT_SECONDS_TO_SPAWN_SCALE,
+  JUGGERNAUT_BASE_RATE,
+  JUGGERNAUT_RATE_MULTIPLIER,
 } from '../../constants';
 import { getRandomEdgeOfScreen } from './helpers/gameHelpers';
 
@@ -47,6 +47,7 @@ export default class GameStageScene extends Phaser.Scene {
   private PermanentWeapons: Phaser.Physics.Arcade.Group | undefined;
   private shopBoxes: Phaser.GameObjects.Group | undefined;
   public generatedItems: PowerupType[] = [];
+  public additionalPrice: number = 0;
 
   private towerSprites: Phaser.GameObjects.Image[] = [];
 
@@ -54,6 +55,7 @@ export default class GameStageScene extends Phaser.Scene {
   private towerLifeText: Phaser.GameObjects.Text | undefined;
   private goldText: Phaser.GameObjects.Text | undefined;
   private enemyRate: number = ENEMY_BASE_RATE;
+  private juggernautRate: number = JUGGERNAUT_BASE_RATE
   private enemyRateText: Phaser.GameObjects.Text | undefined;
   private arrowRate: number = ARROW_BASE_RATE;
   private arrowRateText: Phaser.GameObjects.Text | undefined;
@@ -260,7 +262,7 @@ export default class GameStageScene extends Phaser.Scene {
     });
 
     this.spawnJuggernautTimer = this.time.addEvent({
-      delay: 1000 * JUGGERNAUT_SECONDS_TO_SPAWN,
+      delay: 1000 / this.juggernautRate,
       callback: this.spawnJuggernaut,
       callbackScope: this,
       loop: true,
@@ -275,14 +277,14 @@ export default class GameStageScene extends Phaser.Scene {
 
     this.time.addEvent({
       delay: 1000,
-      callback: () => (this.enemyRate *= ENEMY_RATE_MULTIPLER),
+      callback: () => (this.updateRates()),
       callbackScope: this,
       loop: true,
     });
   }
   
   public update() {
-    console.log(this.enemyRate);
+    console.log(this.enemyRate)
     const cursors = this.input.keyboard?.createCursorKeys();
 
     this.circleWeapons?.children.entries.forEach((circle) => {
@@ -334,6 +336,7 @@ export default class GameStageScene extends Phaser.Scene {
         Phaser.Input.Keyboard.JustDown(this.keyK as Phaser.Input.Keyboard.Key)
       ) {
         this.enemyRate += 1;
+        this.juggernautRate += 1;
       }
       if (
         Phaser.Input.Keyboard.JustDown(this.keyQ as Phaser.Input.Keyboard.Key)
@@ -463,7 +466,7 @@ export default class GameStageScene extends Phaser.Scene {
       this.spawnJuggernautTimer.destroy();
     }
     this.spawnJuggernautTimer = this.time.addEvent({
-      delay: 1000 * JUGGERNAUT_SECONDS_TO_SPAWN * JUGGERNAUT_SECONDS_TO_SPAWN_SCALE,
+      delay: 1000 / this.juggernautRate,
       callback: this.spawnJuggernaut,
       callbackScope: this,
       loop: true,
@@ -599,7 +602,6 @@ export default class GameStageScene extends Phaser.Scene {
 
     if (enemy.getData('type') === 'juggernaut' && enemy.getData('hitpoints') > 0) {
       enemy.setData('hitpoints', enemy.getData('hitpoints') - 5);
-      console.log(enemy.getData('hitpoints'));
     } else {
       this.enemyDefeated(enemy);
     }
@@ -725,4 +727,9 @@ export default class GameStageScene extends Phaser.Scene {
     tornadoSprite.play('tornadoAnimation');
     tornadoSprite.setImmovable(true);
   };
+
+  private updateRates = () => {
+    this.enemyRate *= ENEMY_RATE_MULTIPLER
+    this.juggernautRate *= JUGGERNAUT_RATE_MULTIPLIER
+  }
 }

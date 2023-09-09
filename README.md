@@ -2,15 +2,13 @@
 
 A small hobby. Making a tower survival game with TypeScript, Preact, and Phaser.JS.
 
-I'm not following any designs, but I'm doing small refactors each time I work on it.
+## Description
 
-## Current State
-
-Enemies spawn in increasing numbers
+Enemies spawn in increasing numbers. Slower enemies that can take more hits spawn after a while.
 
 Enemies are destroyed by the player's circle weapon or the tower's automatic arrow or powerup attacks.
 
-There are currently 6 powerups in the game. Powerup details are in POWERUPS.md.
+There are currently 6 powerups in the game. Press Q, W, E to try them out!
 
 ## Controls
 
