@@ -80,15 +80,15 @@ export default class GameStageScene extends Phaser.Scene {
   private keyU: Phaser.Input.Keyboard.Key | null = null;
   private keyK: Phaser.Input.Keyboard.Key | null = null;
 
-  constructor() {
+  public constructor() {
     super({ key: 'GameStageScene' });
   }
 
-  preload() {
+  public preload() {
     loadSprites(this);
   }
 
-  create() {
+  public create() {
     generateTextures(this.make);
     this.towerSprites = extractTowerFrames(this);
 
@@ -214,36 +214,39 @@ export default class GameStageScene extends Phaser.Scene {
       );
     }
 
-    this.physics.add.collider(this.enemies, this.tower, (tower, enemy) => {
-      this.enemyTowerCollision(tower, enemy);
+    this.physics.add.collider(this.enemies, this.tower, (_, enemy) => {
+      this.enemyTowerCollision(
+        enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody,
+      );
     });
     this.physics.add.collider(
       this.enemies,
       this.circleWeapons,
       (enemy, circle) => {
-        this.enemyWeaponCollision({
-          weapon: circle,
-          enemy: enemy,
-          weaponDestroyed: false,
-        });
+        this.enemyWeaponCollision(
+          circle as Phaser.Types.Physics.Arcade.GameObjectWithBody,
+          enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody,
+          false,
+        );
       },
     );
+
     this.physics.add.collider(this.enemies, this.weapons, (weapon, enemy) => {
-      this.enemyWeaponCollision({
-        weapon: weapon,
-        enemy: enemy,
-        weaponDestroyed: true,
-      });
+      this.enemyWeaponCollision(
+        weapon as Phaser.Types.Physics.Arcade.GameObjectWithBody,
+        enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody,
+        true,
+      );
     });
     this.physics.add.collider(
       this.enemies,
       this.PermanentWeapons,
       (enemy, weapon) => {
-        this.enemyWeaponCollision({
-          weapon: weapon,
-          enemy: enemy,
-          weaponDestroyed: false,
-        });
+        this.enemyWeaponCollision(
+          weapon as Phaser.Types.Physics.Arcade.GameObjectWithBody,
+          enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody,
+          false,
+        );
       },
     );
 
@@ -276,7 +279,7 @@ export default class GameStageScene extends Phaser.Scene {
     });
   }
 
-  update() {
+  public update() {
     const cursors = this.input.keyboard?.createCursorKeys();
 
     this.circleWeapons?.children.entries.forEach((circle) => {
@@ -313,7 +316,7 @@ export default class GameStageScene extends Phaser.Scene {
     const shopBoxKeybinds: { [id: string]: ShopBox } = {};
     this.shopBoxes?.children.entries.forEach(
       (gameObject: Phaser.GameObjects.GameObject) => {
-        let shopBox = gameObject as ShopBox;
+        const shopBox = gameObject as ShopBox;
         shopBoxKeybinds[shopBox.getKeybind()] = shopBox;
       },
     );
@@ -397,7 +400,7 @@ export default class GameStageScene extends Phaser.Scene {
     }
   }
 
-  setupKeybindings() {
+  private setupKeybindings() {
     if (this.input.keyboard) {
       this.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
       this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
@@ -407,7 +410,7 @@ export default class GameStageScene extends Phaser.Scene {
     }
   }
 
-  setupAnimations() {
+  private setupAnimations() {
     this.anims.create({
       key: 'darkBlastAnimation',
       frames: Array.from({ length: 15 }, (_, i) => ({
@@ -444,7 +447,7 @@ export default class GameStageScene extends Phaser.Scene {
     });
   }
 
-  spawnBoss() {
+  private spawnBoss() {
     const { x, y } = getRandomEdgeOfScreen(this);
     const boss = this.physics.add.sprite(x, y, 'bossTexture');
     boss.setData('type', 'boss');
@@ -463,7 +466,7 @@ export default class GameStageScene extends Phaser.Scene {
     });
   }
 
-  spawnEnemy() {
+  private spawnEnemy() {
     const { x, y } = getRandomEdgeOfScreen(this);
     const enemy = this.physics.add.sprite(x, y, 'enemyTexture');
     enemy.setImmovable(true);
@@ -480,7 +483,7 @@ export default class GameStageScene extends Phaser.Scene {
     });
   }
 
-  spawnArrow() {
+  private spawnArrow() {
     if (this.tower) {
       const x = this.tower.x;
       const y = this.tower.y;
@@ -490,11 +493,11 @@ export default class GameStageScene extends Phaser.Scene {
 
       this.weapons?.add(arrow);
 
-      let closestEnemy = this.getClosestEnemy(this.tower);
+      const closestEnemy = this.getClosestEnemy(this.tower);
       if (closestEnemy) {
         this.physics.moveToObject(arrow, closestEnemy, ARROW_BASE_SPEED);
       } else {
-        let angle = Phaser.Math.Between(0, 360);
+        const angle = Phaser.Math.Between(0, 360);
         this.physics.velocityFromAngle(angle, 200, arrow.body.velocity);
       }
 
@@ -502,7 +505,7 @@ export default class GameStageScene extends Phaser.Scene {
     }
   }
 
-  addPowerup(item: Item) {
+  private addPowerup(item: Item) {
     switch (item.powerup) {
       case 'arrowRate':
         this.arrowRate += item.cost * ARROW_RATE_INCREASE;
@@ -542,14 +545,14 @@ export default class GameStageScene extends Phaser.Scene {
     }
   }
 
-  getClosestEnemy(origin: Phaser.Physics.Arcade.Sprite) {
+  private getClosestEnemy(origin: Phaser.Physics.Arcade.Sprite) {
     let closestEnemy = null;
     let closestDistance = Number.MAX_VALUE;
 
     this.enemies?.children.entries.forEach(
       (enemy: Phaser.GameObjects.GameObject) => {
         const enemySprite = enemy as Phaser.Physics.Arcade.Sprite;
-        let distance = Phaser.Math.Distance.Between(
+        const distance = Phaser.Math.Distance.Between(
           origin.x,
           origin.y,
           enemySprite.x,
@@ -565,14 +568,19 @@ export default class GameStageScene extends Phaser.Scene {
     return closestEnemy;
   }
 
-  // @ts-ignore
-  enemyTowerCollision(tower: any, enemy: any) {
+  private enemyTowerCollision(
+    enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody,
+  ) {
     enemy.destroy();
     if (enemy.getData('type') === 'boss') this.towerLife -= BOSS_BASE_DAMAGE;
     else this.towerLife -= ENEMY_BASE_DAMAGE;
   }
 
-  enemyWeaponCollision({ weapon, enemy, weaponDestroyed = false }: any) {
+  private enemyWeaponCollision(
+    weapon: Phaser.Types.Physics.Arcade.GameObjectWithBody,
+    enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody,
+    weaponDestroyed = false,
+  ) {
     const currentTime = Date.now();
     const hitCooldown = 200; // milliseconds
     const weaponId = weapon.getData('id');
@@ -597,14 +605,14 @@ export default class GameStageScene extends Phaser.Scene {
     }
   }
 
-  enemyDefeated(enemy: any) {
+  private enemyDefeated(enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody) {
     enemy.destroy();
     if (enemy.getData('type') === 'boss')
       this.playerTower.currentGold += BOSS_BASE_GOLD_VALUE;
     else this.playerTower.currentGold += ENEMY_BASE_GOLD_VALUE;
   }
 
-  updateArrowTimer() {
+  private updateArrowTimer() {
     if (this.spawnArrowTimer) {
       this.spawnArrowTimer.destroy();
     }
@@ -616,12 +624,12 @@ export default class GameStageScene extends Phaser.Scene {
     });
   }
 
-  spawnDarkBlast() {
+  private spawnDarkBlast() {
     if (this.darkBlastTimer) {
       this.darkBlastTimer.destroy();
     }
-    let x: number = this.scale.width / 2;
-    let y: number = this.scale.height / 2;
+    const x: number = this.scale.width / 2;
+    const y: number = this.scale.height / 2;
     const darkBlastSprite = this.physics.add.sprite(x, y, 'darkBlastSprite1');
     darkBlastSprite.scale = 2;
     darkBlastSprite.setData('type', 'darkBlast');
@@ -652,12 +660,12 @@ export default class GameStageScene extends Phaser.Scene {
     });
   }
 
-  spawnRegen() {
+  private spawnRegen() {
     if (this.regenTimer) {
       this.regenTimer.destroy();
     }
-    let x: number = this.scale.width / 2;
-    let y: number = this.scale.height / 2.3;
+    const x: number = this.scale.width / 2;
+    const y: number = this.scale.height / 2.3;
     const regenSprite = this.physics.add.sprite(x, y, 'regen');
     regenSprite.scale = 1.2;
     regenSprite.setData('type', 'regen');
@@ -677,12 +685,12 @@ export default class GameStageScene extends Phaser.Scene {
     });
   }
 
-  spawnTimeSlow() {
+  private spawnTimeSlow() {
     if (this.timeSlowTimer) {
       this.timeSlowTimer.destroy();
     }
-    let x: number = this.scale.width / 2;
-    let y: number = this.scale.height / 2;
+    const x: number = this.scale.width / 2;
+    const y: number = this.scale.height / 2;
     const timeSlowSprite = this.physics.add.sprite(x, y, 'timeSlowTexture');
     timeSlowSprite.scale = 0.5;
     timeSlowSprite.setData('type', 'timeSlow');
@@ -701,9 +709,9 @@ export default class GameStageScene extends Phaser.Scene {
     });
   }
 
-  spawnTornado = () => {
-    let x: number = this.scale.width * Math.random();
-    let y: number = this.scale.height * Math.random();
+  private spawnTornado = () => {
+    const x: number = this.scale.width * Math.random();
+    const y: number = this.scale.height * Math.random();
     const tornadoSprite = this.physics.add.sprite(x, y, 'tornadoRepeat1');
     tornadoSprite.scale = 0.2;
     tornadoSprite.setData('type', 'tornado');

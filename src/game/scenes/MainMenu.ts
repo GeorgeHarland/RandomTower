@@ -1,16 +1,16 @@
 import GameStageScene from './GameStage';
 
 export default class MainMenuScene extends Phaser.Scene {
-  constructor() {
+  public constructor() {
     super({ key: 'MainMenuScene' });
   }
 
-  preload() {
+  public preload() {
     this.load.audio('backgroundMusic', 'audio/sandsOfTime.mp3');
     this.load.image('background', 'sprites/background.png');
   }
 
-  create() {
+  public create() {
     const music = this.sound.add('backgroundMusic', { loop: true });
     music.play();
 
@@ -49,13 +49,13 @@ export default class MainMenuScene extends Phaser.Scene {
     );
   }
 
-  startGame() {
+  private startGame() {
     !this.scene.get('GameStageScene') &&
       this.scene.add('GameStageScene', GameStageScene);
     this.scene.start('GameStageScene');
   }
 
-  setupKeybindings() {
+  private setupKeybindings() {
     const enterKey = this.input.keyboard?.addKey(
       Phaser.Input.Keyboard.KeyCodes.ENTER,
     );

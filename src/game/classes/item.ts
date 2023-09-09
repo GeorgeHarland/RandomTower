@@ -6,7 +6,7 @@ export default class Item extends Phaser.GameObjects.Sprite {
   public cost: number;
   public grade: ItemGradeType;
 
-  constructor(
+  public constructor(
     scene: Phaser.Scene,
     x: number,
     y: number,

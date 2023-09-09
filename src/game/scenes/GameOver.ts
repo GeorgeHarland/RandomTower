@@ -1,9 +1,9 @@
 export default class GameOverScene extends Phaser.Scene {
-  constructor() {
+  public constructor() {
     super({ key: 'GameOverScene' });
   }
 
-  create() {
+  public create() {
     this.add
       .text(400, 300, 'Game Over', { fontSize: '32px', color: '#ff0000' })
       .setOrigin(0.5);

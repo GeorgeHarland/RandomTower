@@ -1,5 +1,3 @@
-declare var require: any; // to allow require.context
-
 export const loadSprites = (scene: Phaser.Scene): void => {
   scene.load.spritesheet('towerSpriteSheet', 'sprites/tower.png', {
     frameWidth: 64,

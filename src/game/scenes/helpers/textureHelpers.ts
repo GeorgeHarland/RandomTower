@@ -1,52 +1,52 @@
 export const generateTextures = (
   objectCreator: Phaser.GameObjects.GameObjectCreator,
 ) => {
-  let bgGraphic = objectCreator.graphics();
+  const bgGraphic = objectCreator.graphics();
   bgGraphic.fillStyle(0x448811, 1);
   bgGraphic.fillRect(0, 0, 200, 200);
   // random grass texture
   for (let i = 0; i < 1000; i++) {
-    let x = Math.random() * 200;
-    let y = Math.random() * 200;
-    let w = 1 + Math.random() * 2;
-    let h = 1 + Math.random() * 2;
+    const x = Math.random() * 200;
+    const y = Math.random() * 200;
+    const w = 1 + Math.random() * 2;
+    const h = 1 + Math.random() * 2;
     bgGraphic.fillStyle(0x226600, 1);
     bgGraphic.fillRect(x, y, w, h);
   }
   bgGraphic.generateTexture('bgTexture', 200, 200);
 
-  let towerGraphic = objectCreator.graphics();
+  const towerGraphic = objectCreator.graphics();
   towerGraphic.fillStyle(0x000000, 1);
   towerGraphic.fillRect(0, 0, 40, 40);
   towerGraphic.fillStyle(0x888888, 1);
   towerGraphic.fillRect(2, 2, 36, 36);
   towerGraphic.generateTexture('towerTexture', 40, 40);
 
-  let circleGraphic = objectCreator.graphics();
+  const circleGraphic = objectCreator.graphics();
   circleGraphic.fillStyle(0xffff00, 1);
   circleGraphic.fillCircle(15, 15, 15);
   circleGraphic.generateTexture('circleTexture', 30, 30);
 
-  let enemyGraphic = objectCreator.graphics();
+  const enemyGraphic = objectCreator.graphics();
   enemyGraphic.fillStyle(0x000000, 1);
   enemyGraphic.fillRect(0, 0, 10, 10);
   enemyGraphic.fillStyle(0xdd3333, 1);
   enemyGraphic.fillRect(1, 1, 8, 8);
   enemyGraphic.generateTexture('enemyTexture', 10, 10);
 
-  let bossGraphic = objectCreator.graphics();
+  const bossGraphic = objectCreator.graphics();
   bossGraphic.fillStyle(0x000000, 1);
   bossGraphic.fillRect(0, 0, 20, 20);
   bossGraphic.fillStyle(0xdd33dd, 1);
   bossGraphic.fillRect(1, 1, 18, 18);
   bossGraphic.generateTexture('bossTexture', 20, 20);
 
-  let arrowGraphic = objectCreator.graphics();
+  const arrowGraphic = objectCreator.graphics();
   arrowGraphic.fillStyle(0x000000, 1);
   arrowGraphic.fillRect(0, 0, 12, 3);
   arrowGraphic.generateTexture('arrowTexture', 12, 3);
 
-  let shopBoxTexture = objectCreator.graphics();
+  const shopBoxTexture = objectCreator.graphics();
   shopBoxTexture.fillStyle(0x000000, 1);
   shopBoxTexture.fillRect(0, 0, 80, 80);
   shopBoxTexture.fillStyle(0xa52a2a, 1);

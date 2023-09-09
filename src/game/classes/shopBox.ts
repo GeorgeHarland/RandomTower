@@ -21,7 +21,7 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
   private keybindText: Phaser.GameObjects.Text;
   private priceText: Phaser.GameObjects.Text | null = null;
 
-  constructor({ scene, x, y, key, keybind }: ShopBoxConfig) {
+  public constructor({ scene, x, y, key, keybind }: ShopBoxConfig) {
     super(scene, x, y, key);
     this.keybind = keybind;
     scene.add.existing(this);

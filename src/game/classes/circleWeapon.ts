@@ -10,7 +10,7 @@ export default class CircleWeapon extends Phaser.Physics.Arcade.Sprite {
   private circleNumber: number = 0;
   public circleSpeed: number = 1;
 
-  constructor({ scene, x, y, texture, circleNumber }: Props) {
+  public constructor({ scene, x, y, texture, circleNumber }: Props) {
     super(scene, x, y, texture);
     scene.physics.world.enable(this);
     scene.add.existing(this);
@@ -18,7 +18,7 @@ export default class CircleWeapon extends Phaser.Physics.Arcade.Sprite {
     this.circleNumber = circleNumber;
   }
 
-  moveCircle = (
+  public moveCircle = (
     cursors: Phaser.Types.Input.Keyboard.CursorKeys | undefined,
   ) => {
     if (cursors?.up?.isDown) {
@@ -41,16 +41,16 @@ export default class CircleWeapon extends Phaser.Physics.Arcade.Sprite {
     }
   };
 
-  moveUp() {
+  private moveUp() {
     this.y -= this.circleSpeed;
   }
-  moveDown() {
+  private moveDown() {
     this.y += this.circleSpeed;
   }
-  moveLeft() {
+  private moveLeft() {
     this.x -= this.circleSpeed;
   }
-  moveRight() {
+  private moveRight() {
     this.x += this.circleSpeed;
   }
 }
