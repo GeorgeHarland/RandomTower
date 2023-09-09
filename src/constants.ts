@@ -8,15 +8,15 @@ export const DEV_TEXT_AT_TOP = false;
 
 export const ENEMY_BASE_DAMAGE = 5;
 export const ENEMY_BASE_RATE = 0.4;
-export const ENEMY_RATE_MULTIPLER = 1.015;
+export const ENEMY_RATE_MULTIPLER = 1.012;
 export const ENEMY_BASE_SPEED = 80;
 export const ENEMY_BASE_GOLD_VALUE = 1;
 
 export const JUGGERNAUT_BASE_DAMAGE = 30;
 export const JUGGERNAUT_BASE_RATE = 0.03;
-export const JUGGERNAUT_RATE_MULTIPLIER = 1.03;
-export const JUGGERNAUT_BASE_GOLD_VALUE = 15;
-export const JUGGERNAUT_BASE_HITPOINTS = 50;
+export const JUGGERNAUT_RATE_MULTIPLIER = 1.012;
+export const JUGGERNAUT_BASE_GOLD_VALUE = 10;
+export const JUGGERNAUT_BASE_HITPOINTS = 40;
 export const JUGGERNAUT_SPEED_MULTIPLIER = 0.25;
 
 // Player / Tower

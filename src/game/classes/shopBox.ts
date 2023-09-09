@@ -81,11 +81,11 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
 
   public generateRandomItem(): Item {
     const gradeCost: Record<ItemGradeType, number> = {
-      D: 10,
-      C: 15,
-      B: 20,
-      A: 25,
-      S: 30,
+      D: 7,
+      C: 12,
+      B: 17,
+      A: 22,
+      S: 27,
     };
 
     let randomPowerup: PowerupType;

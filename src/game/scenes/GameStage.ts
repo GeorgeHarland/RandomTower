@@ -44,6 +44,8 @@ import { getRandomEdgeOfScreen } from './helpers/gameHelpers';
 
 export default class GameStageScene extends Phaser.Scene {
   private playerTower: PlayerTower = new PlayerTower();
+  private startTime: number = 0;
+  private elapsedSeconds: number = 0;
   private circleWeapons: Phaser.Physics.Arcade.Group | undefined;
   private enemies: Phaser.Physics.Arcade.Group | undefined;
   private tower: Phaser.Physics.Arcade.Sprite | undefined;
@@ -57,6 +59,7 @@ export default class GameStageScene extends Phaser.Scene {
 
   private towerLife: number = TOWER_BASE_HITPOINTS;
   private towerLifeText: Phaser.GameObjects.Text | undefined;
+  private gameTimeText: Phaser.GameObjects.Text | undefined;
   private goldText: Phaser.GameObjects.Text | undefined;
   private enemyRate: number = ENEMY_BASE_RATE;
   private juggernautRate: number = JUGGERNAUT_BASE_RATE;
@@ -205,6 +208,15 @@ export default class GameStageScene extends Phaser.Scene {
         color: '#eeee00',
       },
     );
+    this.gameTimeText = this.add.text(
+      this.scale.width / 1.15,
+      this.scale.height / 40,
+      this.elapsedSeconds.toString(),
+      {
+        fontSize: `${topTextSize}px`,
+        color: '#000000',
+      },
+    );
     if (DEV_TEXT_AT_TOP) {
       this.enemyRateText = this.add.text(
         this.scale.width / 40,
@@ -289,11 +301,14 @@ export default class GameStageScene extends Phaser.Scene {
       callbackScope: this,
       loop: true,
     });
+
+    this.startTime = this.time.now;
+    this.elapsedSeconds = 0;
   }
 
-  public update() {
-    console.log(this.enemyRate);
+  public update(time: number) {
     const cursors = this.input.keyboard?.createCursorKeys();
+    this.elapsedSeconds = Math.floor((time - this.startTime) / 1000);
 
     this.circleWeapons?.children.entries.forEach((circle) => {
       (circle as CircleWeapon)?.moveCircle(cursors);
@@ -400,6 +415,8 @@ export default class GameStageScene extends Phaser.Scene {
       this.towerLifeText.setText('Tower Life: ' + this.towerLife);
     this.goldText &&
       this.goldText.setText('Gold: ' + this.playerTower.currentGold);
+    this.gameTimeText &&
+      this.gameTimeText.setText(this.elapsedSeconds.toString());
     if (DEV_TEXT_AT_TOP) {
       this.enemyRateText &&
         this.enemyRateText.setText(
