@@ -1,11 +1,13 @@
-import CircleWeapon from '../classes/circleWeapon';
+import { Duration } from 'luxon';
 import Phaser from 'phaser';
+import CircleWeapon from '../classes/circleWeapon';
+import Item from '../classes/item';
 import PlayerTower from '../classes/playerTower';
 import ShopBox from '../classes/shopBox';
-import { KeybindType, PowerupType } from '../types';
-import { generateTextures } from './helpers/textureHelpers';
+import { getRandomEdgeOfScreen } from './helpers/gameHelpers';
 import { extractTowerFrames, loadSprites } from './helpers/spriteHelpers';
-import Item from '../classes/item';
+import { generateTextures } from './helpers/textureHelpers';
+import { KeybindType, PowerupType } from '../types';
 import {
   ARROW_BASE_RATE,
   ARROW_BASE_SPEED,
@@ -40,7 +42,6 @@ import {
   JUGGERNAUT_BASE_RATE,
   JUGGERNAUT_RATE_MULTIPLIER,
 } from '../../constants';
-import { getRandomEdgeOfScreen } from './helpers/gameHelpers';
 
 export default class GameStageScene extends Phaser.Scene {
   private playerTower: PlayerTower = new PlayerTower();
@@ -417,7 +418,7 @@ export default class GameStageScene extends Phaser.Scene {
     this.goldText &&
       this.goldText.setText('Gold: ' + this.playerTower.currentGold);
     this.gameTimeText &&
-      this.gameTimeText.setText(this.elapsedSeconds.toString());
+      this.gameTimeText.setText(this.secondsToMMSS(this.elapsedSeconds));
     this.gameTimeText &&
       this.gameTimeText.setPosition(
         this.scale.width / 1.05 - this.gameTimeText.width,
@@ -813,4 +814,8 @@ export default class GameStageScene extends Phaser.Scene {
     this.enemyRate *= ENEMY_RATE_MULTIPLER;
     this.juggernautRate *= JUGGERNAUT_RATE_MULTIPLIER;
   };
+
+  private secondsToMMSS = (seconds: number): string => {
+    return Duration.fromObject({ seconds }).toFormat('mm:ss');
+}
 }

@@ -12,6 +12,8 @@
     "preppush": "npm run prettier && npm run lint"
   },
   "dependencies": {
+    "@types/luxon": "^3.3.2",
+    "luxon": "^3.4.3",
     "phaser": "^3.60.0",
     "preact": "^10.13.2",
     "prettier": "^3.0.1"
