@@ -27,12 +27,12 @@ export const TOWER_BASE_HITPOINTS = 100;
 
 export const PowerupRecord: Record<PowerupType, ItemGradeType> = {
   arrowRate: 'C',
-  circleSpeed: 'D',
+  circleStrength: 'C',
   darkBlast: 'B',
   fireBlast: 'B',
   regen: 'D',
   timeSlow: 'S',
-  tornado: 'C',
+  tornado: 'D',
 };
 
 export const gradeCost: Record<ItemGradeType, number> = {
@@ -48,6 +48,7 @@ export const ARROW_BASE_RATE = 0.2;
 export const ARROW_RATE_INCREASE = 0.025;
 
 export const CIRCLE_SPEED_INCREASE = 0.35;
+export const CIRCLE_SCALE_MULTIPLIER = 1.1;
 
 export const DARKBLAST_BASE_ANGLE_CHANGE = 45;
 export const DARKBLAST_BASE_COOLDOWN = 1000;

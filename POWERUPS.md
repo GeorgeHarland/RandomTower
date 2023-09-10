@@ -7,10 +7,10 @@ Powerups are rated as D,C,B,A, or S. The better grade, the more expensive the po
 - Grade: C
 - Increases the spawn rate of the arrows firing from the tower.
 
-### CircleSpeed
+### CircleStrength
 
-- Grade: D
-- Increases the speed of the player-controlled circles.
+- Grade: C
+- Increases the size and speed of the player-controlled circles.
 
 ### DarkBlast
 
@@ -34,5 +34,5 @@ Powerups are rated as D,C,B,A, or S. The better grade, the more expensive the po
 
 ### Tornado
 
-- Grade: C
+- Grade: D
 - Creates a tornado somewhere random on the map that moves around slightly. Each level creates a new one.

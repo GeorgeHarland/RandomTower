@@ -41,6 +41,7 @@ import {
   TOWER_BASE_HITPOINTS,
   JUGGERNAUT_BASE_RATE,
   JUGGERNAUT_RATE_MULTIPLIER,
+  CIRCLE_SCALE_MULTIPLIER,
 } from '../../constants';
 
 export default class GameStageScene extends Phaser.Scene {
@@ -555,9 +556,16 @@ export default class GameStageScene extends Phaser.Scene {
       case 'arrowRate':
         this.arrowRate += item.cost * ARROW_RATE_INCREASE;
         break;
-      case 'circleSpeed':
+      case 'circleStrength':
         this.circleWeapons?.children.entries.forEach((circle) => {
-          (circle as CircleWeapon).circleSpeed += CIRCLE_SPEED_INCREASE;
+          const weaponCircle = circle as CircleWeapon
+          weaponCircle.circleSpeed += CIRCLE_SPEED_INCREASE;
+          const currentX = weaponCircle.x;
+          const currentY = weaponCircle.y;
+          weaponCircle.scaleX *= CIRCLE_SCALE_MULTIPLIER;
+          weaponCircle.scaleY *= CIRCLE_SCALE_MULTIPLIER;
+          weaponCircle.x = currentX;
+          weaponCircle.y = currentY;
         });
         break;
       case 'darkBlast':

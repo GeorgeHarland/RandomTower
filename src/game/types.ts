@@ -5,7 +5,7 @@ export type ItemGradeType = 'S' | 'A' | 'B' | 'C' | 'D';
 
 export type PowerupType =
   | 'arrowRate'
-  | 'circleSpeed'
+  | 'circleStrength'
   | 'darkBlast'
   | 'fireBlast'
   | 'regen'
