@@ -558,7 +558,7 @@ export default class GameStageScene extends Phaser.Scene {
         break;
       case 'circleStrength':
         this.circleWeapons?.children.entries.forEach((circle) => {
-          const weaponCircle = circle as CircleWeapon
+          const weaponCircle = circle as CircleWeapon;
           weaponCircle.circleSpeed += CIRCLE_SPEED_INCREASE;
           const currentX = weaponCircle.x;
           const currentY = weaponCircle.y;
@@ -825,5 +825,5 @@ export default class GameStageScene extends Phaser.Scene {
 
   private secondsToMMSS = (seconds: number): string => {
     return Duration.fromObject({ seconds }).toFormat('mm:ss');
-}
+  };
 }
