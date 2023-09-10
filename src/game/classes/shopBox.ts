@@ -1,9 +1,9 @@
 import Phaser from 'phaser';
 import Item from './item';
-import { ItemGradeType, KeybindType, PowerupType } from '../types';
+import { KeybindType, PowerupType } from '../types';
 import Player from './playerTower';
 import { getArrayRandomElement } from '../../utils';
-import { PowerupRecord } from '../../constants';
+import { PowerupRecord, gradeCost } from '../../constants';
 import GameStageScene from '../scenes/GameStage';
 
 interface ShopBoxConfig {
@@ -80,14 +80,6 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
   };
 
   public generateRandomItem(): Item {
-    const gradeCost: Record<ItemGradeType, number> = {
-      D: 7,
-      C: 12,
-      B: 17,
-      A: 22,
-      S: 27,
-    };
-
     let randomPowerup: PowerupType;
     do {
       randomPowerup = getArrayRandomElement(

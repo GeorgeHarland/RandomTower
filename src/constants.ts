@@ -35,6 +35,14 @@ export const PowerupRecord: Record<PowerupType, ItemGradeType> = {
   tornado: 'C',
 };
 
+export const gradeCost: Record<ItemGradeType, number> = {
+  D: 7,
+  C: 12,
+  B: 17,
+  A: 22,
+  S: 27,
+};
+
 export const ARROW_BASE_SPEED = 200;
 export const ARROW_BASE_RATE = 0.2;
 export const ARROW_RATE_INCREASE = 0.025;

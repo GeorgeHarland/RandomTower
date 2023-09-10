@@ -215,6 +215,7 @@ export default class GameStageScene extends Phaser.Scene {
       {
         fontSize: `${topTextSize}px`,
         color: '#000000',
+        align: 'right',
       },
     );
     if (DEV_TEXT_AT_TOP) {
@@ -417,6 +418,11 @@ export default class GameStageScene extends Phaser.Scene {
       this.goldText.setText('Gold: ' + this.playerTower.currentGold);
     this.gameTimeText &&
       this.gameTimeText.setText(this.elapsedSeconds.toString());
+    this.gameTimeText &&
+      this.gameTimeText.setPosition(
+        this.scale.width / 1.05 - this.gameTimeText.width,
+        this.scale.height / 40,
+      );
     if (DEV_TEXT_AT_TOP) {
       this.enemyRateText &&
         this.enemyRateText.setText(
