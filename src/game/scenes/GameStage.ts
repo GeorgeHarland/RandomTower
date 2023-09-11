@@ -555,6 +555,7 @@ export default class GameStageScene extends Phaser.Scene {
     switch (item.powerup) {
       case 'arrowRate':
         this.arrowRate += item.cost * ARROW_RATE_INCREASE;
+        this.spawnArrow();
         break;
       case 'circleStrength':
         this.circleWeapons?.children.entries.forEach((circle) => {

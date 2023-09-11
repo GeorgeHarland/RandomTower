@@ -15,15 +15,19 @@ interface ShopBoxConfig {
 }
 
 export default class ShopBox extends Phaser.GameObjects.Sprite {
+  private gameScene: GameStageScene;
   private currentItem: Item | null = null;
   private itemImage: Phaser.Physics.Arcade.Sprite | null = null;
-  private keybind: KeybindType = 'Z';
+  private keybind: KeybindType;
   private keybindText: Phaser.GameObjects.Text;
   private priceText: Phaser.GameObjects.Text | null = null;
 
   public constructor({ scene, x, y, key, keybind }: ShopBoxConfig) {
     super(scene, x, y, key);
+
+    this.gameScene = scene as GameStageScene;
     this.keybind = keybind;
+
     scene.add.existing(this);
     this.keybindText = scene.add.text(x - 35, y + 20, keybind, {
       font: '16px Arial',
@@ -58,7 +62,7 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
       this.itemImage && this.itemImage.destroy();
       this.addItem();
       player.currentGold -= boughtItem.cost;
-      (this.scene as GameStageScene).additionalPrice++;
+      this.gameScene.additionalPrice++;
       return boughtItem;
     }
     return null;
@@ -86,14 +90,14 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
         Object.keys(PowerupRecord),
       ) as PowerupType;
     } while (
-      (this.scene as GameStageScene).generatedItems.includes(randomPowerup)
+      this.gameScene.generatedItems.includes(randomPowerup)
     );
 
-    const itemGrade = PowerupRecord[randomPowerup as PowerupType];
+    const itemGrade = PowerupRecord[randomPowerup];
     const modifier = 0.7 + Math.random() * 0.6; // 70-130%
     const itemCost =
       Math.round(gradeCost[itemGrade] * modifier) +
-      (this.scene as GameStageScene).additionalPrice;
+      this.gameScene.additionalPrice;
 
     return new Item(
       this.scene,
