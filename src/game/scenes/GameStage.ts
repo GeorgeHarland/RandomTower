@@ -76,6 +76,7 @@ export default class GameStageScene extends Phaser.Scene {
   private fireBlastAngleChange: number = FIREBLAST_BASE_ANGLE_CHANGE;
   private regenCooldown: number = REGEN_BASE_COOLDOWN;
   private timeSlowCooldown: number = TIMESLOW_BASE_COOLDOWN;
+  private timeSlow: boolean = false;
 
   private spawnArrowTimer: Phaser.Time.TimerEvent | undefined;
   private spawnJuggernautTimer: Phaser.Time.TimerEvent | undefined;
@@ -337,10 +338,12 @@ export default class GameStageScene extends Phaser.Scene {
           (weapon as Phaser.Physics.Arcade.Sprite).y -=
             TORNADO_BASE_SHAKE_AMOUNT;
       }
-      if (weapon.getData('type') === 'timeSlow') {
-        this.enemyCurrentSpeed *= 0.975;
-      }
     });
+
+    if(this.timeSlow) this.enemyCurrentSpeed *= 0.95;
+    else if(this.enemyCurrentSpeed < ENEMY_BASE_SPEED / 10) this.enemyCurrentSpeed = ENEMY_BASE_SPEED / 10;
+    else if(this.enemyCurrentSpeed < ENEMY_BASE_SPEED) this.enemyCurrentSpeed /= 0.95;
+    if(this.enemyCurrentSpeed > ENEMY_BASE_SPEED) this.enemyCurrentSpeed = ENEMY_BASE_SPEED;
 
     const shopBoxKeybinds: { [id: string]: ShopBox } = {};
     this.shopBoxes?.children.entries.forEach(
@@ -790,14 +793,15 @@ export default class GameStageScene extends Phaser.Scene {
     const x: number = this.scale.width / 2;
     const y: number = this.scale.height / 2;
     const timeSlowSprite = this.physics.add.sprite(x, y, 'timeSlowTexture');
+    this.timeSlow = true;
     timeSlowSprite.scale = 0.5;
     timeSlowSprite.setData('type', 'timeSlow');
     timeSlowSprite.play('timeSlowAnimation');
     timeSlowSprite.setImmovable(true);
-    this.PermanentWeapons?.add(timeSlowSprite);
     timeSlowSprite.on('animationcomplete', () => {
       timeSlowSprite.destroy();
-      this.enemyCurrentSpeed = ENEMY_BASE_SPEED;
+      this.timeSlow = false;
+      // this.enemyCurrentSpeed = ENEMY_BASE_SPEED;
       this.timeSlowTimer = this.time.addEvent({
         delay: this.timeSlowCooldown,
         callback: this.spawnTimeSlow,

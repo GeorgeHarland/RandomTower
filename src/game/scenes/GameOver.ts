@@ -13,6 +13,8 @@ export default class GameOverScene extends Phaser.Scene {
   public create() {
     this.sound.stopByKey('backgroundMusic');
 
+    this.setupKeybindings();
+
     const background = this.add.image(0, 0, 'gameOverBackground');
     background.setOrigin(0, 0);
     background.displayWidth = this.sys.canvas.width;
@@ -51,5 +53,16 @@ export default class GameOverScene extends Phaser.Scene {
     !this.scene.get('GameStageScene') &&
       this.scene.add('GameStageScene', GameStageScene);
     this.scene.start('GameStageScene');
+  }
+
+  private setupKeybindings() {
+    const enterKey = this.input.keyboard?.addKey(
+      Phaser.Input.Keyboard.KeyCodes.ENTER,
+    );
+    enterKey?.on('down', this.restartGame, this);
+    const spacebar = this.input.keyboard?.addKey(
+      Phaser.Input.Keyboard.KeyCodes.SPACE,
+    );
+    spacebar?.on('down', this.restartGame, this);
   }
 }
