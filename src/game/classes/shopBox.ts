@@ -62,7 +62,8 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
       this.itemImage && this.itemImage.destroy();
       this.addItem();
       player.currentGold -= boughtItem.cost;
-      this.gameScene.additionalPrice++;
+      // this.gameScene.additionalPrice++;
+      this.gameScene.increasePrices();
       return boughtItem;
     }
     return null;

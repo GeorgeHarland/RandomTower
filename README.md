@@ -26,7 +26,9 @@ K - Dev command to increase enemy spawn speed by 1 per second.
 
 All assets were free to use, but please check out the designers.
 
-Background - https://edermunizz.itch.io/free-pixel-art-forest
+Game Background - https://edermunizz.itch.io/free-pixel-art-forest
+
+Game Over Background - https://lornn.itch.io/backgrounds-dungeons-ruins-caves
 
 Tower assets - https://foozlecc.itch.io/spire-tower-pack-2
 

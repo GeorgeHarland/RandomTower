@@ -411,7 +411,7 @@ export default class GameStageScene extends Phaser.Scene {
 
     if (this.towerLife <= 0) {
       this.scene.remove();
-      this.scene.start('MainMenuScene');
+      this.scene.start('GameOverScene');
     }
 
     this.towerLifeText &&
@@ -827,4 +827,11 @@ export default class GameStageScene extends Phaser.Scene {
   private secondsToMMSS = (seconds: number): string => {
     return Duration.fromObject({ seconds }).toFormat('mm:ss');
   };
+
+  public increasePrices = (): void => {
+    if(this.elapsedSeconds > 360) this.additionalPrice += 3;
+    else if(this.elapsedSeconds > 180) this.additionalPrice += 2;
+    else this.additionalPrice += 1;
+    console.log('price increase: ' + this.additionalPrice)
+  }
 }
