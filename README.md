@@ -10,6 +10,8 @@ Enemies are destroyed by the player's circle weapon or the tower's automatic arr
 
 There are currently 7 powerups in the game. Press Q, W, E after getting some gold to try them out!
 
+Powerups get more expensive each purchase, by 1 gold + the amount of minutes played.
+
 ## Controls
 
 Enter/Space - Start the game
