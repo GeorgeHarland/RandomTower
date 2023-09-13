@@ -836,6 +836,6 @@ export default class GameStageScene extends Phaser.Scene {
   };
 
   public increasePrices = (): void => {
-    this.additionalPrice += Math.floor(this.elapsedSeconds / 180) + 1;
+    this.additionalPrice += Math.floor(this.elapsedSeconds / 60) + 1;
   };
 }
