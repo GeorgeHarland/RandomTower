@@ -340,10 +340,13 @@ export default class GameStageScene extends Phaser.Scene {
       }
     });
 
-    if(this.timeSlow) this.enemyCurrentSpeed *= 0.95;
-    else if(this.enemyCurrentSpeed < ENEMY_BASE_SPEED / 10) this.enemyCurrentSpeed = ENEMY_BASE_SPEED / 10;
-    else if(this.enemyCurrentSpeed < ENEMY_BASE_SPEED) this.enemyCurrentSpeed /= 0.95;
-    if(this.enemyCurrentSpeed > ENEMY_BASE_SPEED) this.enemyCurrentSpeed = ENEMY_BASE_SPEED;
+    if (this.timeSlow) this.enemyCurrentSpeed *= 0.95;
+    else if (this.enemyCurrentSpeed < ENEMY_BASE_SPEED / 10)
+      this.enemyCurrentSpeed = ENEMY_BASE_SPEED / 10;
+    else if (this.enemyCurrentSpeed < ENEMY_BASE_SPEED)
+      this.enemyCurrentSpeed /= 0.95;
+    if (this.enemyCurrentSpeed > ENEMY_BASE_SPEED)
+      this.enemyCurrentSpeed = ENEMY_BASE_SPEED;
 
     const shopBoxKeybinds: { [id: string]: ShopBox } = {};
     this.shopBoxes?.children.entries.forEach(
@@ -834,5 +837,5 @@ export default class GameStageScene extends Phaser.Scene {
 
   public increasePrices = (): void => {
     this.additionalPrice += Math.floor(this.elapsedSeconds / 180) + 1;
-  }
+  };
 }

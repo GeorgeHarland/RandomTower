@@ -1,4 +1,4 @@
-import GameStageScene from "./GameStage";
+import GameStageScene from './GameStage';
 
 export default class GameOverScene extends Phaser.Scene {
   public constructor() {
