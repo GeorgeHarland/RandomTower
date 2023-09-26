@@ -13,7 +13,7 @@ export default class Item extends Phaser.GameObjects.Sprite {
     key: string,
     powerup: PowerupType,
     grade: ItemGradeType,
-    cost: number,
+    cost: number
   ) {
     super(scene, x, y, key);
     this.grade = grade;

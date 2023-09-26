@@ -118,23 +118,21 @@ export default class GameStageScene extends Phaser.Scene {
       0,
       this.scale.width,
       this.scale.height,
-      'bgTexture',
+      'bgTexture'
     );
     bg.setOrigin(0, 0);
 
-    if (this.towerSprites[0]) {
-      const towerImage = this.towerSprites[0];
-      const centerX = this.scale.width / 2;
-      const centerY = this.scale.height / 2;
-      this.tower = this.physics.add.sprite(
-        centerX,
-        centerY,
-        'towerSpriteSheet',
-        towerImage.frame.name,
-      );
-    } else {
-      this.tower = this.physics.add.sprite(400, 300, 'towerTexture');
-    }
+    const towerImage = this.towerSprites[0];
+    const centerX = this.scale.width / 2;
+    const centerY = this.scale.height / 2;
+    this.tower = this.physics.add.sprite(
+      centerX,
+      centerY,
+      'towerSpriteSheet',
+      towerImage.frame.name
+    );
+    this.tower.scale = this.scale.width / 800;
+
     this.tower.setImmovable(true);
 
     this.circleWeapons = this.physics.add.group({
@@ -200,7 +198,7 @@ export default class GameStageScene extends Phaser.Scene {
       {
         fontSize: `${topTextSize}px`,
         color: '#000000',
-      },
+      }
     );
     this.goldText = this.add.text(
       this.scale.width / 40,
@@ -209,7 +207,7 @@ export default class GameStageScene extends Phaser.Scene {
       {
         fontSize: `${topTextSize}px`,
         color: '#eeee00',
-      },
+      }
     );
     this.gameTimeText = this.add.text(
       this.scale.width / 1.15,
@@ -219,7 +217,7 @@ export default class GameStageScene extends Phaser.Scene {
         fontSize: `${topTextSize}px`,
         color: '#000000',
         align: 'right',
-      },
+      }
     );
     if (DEV_TEXT_AT_TOP) {
       this.enemyRateText = this.add.text(
@@ -229,7 +227,7 @@ export default class GameStageScene extends Phaser.Scene {
         {
           fontSize: `${topTextSize}px`,
           color: '#cccccc',
-        },
+        }
       );
       this.arrowRateText = this.add.text(
         this.scale.width / 40,
@@ -238,13 +236,13 @@ export default class GameStageScene extends Phaser.Scene {
         {
           fontSize: `${topTextSize}px`,
           color: '#cccccc',
-        },
+        }
       );
     }
 
     this.physics.add.collider(this.enemies, this.tower, (_, enemy) => {
       this.enemyTowerCollision(
-        enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody,
+        enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody
       );
     });
     this.physics.add.collider(
@@ -254,16 +252,16 @@ export default class GameStageScene extends Phaser.Scene {
         this.enemyWeaponCollision(
           circle as Phaser.Types.Physics.Arcade.GameObjectWithBody,
           enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody,
-          false,
+          false
         );
-      },
+      }
     );
 
     this.physics.add.collider(this.enemies, this.weapons, (enemy, weapon) => {
       this.enemyWeaponCollision(
         weapon as Phaser.Types.Physics.Arcade.GameObjectWithBody,
         enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody,
-        true,
+        true
       );
     });
     this.physics.add.collider(
@@ -273,9 +271,9 @@ export default class GameStageScene extends Phaser.Scene {
         this.enemyWeaponCollision(
           weapon as Phaser.Types.Physics.Arcade.GameObjectWithBody,
           enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody,
-          false,
+          false
         );
-      },
+      }
     );
 
     this.spawnArrowTimer = this.time.addEvent({
@@ -353,7 +351,7 @@ export default class GameStageScene extends Phaser.Scene {
       (gameObject: Phaser.GameObjects.GameObject) => {
         const shopBox = gameObject as ShopBox;
         shopBoxKeybinds[shopBox.getKeybind()] = shopBox;
-      },
+      }
     );
     let itemBought = null;
     if (this.input.keyboard) {
@@ -398,7 +396,7 @@ export default class GameStageScene extends Phaser.Scene {
           this.physics.moveToObject(
             enemy,
             this.tower,
-            this.enemyCurrentSpeed * JUGGERNAUT_SPEED_MULTIPLIER,
+            this.enemyCurrentSpeed * JUGGERNAUT_SPEED_MULTIPLIER
           );
         else
           this.physics.moveToObject(enemy, this.tower, this.enemyCurrentSpeed);
@@ -429,16 +427,16 @@ export default class GameStageScene extends Phaser.Scene {
     this.gameTimeText &&
       this.gameTimeText.setPosition(
         this.scale.width / 1.05 - this.gameTimeText.width,
-        this.scale.height / 40,
+        this.scale.height / 40
       );
     if (DEV_TEXT_AT_TOP) {
       this.enemyRateText &&
         this.enemyRateText.setText(
-          'Enemies per second: ' + this.enemyRate.toFixed(1),
+          'Enemies per second: ' + this.enemyRate.toFixed(1)
         );
       this.arrowRateText &&
         this.arrowRateText.setText(
-          'Arrows per second: ' + this.arrowRate.toFixed(1),
+          'Arrows per second: ' + this.arrowRate.toFixed(1)
         );
     }
   }
@@ -625,20 +623,20 @@ export default class GameStageScene extends Phaser.Scene {
           origin.x,
           origin.y,
           enemySprite.x,
-          enemySprite.y,
+          enemySprite.y
         );
         if (distance < closestDistance) {
           closestDistance = distance;
           closestEnemy = enemySprite;
         }
-      },
+      }
     );
 
     return closestEnemy;
   }
 
   private enemyTowerCollision(
-    enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody,
+    enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
   ) {
     if (enemy.getData('type') === 'juggernaut')
       this.towerLife -= JUGGERNAUT_BASE_DAMAGE;
@@ -649,7 +647,7 @@ export default class GameStageScene extends Phaser.Scene {
   private enemyWeaponCollision(
     weapon: Phaser.Types.Physics.Arcade.GameObjectWithBody,
     enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody,
-    weaponDestroyed = false,
+    weaponDestroyed = false
   ) {
     const currentTime = Date.now();
     const hitCooldown = 200; // milliseconds
@@ -712,7 +710,7 @@ export default class GameStageScene extends Phaser.Scene {
       this.physics.velocityFromAngle(
         this.darkBlastDirection,
         200,
-        darkBlastSprite.body.velocity,
+        darkBlastSprite.body.velocity
       );
       darkBlastSprite.angle = this.darkBlastDirection;
       if (this.darkBlastDirection + this.darkBlastAngleChange < 360)
@@ -745,7 +743,7 @@ export default class GameStageScene extends Phaser.Scene {
       this.physics.velocityFromAngle(
         this.fireBlastDirection,
         200,
-        fireBlastSprite.body.velocity,
+        fireBlastSprite.body.velocity
       );
       fireBlastSprite.angle = this.fireBlastDirection;
       if (this.fireBlastDirection + this.fireBlastAngleChange > 0)

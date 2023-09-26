@@ -29,7 +29,7 @@ export default class GameOverScene extends Phaser.Scene {
         this.cameras.main.centerX,
         this.cameras.main.centerY - this.scale.height / 10,
         'Game over',
-        { fontSize: `${titleFontSize}px`, color: '#FFFFFF' },
+        { fontSize: `${titleFontSize}px`, color: '#FFFFFF' }
       )
       .setOrigin(0.5);
     const button = this.add
@@ -44,7 +44,7 @@ export default class GameOverScene extends Phaser.Scene {
       () => {
         this.restartGame();
       },
-      this,
+      this
     );
   }
 
@@ -57,11 +57,11 @@ export default class GameOverScene extends Phaser.Scene {
 
   private setupKeybindings() {
     const enterKey = this.input.keyboard?.addKey(
-      Phaser.Input.Keyboard.KeyCodes.ENTER,
+      Phaser.Input.Keyboard.KeyCodes.ENTER
     );
     enterKey?.on('down', this.restartGame, this);
     const spacebar = this.input.keyboard?.addKey(
-      Phaser.Input.Keyboard.KeyCodes.SPACE,
+      Phaser.Input.Keyboard.KeyCodes.SPACE
     );
     spacebar?.on('down', this.restartGame, this);
   }

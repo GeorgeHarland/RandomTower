@@ -9,7 +9,7 @@ export const loadSprites = (scene: Phaser.Scene): void => {
     {
       frameWidth: 480,
       frameHeight: 480,
-    },
+    }
   );
   scene.load.spritesheet(
     'healEffectSheet',
@@ -17,7 +17,7 @@ export const loadSprites = (scene: Phaser.Scene): void => {
     {
       frameWidth: 128,
       frameHeight: 128,
-    },
+    }
   );
 
   scene.load.image('arrowRate', 'sprites/powerupIcons/arrow-scope.png');
@@ -31,27 +31,27 @@ export const loadSprites = (scene: Phaser.Scene): void => {
   for (let i = 1; i <= 9; i++) {
     scene.load.image(
       `tornadoRepeat${i}`,
-      `sprites/spellEffects/wind/strong/windStrongRepeat000${i}.png`,
+      `sprites/spellEffects/wind/strong/windStrongRepeat000${i}.png`
     );
   }
 
   for (let i = 1; i <= 15; i++) {
     scene.load.image(
       `darkBlastSprite${i}`,
-      `sprites/spellEffects/dark/6/1_${i - 1}.png`,
+      `sprites/spellEffects/dark/6/1_${i - 1}.png`
     );
   }
 
   for (let i = 1; i <= 15; i++) {
     scene.load.image(
       `fireBlastSprite${i}`,
-      `sprites/spellEffects/fire/1/1_${i - 1}.png`,
+      `sprites/spellEffects/fire/1/1_${i - 1}.png`
     );
   }
 };
 
 export const extractTowerFrames = (
-  scene: Phaser.Scene,
+  scene: Phaser.Scene
 ): Phaser.GameObjects.Image[] => {
   const frameNames = scene.textures.get('towerSpriteSheet').getFrameNames();
   const towerSprites = [];
@@ -62,7 +62,7 @@ export const extractTowerFrames = (
       frame.x,
       frame.y,
       'towerSpriteSheet',
-      frameName,
+      frameName
     );
     towerSprites.push(image);
   }

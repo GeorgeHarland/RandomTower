@@ -45,12 +45,12 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
       this.x - 35,
       this.y - 35,
       item.cost.toString(),
-      { font: '16px Arial', color: '#000000' },
+      { font: '16px Arial', color: '#000000' }
     );
     this.itemImage = this.scene.physics.add.sprite(
       this.x,
       this.y,
-      item.powerup,
+      item.powerup
     );
   };
 
@@ -88,7 +88,7 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
     let randomPowerup: PowerupType;
     do {
       randomPowerup = getArrayRandomElement(
-        Object.keys(PowerupRecord),
+        Object.keys(PowerupRecord)
       ) as PowerupType;
     } while (this.gameScene.generatedItems.includes(randomPowerup));
 
@@ -105,7 +105,7 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
       'item0',
       randomPowerup,
       itemGrade,
-      itemCost,
+      itemCost
     );
   }
 

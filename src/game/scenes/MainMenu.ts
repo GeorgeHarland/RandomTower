@@ -30,7 +30,7 @@ export default class MainMenuScene extends Phaser.Scene {
         this.cameras.main.centerX,
         this.cameras.main.centerY - this.scale.height / 10,
         'Random Tower',
-        { fontSize: `${titleFontSize}px`, color: '#ff0000' },
+        { fontSize: `${titleFontSize}px`, color: '#ff0000' }
       )
       .setOrigin(0.5);
     const button = this.add
@@ -45,7 +45,7 @@ export default class MainMenuScene extends Phaser.Scene {
       () => {
         this.startGame();
       },
-      this,
+      this
     );
   }
 
@@ -57,11 +57,11 @@ export default class MainMenuScene extends Phaser.Scene {
 
   private setupKeybindings() {
     const enterKey = this.input.keyboard?.addKey(
-      Phaser.Input.Keyboard.KeyCodes.ENTER,
+      Phaser.Input.Keyboard.KeyCodes.ENTER
     );
     enterKey?.on('down', this.startGame, this);
     const spacebar = this.input.keyboard?.addKey(
-      Phaser.Input.Keyboard.KeyCodes.SPACE,
+      Phaser.Input.Keyboard.KeyCodes.SPACE
     );
     spacebar?.on('down', this.startGame, this);
   }

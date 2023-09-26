@@ -19,7 +19,7 @@ export default class CircleWeapon extends Phaser.Physics.Arcade.Sprite {
   }
 
   public moveCircle = (
-    cursors: Phaser.Types.Input.Keyboard.CursorKeys | undefined,
+    cursors: Phaser.Types.Input.Keyboard.CursorKeys | undefined
   ) => {
     if (cursors?.up?.isDown) {
       this.circleNumber === 0
