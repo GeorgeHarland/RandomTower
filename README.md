@@ -8,7 +8,7 @@ Enemies spawn in increasing numbers. Slower enemies that can take more hits spaw
 
 Enemies are destroyed by the player's circle weapon (arrow keys) or the tower's automatic arrow or powerup attacks.
 
-the bigger enemies can be pushed back, so try to use the circle weapon again those.
+The bigger enemies can be pushed back, so try to use the circle weapon against those.
 
 There are currently 7 powerups in the game. Press Q, W, E after getting some gold to try them out!
 
