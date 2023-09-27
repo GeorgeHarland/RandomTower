@@ -3,7 +3,7 @@ import CircleWeapon from '../classes/circleWeapon';
 import Item from '../classes/item';
 import PlayerTower from '../classes/playerTower';
 import ShopBox from '../classes/shopBox';
-import { getRandomEdgeOfScreen, secondsToMMSS } from './helpers/gameHelpers';
+import { secondsToMMSS } from './helpers/gameHelpers';
 import { extractTowerFrames, loadSprites } from './helpers/spriteHelpers';
 import { generateTextures } from './helpers/textureHelpers';
 import { KeybindType, PowerupType } from '../types';
@@ -11,9 +11,6 @@ import {
   ARROW_BASE_RATE,
   ARROW_BASE_SPEED,
   ARROW_RATE_INCREASE,
-  JUGGERNAUT_BASE_DAMAGE,
-  JUGGERNAUT_BASE_GOLD_VALUE,
-  JUGGERNAUT_BASE_HITPOINTS,
   JUGGERNAUT_SPEED_MULTIPLIER,
   CIRCLE_SPEED_INCREASE,
   DARKBLAST_BASE_ANGLE_CHANGE,
@@ -25,10 +22,6 @@ import {
   FIREBLAST_LEVELUP_ANGLE_MULTIPLIER,
   FIREBLAST_LEVELUP_COOLDOWN_MULTIPLIER,
   DEV_TEXT_AT_TOP,
-  ENEMY_BASE_DAMAGE,
-  ENEMY_BASE_GOLD_VALUE,
-  ENEMY_BASE_RATE,
-  ENEMY_RATE_MULTIPLER,
   ENEMY_BASE_SPEED,
   REGEN_BASE_COOLDOWN,
   REGEN_BASE_HEAL_AMOUNT,
@@ -37,19 +30,17 @@ import {
   TIMESLOW_BASE_COOLDOWN,
   TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER,
   TORNADO_BASE_SHAKE_AMOUNT,
-  TOWER_BASE_HITPOINTS,
-  JUGGERNAUT_BASE_RATE,
-  JUGGERNAUT_RATE_MULTIPLIER,
   CIRCLE_SCALE_MULTIPLIER,
   PowerupRecord,
 } from '../../constants';
+import EnemyManager from '../classes/EnemyManager';
 
 export default class GameStageScene extends Phaser.Scene {
   private playerTower: PlayerTower = new PlayerTower();
+  private enemyManager: EnemyManager = new EnemyManager(this, this.playerTower);
   private startTime: number = 0;
   private elapsedSeconds: number = 0;
   private circleWeapons: Phaser.Physics.Arcade.Group | undefined;
-  private enemies: Phaser.Physics.Arcade.Group | undefined;
   private tower: Phaser.Physics.Arcade.Sprite | undefined;
   private weapons: Phaser.Physics.Arcade.Group | undefined;
   private PermanentWeapons: Phaser.Physics.Arcade.Group | undefined;
@@ -59,12 +50,9 @@ export default class GameStageScene extends Phaser.Scene {
 
   private towerSprites: Phaser.GameObjects.Image[] = [];
 
-  private towerLife: number = TOWER_BASE_HITPOINTS;
   private towerLifeText: Phaser.GameObjects.Text | undefined;
   private gameTimeText: Phaser.GameObjects.Text | undefined;
   private goldText: Phaser.GameObjects.Text | undefined;
-  private enemyRate: number = ENEMY_BASE_RATE;
-  private juggernautRate: number = JUGGERNAUT_BASE_RATE;
   private enemyRateText: Phaser.GameObjects.Text | undefined;
   private arrowRate: number = ARROW_BASE_RATE;
   private arrowRateText: Phaser.GameObjects.Text | undefined;
@@ -79,9 +67,6 @@ export default class GameStageScene extends Phaser.Scene {
   private timeSlow: boolean = false;
 
   private spawnArrowTimer: Phaser.Time.TimerEvent | undefined;
-  private spawnJuggernautTimer: Phaser.Time.TimerEvent | undefined;
-  private weaponJuggernautHitMap = new Map();
-  private spawnEnemyTimer: Phaser.Time.TimerEvent | undefined;
   private darkBlastTimer: Phaser.Time.TimerEvent | undefined;
   private fireBlastTimer: Phaser.Time.TimerEvent | undefined;
   private regenTimer: Phaser.Time.TimerEvent | undefined;
@@ -90,7 +75,6 @@ export default class GameStageScene extends Phaser.Scene {
 
   private enemyCurrentSpeed: number = ENEMY_BASE_SPEED;
   private weaponCounter: number = 0;
-  private enemyCounter: number = 0;
 
   private keyQ: Phaser.Input.Keyboard.Key | null = null;
   private keyW: Phaser.Input.Keyboard.Key | null = null;
@@ -132,9 +116,9 @@ export default class GameStageScene extends Phaser.Scene {
       'towerSpriteSheet',
       towerImage.frame.name
     );
-    // this.tower.scale = this.scale.width / 800;
     this.tower.setBodySize(this.tower.displayWidth , this.tower.displayHeight * 0.7, true)
     this.tower.setOffset(0, this.tower.displayHeight * 0.25)
+    this.tower.scale = this.scale.width / 800;
 
     this.tower.setImmovable(true);
 
@@ -164,9 +148,6 @@ export default class GameStageScene extends Phaser.Scene {
       (circle as CircleWeapon)?.setImmovable(true);
     });
 
-    this.enemies = this.physics.add.group({
-      classType: Phaser.GameObjects.Rectangle,
-    });
     this.weapons = this.physics.add.group({
       classType: Phaser.GameObjects.Rectangle,
     });
@@ -197,7 +178,7 @@ export default class GameStageScene extends Phaser.Scene {
     this.towerLifeText = this.add.text(
       this.scale.width / 40,
       this.scale.height / 40,
-      'Tower Life: ' + this.towerLife,
+      'Tower Life: ' + this.playerTower.currentHp,
       {
         fontSize: `${topTextSize}px`,
         color: '#000000',
@@ -226,7 +207,7 @@ export default class GameStageScene extends Phaser.Scene {
       this.enemyRateText = this.add.text(
         this.scale.width / 40,
         this.scale.height / 6,
-        'Enemies per second: ' + this.enemyRate.toFixed(1),
+        'Enemies per second: ' + this.enemyManager.enemyRate.toFixed(1),
         {
           fontSize: `${topTextSize}px`,
           color: '#cccccc',
@@ -242,17 +223,22 @@ export default class GameStageScene extends Phaser.Scene {
         }
       );
     }
+    
+    console.log("Directly within scene:", Object.keys(this));
 
-    this.physics.add.collider(this.enemies, this.tower, (_, enemy) => {
-      this.enemyTowerCollision(
+    this.enemyManager = new EnemyManager(this, this.playerTower);
+    this.enemyManager.initialize();
+
+    this.physics.add.collider(this.enemyManager.enemies, this.tower, (_, enemy) => {
+      this.enemyManager.enemyTowerCollision(
         enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody
       );
     });
     this.physics.add.collider(
-      this.enemies,
+      this.enemyManager.enemies,
       this.circleWeapons,
       (enemy, circle) => {
-        this.enemyWeaponCollision(
+        this.enemyManager.enemyWeaponCollision(
           circle as Phaser.Types.Physics.Arcade.GameObjectWithBody,
           enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody,
           false
@@ -260,18 +246,18 @@ export default class GameStageScene extends Phaser.Scene {
       }
     );
 
-    this.physics.add.collider(this.enemies, this.weapons, (enemy, weapon) => {
-      this.enemyWeaponCollision(
+    this.physics.add.collider(this.enemyManager.enemies, this.weapons, (enemy, weapon) => {
+      this.enemyManager.enemyWeaponCollision(
         weapon as Phaser.Types.Physics.Arcade.GameObjectWithBody,
         enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody,
         true
       );
     });
     this.physics.add.collider(
-      this.enemies,
+      this.enemyManager.enemies,
       this.PermanentWeapons,
       (enemy, weapon) => {
-        this.enemyWeaponCollision(
+        this.enemyManager.enemyWeaponCollision(
           weapon as Phaser.Types.Physics.Arcade.GameObjectWithBody,
           enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody,
           false
@@ -286,23 +272,23 @@ export default class GameStageScene extends Phaser.Scene {
       loop: true,
     });
 
-    this.spawnJuggernautTimer = this.time.addEvent({
-      delay: 1000 / this.juggernautRate,
-      callback: this.spawnJuggernaut,
+    this.enemyManager.spawnJuggernautTimer = this.time.addEvent({
+      delay: 1000 / this.enemyManager.juggernautRate,
+      callback: this.enemyManager.spawnJuggernaut,
       callbackScope: this,
       loop: true,
     });
 
-    this.spawnEnemyTimer = this.time.addEvent({
-      delay: 1000 / this.enemyRate,
-      callback: this.spawnEnemy,
+    this.enemyManager.spawnEnemyTimer = this.time.addEvent({
+      delay: 1000 / this.enemyManager.enemyRate,
+      callback: this.enemyManager.spawnEnemy,
       callbackScope: this,
       loop: true,
     });
 
     this.time.addEvent({
       delay: 1000,
-      callback: () => this.updateRates(),
+      callback: () => this.enemyManager.updateEnemyRates(),
       callbackScope: this,
       loop: true,
     });
@@ -366,8 +352,8 @@ export default class GameStageScene extends Phaser.Scene {
       if (
         Phaser.Input.Keyboard.JustDown(this.keyK as Phaser.Input.Keyboard.Key)
       ) {
-        this.enemyRate += 1;
-        this.juggernautRate += 1;
+        this.enemyManager.enemyRate += 1;
+        this.enemyManager.juggernautRate += 1;
       }
       if (
         Phaser.Input.Keyboard.JustDown(this.keyQ as Phaser.Input.Keyboard.Key)
@@ -393,7 +379,7 @@ export default class GameStageScene extends Phaser.Scene {
       });
     }
 
-    this.enemies?.children.entries.forEach((enemy) => {
+    this.enemyManager.enemies?.children.entries.forEach((enemy) => {
       if (this.tower) {
         if (enemy.getData('type') === 'juggernaut')
           this.physics.moveToObject(
@@ -443,14 +429,14 @@ export default class GameStageScene extends Phaser.Scene {
       }
     });
 
-    if (this.towerLife <= 0) {
+    if (this.playerTower.currentHp <= 0) {
       this.data.set('gametime', this.elapsedSeconds)
       // this.scene.remove();
       this.scene.start('GameOverScene');
     }
 
     this.towerLifeText &&
-      this.towerLifeText.setText('Tower Life: ' + this.towerLife);
+      this.towerLifeText.setText('Tower Life: ' + this.playerTower.currentHp);
     this.goldText &&
       this.goldText.setText('Gold: ' + this.playerTower.currentGold);
     this.gameTimeText &&
@@ -463,7 +449,7 @@ export default class GameStageScene extends Phaser.Scene {
     if (DEV_TEXT_AT_TOP) {
       this.enemyRateText &&
         this.enemyRateText.setText(
-          'Enemies per second: ' + this.enemyRate.toFixed(1)
+          'Enemies per second: ' + this.enemyManager.enemyRate.toFixed(1)
         );
       this.arrowRateText &&
         this.arrowRateText.setText(
@@ -527,43 +513,6 @@ export default class GameStageScene extends Phaser.Scene {
     });
   }
 
-  private spawnJuggernaut() {
-    const { x, y } = getRandomEdgeOfScreen(this);
-    const juggernaut = this.physics.add.sprite(x, y, 'juggernautTexture');
-    juggernaut.setData('type', 'juggernaut');
-    juggernaut.setData('hitpoints', JUGGERNAUT_BASE_HITPOINTS);
-    juggernaut.setData('id', `enemy-${this.enemyCounter++}`);
-    juggernaut.setImmovable(true);
-
-    this.enemies?.add(juggernaut);
-    if (this.spawnJuggernautTimer) {
-      this.spawnJuggernautTimer.destroy();
-    }
-    this.spawnJuggernautTimer = this.time.addEvent({
-      delay: 1000 / this.juggernautRate,
-      callback: this.spawnJuggernaut,
-      callbackScope: this,
-      loop: true,
-    });
-  }
-
-  private spawnEnemy() {
-    const { x, y } = getRandomEdgeOfScreen(this);
-    const enemy = this.physics.add.sprite(x, y, 'enemyTexture');
-    enemy.setImmovable(true);
-    enemy.setData('id', `enemy-${this.enemyCounter++}`);
-    this.enemies?.add(enemy);
-    if (this.spawnEnemyTimer) {
-      this.spawnEnemyTimer.destroy();
-    }
-    this.spawnEnemyTimer = this.time.addEvent({
-      delay: 1000 / this.enemyRate,
-      callback: this.spawnEnemy,
-      callbackScope: this,
-      loop: true,
-    });
-  }
-
   private spawnArrow() {
     if (this.tower) {
       const x = this.tower.x;
@@ -574,7 +523,7 @@ export default class GameStageScene extends Phaser.Scene {
 
       this.weapons?.add(arrow);
 
-      const closestEnemy = this.getClosestEnemy(this.tower);
+      const closestEnemy = this.enemyManager.getClosestEnemy(this.tower);
       if (closestEnemy) {
         this.physics.moveToObject(arrow, closestEnemy, ARROW_BASE_SPEED);
       } else {
@@ -623,6 +572,7 @@ export default class GameStageScene extends Phaser.Scene {
         this.spawnFireBlast();
         break;
       case 'regen':
+        this.playerTower.maxHp += 5;
         if (this.regenTimer) {
           this.regenCooldown *= REGEN_LEVELUP_COOLDOWN_MULTIPLIER;
           this.regenAmount += REGEN_LEVELUP_HEAL_INCREASE;
@@ -641,76 +591,6 @@ export default class GameStageScene extends Phaser.Scene {
       default:
         break;
     }
-  }
-
-  private getClosestEnemy(origin: Phaser.Physics.Arcade.Sprite) {
-    let closestEnemy = null;
-    let closestDistance = Number.MAX_VALUE;
-
-    this.enemies?.children.entries.forEach(
-      (enemy: Phaser.GameObjects.GameObject) => {
-        const enemySprite = enemy as Phaser.Physics.Arcade.Sprite;
-        const distance = Phaser.Math.Distance.Between(
-          origin.x,
-          origin.y,
-          enemySprite.x,
-          enemySprite.y
-        );
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closestEnemy = enemySprite;
-        }
-      }
-    );
-
-    return closestEnemy;
-  }
-
-  private enemyTowerCollision(
-    enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
-  ) {
-    if (enemy.getData('type') === 'juggernaut')
-      this.towerLife -= JUGGERNAUT_BASE_DAMAGE;
-    else this.towerLife -= ENEMY_BASE_DAMAGE;
-    enemy.destroy();
-  }
-
-  private enemyWeaponCollision(
-    weapon: Phaser.Types.Physics.Arcade.GameObjectWithBody,
-    enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody,
-    weaponDestroyed = false
-  ) {
-    const currentTime = Date.now();
-    const hitCooldown = 200; // milliseconds
-    const weaponId = weapon.getData('id');
-    const juggernautId = enemy.getData('id');
-
-    const compositeKey = `${weaponId}-${juggernautId}`;
-    const lastHitTime = this.weaponJuggernautHitMap.get(compositeKey) || 0;
-    if (currentTime - lastHitTime < hitCooldown) {
-      return;
-    }
-    this.weaponJuggernautHitMap.set(compositeKey, currentTime);
-
-    if (
-      enemy.getData('type') === 'juggernaut' &&
-      enemy.getData('hitpoints') > 0
-    ) {
-      enemy.setData('hitpoints', enemy.getData('hitpoints') - 5);
-    } else {
-      this.enemyDefeated(enemy);
-    }
-
-    if (weaponDestroyed) {
-      weapon.destroy();
-    }
-  }
-
-  private enemyDefeated(enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody) {
-    if (enemy.getData('type') === 'juggernaut')
-      this.playerTower.currentGold += JUGGERNAUT_BASE_GOLD_VALUE;
-    else this.playerTower.currentGold += ENEMY_BASE_GOLD_VALUE;
-    enemy.destroy();
   }
 
   private updateArrowTimer() {
@@ -802,11 +682,11 @@ export default class GameStageScene extends Phaser.Scene {
     regenSprite.setData('type', 'regen');
     regenSprite.play('regenAnimation');
     regenSprite.setImmovable(true);
-    if (this.towerLife + this.regenAmount >= TOWER_BASE_HITPOINTS)
-      this.towerLife = TOWER_BASE_HITPOINTS;
-    else this.towerLife += this.regenAmount;
-    if (this.towerLife > TOWER_BASE_HITPOINTS)
-      this.towerLife === TOWER_BASE_HITPOINTS;
+    if (this.playerTower.currentHp + this.regenAmount >= this.playerTower.maxHp)
+      this.playerTower.currentHp = this.playerTower.maxHp;
+    else this.playerTower.currentHp += this.regenAmount;
+    if (this.playerTower.currentHp > this.playerTower.maxHp)
+      this.playerTower.currentHp === this.playerTower.maxHp;
     regenSprite.on('animationcomplete', () => {
       regenSprite.destroy();
       this.regenTimer = this.time.addEvent({
@@ -853,11 +733,6 @@ export default class GameStageScene extends Phaser.Scene {
     this.PermanentWeapons?.add(tornadoSprite);
     tornadoSprite.play('tornadoAnimation');
     tornadoSprite.setImmovable(true);
-  };
-
-  private updateRates = () => {
-    this.enemyRate *= ENEMY_RATE_MULTIPLER;
-    this.juggernautRate *= JUGGERNAUT_RATE_MULTIPLIER;
   };
 
   public increasePrices = (): void => {

@@ -25,7 +25,7 @@ Powerups are rated as D,C,B,A, or S. The better grade, the more expensive the po
 ### Regen
 
 - Grade: D
-- Heals the tower occasionally. Leveling up makes the regen occur slightly more frequently and heal slightly more.
+- Heals the tower occasionally. Also increases max hitpoints by 5 per level. Leveling up makes the regen occur slightly more frequently and heal slightly more.
 
 ### TimeSlow
 
