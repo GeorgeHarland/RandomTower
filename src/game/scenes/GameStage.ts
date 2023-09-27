@@ -1,10 +1,9 @@
-import { Duration } from 'luxon';
 import Phaser from 'phaser';
 import CircleWeapon from '../classes/circleWeapon';
 import Item from '../classes/item';
 import PlayerTower from '../classes/playerTower';
 import ShopBox from '../classes/shopBox';
-import { getRandomEdgeOfScreen } from './helpers/gameHelpers';
+import { getRandomEdgeOfScreen, secondsToMMSS } from './helpers/gameHelpers';
 import { extractTowerFrames, loadSprites } from './helpers/spriteHelpers';
 import { generateTextures } from './helpers/textureHelpers';
 import { KeybindType, PowerupType } from '../types';
@@ -414,7 +413,8 @@ export default class GameStageScene extends Phaser.Scene {
     });
 
     if (this.towerLife <= 0) {
-      this.scene.remove();
+      this.data.set('gametime', this.elapsedSeconds)
+      // this.scene.remove();
       this.scene.start('GameOverScene');
     }
 
@@ -423,7 +423,7 @@ export default class GameStageScene extends Phaser.Scene {
     this.goldText &&
       this.goldText.setText('Gold: ' + this.playerTower.currentGold);
     this.gameTimeText &&
-      this.gameTimeText.setText(this.secondsToMMSS(this.elapsedSeconds));
+      this.gameTimeText.setText(secondsToMMSS(this.elapsedSeconds));
     this.gameTimeText &&
       this.gameTimeText.setPosition(
         this.scale.width / 1.05 - this.gameTimeText.width,
@@ -827,10 +827,6 @@ export default class GameStageScene extends Phaser.Scene {
   private updateRates = () => {
     this.enemyRate *= ENEMY_RATE_MULTIPLER;
     this.juggernautRate *= JUGGERNAUT_RATE_MULTIPLIER;
-  };
-
-  private secondsToMMSS = (seconds: number): string => {
-    return Duration.fromObject({ seconds }).toFormat('mm:ss');
   };
 
   public increasePrices = (): void => {

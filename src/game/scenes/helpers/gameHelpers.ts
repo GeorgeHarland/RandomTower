@@ -1,3 +1,4 @@
+import { Duration } from 'luxon';
 import { CoordinateType } from '../../types';
 
 export const getRandomEdgeOfScreen = (scene: Phaser.Scene): CoordinateType => {
@@ -11,4 +12,8 @@ export const getRandomEdgeOfScreen = (scene: Phaser.Scene): CoordinateType => {
     y = Math.random() < 0.5 ? -50 : scene.scale.height + 50;
   }
   return { x, y };
+};
+
+export const secondsToMMSS = (seconds: number): string => {
+  return Duration.fromObject({ seconds }).toFormat('mm:ss');
 };
