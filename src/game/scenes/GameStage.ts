@@ -41,6 +41,7 @@ import {
   JUGGERNAUT_BASE_RATE,
   JUGGERNAUT_RATE_MULTIPLIER,
   CIRCLE_SCALE_MULTIPLIER,
+  PowerupRecord,
 } from '../../constants';
 
 export default class GameStageScene extends Phaser.Scene {
@@ -122,6 +123,7 @@ export default class GameStageScene extends Phaser.Scene {
     bg.setOrigin(0, 0);
 
     const towerImage = this.towerSprites[0];
+    
     const centerX = this.scale.width / 2;
     const centerY = this.scale.height / 2;
     this.tower = this.physics.add.sprite(
@@ -130,7 +132,9 @@ export default class GameStageScene extends Phaser.Scene {
       'towerSpriteSheet',
       towerImage.frame.name
     );
-    this.tower.scale = this.scale.width / 800;
+    // this.tower.scale = this.scale.width / 800;
+    this.tower.setBodySize(this.tower.displayWidth , this.tower.displayHeight * 0.7, true)
+    this.tower.setOffset(0, this.tower.displayHeight * 0.25)
 
     this.tower.setImmovable(true);
 
@@ -402,10 +406,37 @@ export default class GameStageScene extends Phaser.Scene {
       }
     });
 
-    this.shopBoxes?.children.entries.forEach((box) => {
+    this.shopBoxes?.children.entries.forEach((box, index) => {
       const shopBox = box as ShopBox;
       if (shopBox.getItem() === null) {
-        (shopBox as ShopBox).addItem((shopBox as ShopBox).generateRandomItem());
+        if(this.elapsedSeconds > 1) (shopBox as ShopBox).addItem((shopBox as ShopBox).generateRandomItem());
+        else if (index === 0) shopBox.addItem(new Item(
+          shopBox.scene,
+          0,
+          0,
+          'item0',
+          'arrowRate',
+          PowerupRecord['arrowRate'],
+          10
+        ));
+        else if (index === 1) shopBox.addItem(new Item(
+          shopBox.scene,
+          0,
+          0,
+          'item0',
+          'circleStrength',
+          PowerupRecord['circleStrength'],
+          10
+        ));
+        else if (index === 2) shopBox.addItem(new Item(
+          shopBox.scene,
+          0,
+          0,
+          'item0',
+          'tornado',
+          PowerupRecord['tornado'],
+          8
+        ));
       }
       if (shopBox.getItem != null) {
         this.generatedItems.push((shopBox.getItem() as Item).powerup);

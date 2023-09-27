@@ -49,7 +49,7 @@ export default class GameOverScene extends Phaser.Scene {
     const button = this.add
       .text(this.cameras.main.centerX, this.cameras.main.centerY, 'Restart', {
         fontSize: `${buttonFontSize}px`,
-        color: '#FFFF',
+        color: '#FFFFFF',
       })
       .setOrigin(0.5);
     button.setInteractive({ useHandCursor: true });
