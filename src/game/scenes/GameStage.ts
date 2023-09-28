@@ -229,13 +229,13 @@ export default class GameStageScene extends Phaser.Scene {
     this.enemyManager = new EnemyManager(this, this.playerTower);
     this.enemyManager.initialize();
 
-    this.physics.add.collider(this.enemyManager.enemies, this.tower, (_, enemy) => {
+    this.physics.add.collider(this.enemyManager.enemies as Phaser.Types.Physics.Arcade.ArcadeColliderType, this.tower, (_, enemy) => {
       this.enemyManager.enemyTowerCollision(
         enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody
       );
     });
     this.physics.add.collider(
-      this.enemyManager.enemies,
+      this.enemyManager.enemies as Phaser.Types.Physics.Arcade.ArcadeColliderType,
       this.circleWeapons,
       (enemy, circle) => {
         this.enemyManager.enemyWeaponCollision(
@@ -246,7 +246,7 @@ export default class GameStageScene extends Phaser.Scene {
       }
     );
 
-    this.physics.add.collider(this.enemyManager.enemies, this.weapons, (enemy, weapon) => {
+    this.physics.add.collider(this.enemyManager.enemies as Phaser.Types.Physics.Arcade.ArcadeColliderType, this.weapons, (enemy, weapon) => {
       this.enemyManager.enemyWeaponCollision(
         weapon as Phaser.Types.Physics.Arcade.GameObjectWithBody,
         enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody,
@@ -254,7 +254,7 @@ export default class GameStageScene extends Phaser.Scene {
       );
     });
     this.physics.add.collider(
-      this.enemyManager.enemies,
+      this.enemyManager.enemies as Phaser.Types.Physics.Arcade.ArcadeColliderType,
       this.PermanentWeapons,
       (enemy, weapon) => {
         this.enemyManager.enemyWeaponCollision(
