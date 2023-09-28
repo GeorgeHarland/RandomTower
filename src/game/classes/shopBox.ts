@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
-import Item from './item';
+import Item from './Item';
 import { KeybindType, PowerupType } from '../types';
-import Player from './playerTower';
+import Player from './PlayerTower';
 import { getArrayRandomElement } from '../../utils';
 import { PowerupRecord, gradeCost } from '../../constants';
 import GameStageScene from '../scenes/GameStage';

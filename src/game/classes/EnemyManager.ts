@@ -1,7 +1,7 @@
-import { ENEMY_BASE_DAMAGE, ENEMY_BASE_GOLD_VALUE, ENEMY_BASE_RATE, ENEMY_RATE_MULTIPLER, JUGGERNAUT_BASE_DAMAGE, JUGGERNAUT_BASE_GOLD_VALUE, JUGGERNAUT_BASE_HITPOINTS, JUGGERNAUT_BASE_RATE, JUGGERNAUT_RATE_MULTIPLIER } from "../../constants";
+import { ENEMY_BASE_DAMAGE, ENEMY_BASE_GOLD_VALUE, ENEMY_BASE_RATE, ENEMY_BASE_SPEED, ENEMY_RATE_MULTIPLER, JUGGERNAUT_BASE_DAMAGE, JUGGERNAUT_BASE_GOLD_VALUE, JUGGERNAUT_BASE_HITPOINTS, JUGGERNAUT_BASE_RATE, JUGGERNAUT_RATE_MULTIPLIER } from "../../constants";
 import GameStageScene from "../scenes/GameStage";
 import { getRandomEdgeOfScreen } from "../scenes/helpers/gameHelpers";
-import PlayerTower from "./playerTower";
+import PlayerTower from "./PlayerTower";
 
 export default class EnemyManager {
   private scene: GameStageScene;
@@ -12,6 +12,7 @@ export default class EnemyManager {
   public spawnJuggernautTimer: Phaser.Time.TimerEvent | undefined;
   public enemyRate: number = ENEMY_BASE_RATE;
   public juggernautRate: number = JUGGERNAUT_BASE_RATE;
+  public enemyCurrentSpeed: number = ENEMY_BASE_SPEED;
   public weaponJuggernautHitMap = new Map();
 
   constructor(scene: GameStageScene, playerTower: PlayerTower) {

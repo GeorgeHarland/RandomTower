@@ -1,49 +1,32 @@
 import Phaser from 'phaser';
-import CircleWeapon from '../classes/circleWeapon';
-import Item from '../classes/item';
-import PlayerTower from '../classes/playerTower';
-import ShopBox from '../classes/shopBox';
+import CircleWeapon from '../classes/CircleWeapon';
+import Item from '../classes/Item';
+import PlayerTower from '../classes/PlayerTower';
+import ShopBox from '../classes/ShopBox';
 import { secondsToMMSS } from './helpers/gameHelpers';
 import { extractTowerFrames, loadSprites } from './helpers/spriteHelpers';
 import { generateTextures } from './helpers/textureHelpers';
 import { KeybindType, PowerupType } from '../types';
 import {
-  ARROW_BASE_RATE,
-  ARROW_BASE_SPEED,
-  ARROW_RATE_INCREASE,
   JUGGERNAUT_SPEED_MULTIPLIER,
-  CIRCLE_SPEED_INCREASE,
-  DARKBLAST_BASE_ANGLE_CHANGE,
-  DARKBLAST_BASE_COOLDOWN,
-  DARKBLAST_LEVELUP_ANGLE_MULTIPLIER,
-  DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER,
-  FIREBLAST_BASE_ANGLE_CHANGE,
-  FIREBLAST_BASE_COOLDOWN,
-  FIREBLAST_LEVELUP_ANGLE_MULTIPLIER,
-  FIREBLAST_LEVELUP_COOLDOWN_MULTIPLIER,
   DEV_TEXT_AT_TOP,
   ENEMY_BASE_SPEED,
-  REGEN_BASE_COOLDOWN,
-  REGEN_BASE_HEAL_AMOUNT,
-  REGEN_LEVELUP_COOLDOWN_MULTIPLIER,
-  REGEN_LEVELUP_HEAL_INCREASE,
-  TIMESLOW_BASE_COOLDOWN,
-  TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER,
   TORNADO_BASE_SHAKE_AMOUNT,
-  CIRCLE_SCALE_MULTIPLIER,
   PowerupRecord,
 } from '../../constants';
 import EnemyManager from '../classes/EnemyManager';
+import PowerupManager from '../classes/PowerupManager';
 
 export default class GameStageScene extends Phaser.Scene {
-  private playerTower: PlayerTower = new PlayerTower();
-  private enemyManager: EnemyManager = new EnemyManager(this, this.playerTower);
+  public playerTower: PlayerTower = new PlayerTower();
+  public enemyManager: EnemyManager = new EnemyManager(this, this.playerTower);
+  public powerupManager: PowerupManager = new PowerupManager(this);
   private startTime: number = 0;
   private elapsedSeconds: number = 0;
-  private circleWeapons: Phaser.Physics.Arcade.Group | undefined;
-  private tower: Phaser.Physics.Arcade.Sprite | undefined;
-  private weapons: Phaser.Physics.Arcade.Group | undefined;
-  private PermanentWeapons: Phaser.Physics.Arcade.Group | undefined;
+  public circleWeapons: Phaser.Physics.Arcade.Group | undefined;
+  public tower: Phaser.Physics.Arcade.Sprite | undefined;
+  public weapons: Phaser.Physics.Arcade.Group | undefined;
+  public PermanentWeapons: Phaser.Physics.Arcade.Group | undefined;
   private shopBoxes: Phaser.GameObjects.Group | undefined;
   public generatedItems: PowerupType[] = [];
   public additionalPrice: number = 0;
@@ -54,27 +37,7 @@ export default class GameStageScene extends Phaser.Scene {
   private gameTimeText: Phaser.GameObjects.Text | undefined;
   private goldText: Phaser.GameObjects.Text | undefined;
   private enemyRateText: Phaser.GameObjects.Text | undefined;
-  private arrowRate: number = ARROW_BASE_RATE;
   private arrowRateText: Phaser.GameObjects.Text | undefined;
-  private darkBlastCooldown: number = DARKBLAST_BASE_COOLDOWN;
-  private darkBlastDirection: number = 0;
-  private darkBlastAngleChange: number = DARKBLAST_BASE_ANGLE_CHANGE;
-  private fireBlastCooldown: number = FIREBLAST_BASE_COOLDOWN;
-  private fireBlastDirection: number = 180;
-  private fireBlastAngleChange: number = FIREBLAST_BASE_ANGLE_CHANGE;
-  private regenCooldown: number = REGEN_BASE_COOLDOWN;
-  private timeSlowCooldown: number = TIMESLOW_BASE_COOLDOWN;
-  private timeSlow: boolean = false;
-
-  private spawnArrowTimer: Phaser.Time.TimerEvent | undefined;
-  private darkBlastTimer: Phaser.Time.TimerEvent | undefined;
-  private fireBlastTimer: Phaser.Time.TimerEvent | undefined;
-  private regenTimer: Phaser.Time.TimerEvent | undefined;
-  private regenAmount: number = REGEN_BASE_HEAL_AMOUNT;
-  private timeSlowTimer: Phaser.Time.TimerEvent | undefined;
-
-  private enemyCurrentSpeed: number = ENEMY_BASE_SPEED;
-  private weaponCounter: number = 0;
 
   private keyQ: Phaser.Input.Keyboard.Key | null = null;
   private keyW: Phaser.Input.Keyboard.Key | null = null;
@@ -96,6 +59,10 @@ export default class GameStageScene extends Phaser.Scene {
 
     this.setupKeybindings();
     this.setupAnimations();
+
+    this.enemyManager = new EnemyManager(this, this.playerTower);
+    this.enemyManager.initialize();
+    this.powerupManager = new PowerupManager(this)
 
     const bg = this.add.tileSprite(
       0,
@@ -216,18 +183,13 @@ export default class GameStageScene extends Phaser.Scene {
       this.arrowRateText = this.add.text(
         this.scale.width / 40,
         this.scale.height / 4,
-        'Arrows per second: ' + this.arrowRate.toFixed(1),
+        'Arrows per second: ' + this.powerupManager.arrowRate.toFixed(1),
         {
           fontSize: `${topTextSize}px`,
           color: '#cccccc',
         }
       );
     }
-    
-    console.log("Directly within scene:", Object.keys(this));
-
-    this.enemyManager = new EnemyManager(this, this.playerTower);
-    this.enemyManager.initialize();
 
     this.physics.add.collider(this.enemyManager.enemies as Phaser.Types.Physics.Arcade.ArcadeColliderType, this.tower, (_, enemy) => {
       this.enemyManager.enemyTowerCollision(
@@ -265,9 +227,9 @@ export default class GameStageScene extends Phaser.Scene {
       }
     );
 
-    this.spawnArrowTimer = this.time.addEvent({
-      delay: 1000 / this.arrowRate,
-      callback: this.spawnArrow,
+    this.powerupManager.spawnArrowTimer = this.time.addEvent({
+      delay: 1000 / this.powerupManager.arrowRate,
+      callback: this.powerupManager.spawnArrow,
       callbackScope: this,
       loop: true,
     });
@@ -327,13 +289,13 @@ export default class GameStageScene extends Phaser.Scene {
       }
     });
 
-    if (this.timeSlow) this.enemyCurrentSpeed *= 0.95;
-    else if (this.enemyCurrentSpeed < ENEMY_BASE_SPEED / 10)
-      this.enemyCurrentSpeed = ENEMY_BASE_SPEED / 10;
-    else if (this.enemyCurrentSpeed < ENEMY_BASE_SPEED)
-      this.enemyCurrentSpeed /= 0.95;
-    if (this.enemyCurrentSpeed > ENEMY_BASE_SPEED)
-      this.enemyCurrentSpeed = ENEMY_BASE_SPEED;
+    if (this.powerupManager.timeSlow) this.enemyManager.enemyCurrentSpeed *= 0.95;
+    else if (this.enemyManager.enemyCurrentSpeed < ENEMY_BASE_SPEED / 10)
+      this.enemyManager.enemyCurrentSpeed = ENEMY_BASE_SPEED / 10;
+    else if (this.enemyManager.enemyCurrentSpeed < ENEMY_BASE_SPEED)
+      this.enemyManager.enemyCurrentSpeed /= 0.95;
+    if (this.enemyManager.enemyCurrentSpeed > ENEMY_BASE_SPEED)
+      this.enemyManager.enemyCurrentSpeed = ENEMY_BASE_SPEED;
 
     const shopBoxKeybinds: { [id: string]: ShopBox } = {};
     this.shopBoxes?.children.entries.forEach(
@@ -372,7 +334,7 @@ export default class GameStageScene extends Phaser.Scene {
       }
     }
     if (itemBought) {
-      this.addPowerup(itemBought);
+      this.powerupManager.addPowerup(itemBought);
       this.generatedItems = [];
       this.shopBoxes?.children.entries.forEach((shopbox) => {
         (shopbox as ShopBox).rerollItem();
@@ -385,10 +347,10 @@ export default class GameStageScene extends Phaser.Scene {
           this.physics.moveToObject(
             enemy,
             this.tower,
-            this.enemyCurrentSpeed * JUGGERNAUT_SPEED_MULTIPLIER
+            this.enemyManager.enemyCurrentSpeed * JUGGERNAUT_SPEED_MULTIPLIER
           );
         else
-          this.physics.moveToObject(enemy, this.tower, this.enemyCurrentSpeed);
+          this.physics.moveToObject(enemy, this.tower, this.enemyManager.enemyCurrentSpeed);
       }
     });
 
@@ -453,7 +415,7 @@ export default class GameStageScene extends Phaser.Scene {
         );
       this.arrowRateText &&
         this.arrowRateText.setText(
-          'Arrows per second: ' + this.arrowRate.toFixed(1)
+          'Arrows per second: ' + this.powerupManager.arrowRate.toFixed(1)
         );
     }
   }
@@ -512,228 +474,6 @@ export default class GameStageScene extends Phaser.Scene {
       repeat: -1,
     });
   }
-
-  private spawnArrow() {
-    if (this.tower) {
-      const x = this.tower.x;
-      const y = this.tower.y;
-
-      const arrow = this.physics.add.sprite(x, y, 'arrowTexture');
-      arrow.setData('id', `weapon-${this.weaponCounter++}`);
-
-      this.weapons?.add(arrow);
-
-      const closestEnemy = this.enemyManager.getClosestEnemy(this.tower);
-      if (closestEnemy) {
-        this.physics.moveToObject(arrow, closestEnemy, ARROW_BASE_SPEED);
-      } else {
-        const angle = Phaser.Math.Between(0, 360);
-        this.physics.velocityFromAngle(angle, 200, arrow.body.velocity);
-      }
-
-      this.updateArrowTimer();
-    }
-  }
-
-  private addPowerup(item: Item) {
-    switch (item.powerup) {
-      case 'arrowRate':
-        this.arrowRate += item.cost * ARROW_RATE_INCREASE;
-        this.spawnArrow();
-        break;
-      case 'circleStrength':
-        this.circleWeapons?.children.entries.forEach((circle) => {
-          const weaponCircle = circle as CircleWeapon;
-          weaponCircle.circleSpeed += CIRCLE_SPEED_INCREASE;
-          const currentX = weaponCircle.x;
-          const currentY = weaponCircle.y;
-          weaponCircle.scaleX *= CIRCLE_SCALE_MULTIPLIER;
-          weaponCircle.scaleY *= CIRCLE_SCALE_MULTIPLIER;
-          weaponCircle.x = currentX;
-          weaponCircle.y = currentY;
-        });
-        break;
-      case 'darkBlast':
-        if (this.darkBlastTimer) {
-          this.darkBlastCooldown =
-            this.darkBlastCooldown * DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER;
-          this.darkBlastAngleChange =
-            this.darkBlastAngleChange * DARKBLAST_LEVELUP_ANGLE_MULTIPLIER;
-        }
-        this.spawnDarkBlast();
-        break;
-      case 'fireBlast':
-        if (this.fireBlastTimer) {
-          this.fireBlastCooldown =
-            this.fireBlastCooldown * FIREBLAST_LEVELUP_COOLDOWN_MULTIPLIER;
-          this.fireBlastAngleChange =
-            this.fireBlastAngleChange * FIREBLAST_LEVELUP_ANGLE_MULTIPLIER;
-        }
-        this.spawnFireBlast();
-        break;
-      case 'regen':
-        this.playerTower.maxHp += 5;
-        if (this.regenTimer) {
-          this.regenCooldown *= REGEN_LEVELUP_COOLDOWN_MULTIPLIER;
-          this.regenAmount += REGEN_LEVELUP_HEAL_INCREASE;
-        }
-        this.spawnRegen();
-        break;
-      case 'timeSlow':
-        if (this.timeSlowTimer) {
-          this.timeSlowCooldown *= TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER;
-        }
-        this.spawnTimeSlow();
-        break;
-      case 'tornado':
-        this.spawnTornado();
-        break;
-      default:
-        break;
-    }
-  }
-
-  private updateArrowTimer() {
-    if (this.spawnArrowTimer) {
-      this.spawnArrowTimer.destroy();
-    }
-    this.spawnArrowTimer = this.time.addEvent({
-      delay: 1000 / this.arrowRate,
-      callback: this.spawnArrow,
-      callbackScope: this,
-      loop: true,
-    });
-  }
-
-  private spawnDarkBlast() {
-    if (this.darkBlastTimer) {
-      this.darkBlastTimer.destroy();
-    }
-    const x: number = this.scale.width / 2;
-    const y: number = this.scale.height / 2;
-    const darkBlastSprite = this.physics.add.sprite(x, y, 'darkBlastSprite1');
-    darkBlastSprite.scale = 2;
-    darkBlastSprite.setData('type', 'darkBlast');
-    darkBlastSprite.setData('id', `weapon-${this.weaponCounter++}`);
-    darkBlastSprite.play('darkBlastAnimation');
-
-    this.time.delayedCall(1, () => {
-      this.physics.velocityFromAngle(
-        this.darkBlastDirection,
-        200,
-        darkBlastSprite.body.velocity
-      );
-      darkBlastSprite.angle = this.darkBlastDirection;
-      if (this.darkBlastDirection + this.darkBlastAngleChange < 360)
-        this.darkBlastDirection += this.darkBlastAngleChange;
-      else this.darkBlastDirection = 0;
-    });
-
-    this.weapons?.add(darkBlastSprite);
-    this.darkBlastTimer = this.time.addEvent({
-      delay: this.darkBlastCooldown,
-      callback: this.spawnDarkBlast,
-      callbackScope: this,
-      loop: false,
-    });
-  }
-
-  private spawnFireBlast() {
-    if (this.fireBlastTimer) {
-      this.fireBlastTimer.destroy();
-    }
-    const x: number = this.scale.width / 2;
-    const y: number = this.scale.height / 2;
-    const fireBlastSprite = this.physics.add.sprite(x, y, 'fireBlastSprite1');
-    fireBlastSprite.scale = 2;
-    fireBlastSprite.setData('type', 'fireBlast');
-    fireBlastSprite.setData('id', `weapon-${this.weaponCounter++}`);
-    fireBlastSprite.play('fireBlastAnimation');
-
-    this.time.delayedCall(1, () => {
-      this.physics.velocityFromAngle(
-        this.fireBlastDirection,
-        200,
-        fireBlastSprite.body.velocity
-      );
-      fireBlastSprite.angle = this.fireBlastDirection;
-      if (this.fireBlastDirection + this.fireBlastAngleChange > 0)
-        this.fireBlastDirection -= this.fireBlastAngleChange;
-      else this.fireBlastDirection = 360;
-    });
-
-    this.weapons?.add(fireBlastSprite);
-    this.fireBlastTimer = this.time.addEvent({
-      delay: this.fireBlastCooldown,
-      callback: this.spawnFireBlast,
-      callbackScope: this,
-      loop: false,
-    });
-  }
-
-  private spawnRegen() {
-    if (this.regenTimer) {
-      this.regenTimer.destroy();
-    }
-    const x: number = this.scale.width / 2;
-    const y: number = this.scale.height / 2.3;
-    const regenSprite = this.physics.add.sprite(x, y, 'regen');
-    regenSprite.scale = 1.2;
-    regenSprite.setData('type', 'regen');
-    regenSprite.play('regenAnimation');
-    regenSprite.setImmovable(true);
-    if (this.playerTower.currentHp + this.regenAmount >= this.playerTower.maxHp)
-      this.playerTower.currentHp = this.playerTower.maxHp;
-    else this.playerTower.currentHp += this.regenAmount;
-    if (this.playerTower.currentHp > this.playerTower.maxHp)
-      this.playerTower.currentHp === this.playerTower.maxHp;
-    regenSprite.on('animationcomplete', () => {
-      regenSprite.destroy();
-      this.regenTimer = this.time.addEvent({
-        delay: this.regenCooldown,
-        callback: this.spawnRegen,
-        callbackScope: this,
-        loop: false,
-      });
-    });
-  }
-
-  private spawnTimeSlow() {
-    if (this.timeSlowTimer) {
-      this.timeSlowTimer.destroy();
-    }
-    const x: number = this.scale.width / 2;
-    const y: number = this.scale.height / 2;
-    const timeSlowSprite = this.physics.add.sprite(x, y, 'timeSlowTexture');
-    this.timeSlow = true;
-    timeSlowSprite.scale = 0.5;
-    timeSlowSprite.setData('type', 'timeSlow');
-    timeSlowSprite.play('timeSlowAnimation');
-    timeSlowSprite.setImmovable(true);
-    timeSlowSprite.on('animationcomplete', () => {
-      timeSlowSprite.destroy();
-      this.timeSlow = false;
-      // this.enemyCurrentSpeed = ENEMY_BASE_SPEED;
-      this.timeSlowTimer = this.time.addEvent({
-        delay: this.timeSlowCooldown,
-        callback: this.spawnTimeSlow,
-        callbackScope: this,
-        loop: false,
-      });
-    });
-  }
-
-  private spawnTornado = () => {
-    const x: number = this.scale.width * Math.random();
-    const y: number = this.scale.height * Math.random();
-    const tornadoSprite = this.physics.add.sprite(x, y, 'tornadoRepeat1');
-    tornadoSprite.scale = 0.2;
-    tornadoSprite.setData('type', 'tornado');
-    tornadoSprite.setData('id', `weapon-${this.weaponCounter++}`);
-    this.PermanentWeapons?.add(tornadoSprite);
-    tornadoSprite.play('tornadoAnimation');
-    tornadoSprite.setImmovable(true);
-  };
 
   public increasePrices = (): void => {
     this.additionalPrice += Math.floor(this.elapsedSeconds / 60) + 1;
