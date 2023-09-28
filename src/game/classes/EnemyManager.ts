@@ -1,7 +1,18 @@
-import { ENEMY_BASE_DAMAGE, ENEMY_BASE_GOLD_VALUE, ENEMY_BASE_RATE, ENEMY_BASE_SPEED, ENEMY_RATE_MULTIPLER, JUGGERNAUT_BASE_DAMAGE, JUGGERNAUT_BASE_GOLD_VALUE, JUGGERNAUT_BASE_HITPOINTS, JUGGERNAUT_BASE_RATE, JUGGERNAUT_RATE_MULTIPLIER } from "../../constants";
-import GameStageScene from "../scenes/GameStage";
-import { getRandomEdgeOfScreen } from "../scenes/helpers/gameHelpers";
-import PlayerTower from "./PlayerTower";
+import {
+  ENEMY_BASE_DAMAGE,
+  ENEMY_BASE_GOLD_VALUE,
+  ENEMY_BASE_RATE,
+  ENEMY_BASE_SPEED,
+  ENEMY_RATE_MULTIPLER,
+  JUGGERNAUT_BASE_DAMAGE,
+  JUGGERNAUT_BASE_GOLD_VALUE,
+  JUGGERNAUT_BASE_HITPOINTS,
+  JUGGERNAUT_BASE_RATE,
+  JUGGERNAUT_RATE_MULTIPLIER,
+} from '../../constants';
+import GameStageScene from '../scenes/GameStage';
+import { getRandomEdgeOfScreen } from '../scenes/helpers/gameHelpers';
+import PlayerTower from './PlayerTower';
 
 export default class EnemyManager {
   private scene: GameStageScene;
@@ -15,18 +26,18 @@ export default class EnemyManager {
   public enemyCurrentSpeed: number = ENEMY_BASE_SPEED;
   public weaponJuggernautHitMap = new Map();
 
-  constructor(scene: GameStageScene, playerTower: PlayerTower) {
+  public constructor(scene: GameStageScene, playerTower: PlayerTower) {
     this.scene = scene;
     this.playerTower = playerTower;
   }
 
-  initialize = () => {
+  public initialize = () => {
     this.enemies = this.scene.physics.add.group({
       classType: Phaser.GameObjects.Rectangle,
     });
-  }
+  };
 
-  spawnEnemy = () => {
+  public spawnEnemy = () => {
     const { x, y } = getRandomEdgeOfScreen(this.scene);
     const enemy = this.scene.physics.add.sprite(x, y, 'enemyTexture');
     enemy.setImmovable(true);
@@ -41,9 +52,9 @@ export default class EnemyManager {
       callbackScope: this,
       loop: true,
     });
-  }
+  };
 
-  spawnJuggernaut = () => {
+  public spawnJuggernaut = () => {
     const { x, y } = getRandomEdgeOfScreen(this.scene);
     const juggernaut = this.scene.physics.add.sprite(x, y, 'juggernautTexture');
     juggernaut.setData('type', 'juggernaut');
@@ -61,18 +72,18 @@ export default class EnemyManager {
       callbackScope: this,
       loop: true,
     });
-  }
+  };
 
-  enemyTowerCollision = (
+  public enemyTowerCollision = (
     enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
   ) => {
     if (enemy.getData('type') === 'juggernaut')
       this.playerTower.currentHp -= JUGGERNAUT_BASE_DAMAGE;
     else this.playerTower.currentHp -= ENEMY_BASE_DAMAGE;
     enemy.destroy();
-  }
+  };
 
-  enemyWeaponCollision = (
+  public enemyWeaponCollision = (
     weapon: Phaser.Types.Physics.Arcade.GameObjectWithBody,
     enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody,
     weaponDestroyed = false
@@ -101,16 +112,18 @@ export default class EnemyManager {
     if (weaponDestroyed) {
       weapon.destroy();
     }
-  }
+  };
 
-  enemyDefeated = (enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody) => {
+  public enemyDefeated = (
+    enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
+  ) => {
     if (enemy.getData('type') === 'juggernaut')
       this.playerTower.currentGold += JUGGERNAUT_BASE_GOLD_VALUE;
     else this.playerTower.currentGold += ENEMY_BASE_GOLD_VALUE;
     enemy.destroy();
-  }
+  };
 
-  getClosestEnemy = (origin: Phaser.Physics.Arcade.Sprite) => {
+  public getClosestEnemy = (origin: Phaser.Physics.Arcade.Sprite) => {
     let closestEnemy = null;
     let closestDistance = Number.MAX_VALUE;
 
@@ -131,9 +144,9 @@ export default class EnemyManager {
     );
 
     return closestEnemy;
-  }
-  
-  updateEnemyRates = () => {
+  };
+
+  public updateEnemyRates = () => {
     this.enemyRate *= ENEMY_RATE_MULTIPLER;
     this.juggernautRate *= JUGGERNAUT_RATE_MULTIPLIER;
   };

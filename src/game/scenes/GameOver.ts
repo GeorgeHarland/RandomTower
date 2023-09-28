@@ -7,12 +7,12 @@ export default class GameOverScene extends Phaser.Scene {
   public constructor() {
     super({ key: 'GameOverScene' });
   }
-  
+
   public preload() {
     this.load.audio('backgroundMusic', 'audio/sandsOfTime.mp3');
     this.load.image('gameOverBackground', 'sprites/gameOverBackground.png');
   }
-  
+
   public create() {
     this.gameScene = this.scene.get('GameStageScene') as GameStageScene;
     this.sound.stopByKey('backgroundMusic');
@@ -39,13 +39,12 @@ export default class GameOverScene extends Phaser.Scene {
         { fontSize: `${titleFontSize}px`, color: '#FFFFFF' }
       )
       .setOrigin(0.5);
-    this.add
-      .text(
-        this.scale.width / 20,
-        this.scale.height / 20,
-        'Survived: ' + secondsToMMSS(gametime),
-        { fontSize: `${timeFontSize}px`, color: '#FFFFFF' }
-      )
+    this.add.text(
+      this.scale.width / 20,
+      this.scale.height / 20,
+      'Survived: ' + secondsToMMSS(gametime),
+      { fontSize: `${timeFontSize}px`, color: '#FFFFFF' }
+    );
     const button = this.add
       .text(this.cameras.main.centerX, this.cameras.main.centerY, 'Restart', {
         fontSize: `${buttonFontSize}px`,

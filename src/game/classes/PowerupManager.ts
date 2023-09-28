@@ -1,7 +1,29 @@
-import { ARROW_BASE_RATE, ARROW_BASE_SPEED, ARROW_RATE_INCREASE, CIRCLE_SCALE_MULTIPLIER, CIRCLE_SPEED_INCREASE, DARKBLAST_BASE_ANGLE_CHANGE, DARKBLAST_BASE_COOLDOWN, DARKBLAST_LEVELUP_ANGLE_MULTIPLIER, DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER, FIREBLAST_BASE_ANGLE_CHANGE, FIREBLAST_BASE_COOLDOWN, FIREBLAST_LEVELUP_ANGLE_MULTIPLIER, FIREBLAST_LEVELUP_COOLDOWN_MULTIPLIER, REGEN_BASE_COOLDOWN, REGEN_BASE_HEAL_AMOUNT, REGEN_LEVELUP_COOLDOWN_MULTIPLIER, REGEN_LEVELUP_HEAL_INCREASE, TIMESLOW_BASE_COOLDOWN, TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER } from "../../constants";
-import GameStageScene from "../scenes/GameStage";
-import CircleWeapon from "./CircleWeapon";
-import Item from "./Item";
+import {
+  ARROW_BASE_RATE,
+  ARROW_BASE_SPEED,
+  ARROW_RATE_INCREASE,
+  CIRCLE_SCALE_MULTIPLIER,
+  CIRCLE_SPEED_INCREASE,
+  DARKBLAST_BASE_ANGLE_CHANGE,
+  DARKBLAST_BASE_COOLDOWN,
+  DARKBLAST_LEVELUP_ANGLE_MULTIPLIER,
+  DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER,
+  FIREBLAST_BASE_ANGLE_CHANGE,
+  FIREBLAST_BASE_COOLDOWN,
+  FIREBLAST_LEVELUP_ANGLE_MULTIPLIER,
+  FIREBLAST_LEVELUP_COOLDOWN_MULTIPLIER,
+  PowerupRecord,
+  REGEN_BASE_COOLDOWN,
+  REGEN_BASE_HEAL_AMOUNT,
+  REGEN_LEVELUP_COOLDOWN_MULTIPLIER,
+  REGEN_LEVELUP_HEAL_INCREASE,
+  TIMESLOW_BASE_COOLDOWN,
+  TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER,
+} from '../../constants';
+import GameStageScene from '../scenes/GameStage';
+import CircleWeapon from './CircleWeapon';
+import Item from './Item';
+import ShopBox from './ShopBox';
 
 export default class PowerupManager {
   public arrowRate: number = ARROW_BASE_RATE;
@@ -22,14 +44,61 @@ export default class PowerupManager {
   public fireBlastTimer: Phaser.Time.TimerEvent | undefined;
   public regenTimer: Phaser.Time.TimerEvent | undefined;
   public timeSlowTimer: Phaser.Time.TimerEvent | undefined;
-  
-  constructor(private scene: GameStageScene) { }
 
-  initShopBoxes = () => {
-    // Code that populates shopBoxes with items
-  }
+  public constructor(private scene: GameStageScene) {}
 
-  spawnArrow = () => {
+  public initShopBoxes = () => {
+    this.scene.shopBoxes?.children.entries.forEach((box, index) => {
+      const shopBox = box as ShopBox;
+      if (shopBox.getItem() === null) {
+        if (this.scene.elapsedSeconds > 1)
+          (shopBox as ShopBox).addItem(
+            (shopBox as ShopBox).generateRandomItem()
+          );
+        else if (index === 0)
+          shopBox.addItem(
+            new Item(
+              shopBox.scene,
+              0,
+              0,
+              'item0',
+              'arrowRate',
+              PowerupRecord['arrowRate'],
+              10
+            )
+          );
+        else if (index === 1)
+          shopBox.addItem(
+            new Item(
+              shopBox.scene,
+              0,
+              0,
+              'item0',
+              'circleStrength',
+              PowerupRecord['circleStrength'],
+              10
+            )
+          );
+        else if (index === 2)
+          shopBox.addItem(
+            new Item(
+              shopBox.scene,
+              0,
+              0,
+              'item0',
+              'tornado',
+              PowerupRecord['tornado'],
+              8
+            )
+          );
+      }
+      if (shopBox.getItem != null) {
+        this.scene.generatedItems.push((shopBox.getItem() as Item).powerup);
+      }
+    });
+  };
+
+  public spawnArrow = () => {
     if (this.scene.tower) {
       const x = this.scene.tower.x;
       const y = this.scene.tower.y;
@@ -39,7 +108,9 @@ export default class PowerupManager {
 
       this.scene.weapons?.add(arrow);
 
-      const closestEnemy = this.scene.enemyManager.getClosestEnemy(this.scene.tower);
+      const closestEnemy = this.scene.enemyManager.getClosestEnemy(
+        this.scene.tower
+      );
       if (closestEnemy) {
         this.scene.physics.moveToObject(arrow, closestEnemy, ARROW_BASE_SPEED);
       } else {
@@ -49,9 +120,9 @@ export default class PowerupManager {
 
       this.updateArrowTimer();
     }
-  }
+  };
 
-  addPowerup = (item: Item) => {
+  public addPowerup = (item: Item) => {
     switch (item.powerup) {
       case 'arrowRate':
         this.arrowRate += item.cost * ARROW_RATE_INCREASE;
@@ -107,9 +178,9 @@ export default class PowerupManager {
       default:
         break;
     }
-  }
+  };
 
-  updateArrowTimer = () => {
+  public updateArrowTimer = () => {
     if (this.spawnArrowTimer) {
       this.spawnArrowTimer.destroy();
     }
@@ -119,15 +190,19 @@ export default class PowerupManager {
       callbackScope: this,
       loop: true,
     });
-  }
+  };
 
-  spawnDarkBlast = () => {
+  public spawnDarkBlast = () => {
     if (this.darkBlastTimer) {
       this.darkBlastTimer.destroy();
     }
     const x: number = this.scene.scale.width / 2;
     const y: number = this.scene.scale.height / 2;
-    const darkBlastSprite = this.scene.physics.add.sprite(x, y, 'darkBlastSprite1');
+    const darkBlastSprite = this.scene.physics.add.sprite(
+      x,
+      y,
+      'darkBlastSprite1'
+    );
     darkBlastSprite.scale = 2;
     darkBlastSprite.setData('type', 'darkBlast');
     darkBlastSprite.setData('id', `weapon-${this.weaponCounter++}`);
@@ -152,15 +227,19 @@ export default class PowerupManager {
       callbackScope: this,
       loop: false,
     });
-  }
+  };
 
-  spawnFireBlast = () => {
+  public spawnFireBlast = () => {
     if (this.fireBlastTimer) {
       this.fireBlastTimer.destroy();
     }
     const x: number = this.scene.scale.width / 2;
     const y: number = this.scene.scale.height / 2;
-    const fireBlastSprite = this.scene.physics.add.sprite(x, y, 'fireBlastSprite1');
+    const fireBlastSprite = this.scene.physics.add.sprite(
+      x,
+      y,
+      'fireBlastSprite1'
+    );
     fireBlastSprite.scale = 2;
     fireBlastSprite.setData('type', 'fireBlast');
     fireBlastSprite.setData('id', `weapon-${this.weaponCounter++}`);
@@ -185,9 +264,9 @@ export default class PowerupManager {
       callbackScope: this,
       loop: false,
     });
-  }
+  };
 
-  spawnRegen = () => {
+  public spawnRegen = () => {
     if (this.regenTimer) {
       this.regenTimer.destroy();
     }
@@ -198,7 +277,10 @@ export default class PowerupManager {
     regenSprite.setData('type', 'regen');
     regenSprite.play('regenAnimation');
     regenSprite.setImmovable(true);
-    if (this.scene.playerTower.currentHp + this.regenAmount >= this.scene.playerTower.maxHp)
+    if (
+      this.scene.playerTower.currentHp + this.regenAmount >=
+      this.scene.playerTower.maxHp
+    )
       this.scene.playerTower.currentHp = this.scene.playerTower.maxHp;
     else this.scene.playerTower.currentHp += this.regenAmount;
     if (this.scene.playerTower.currentHp > this.scene.playerTower.maxHp)
@@ -212,15 +294,19 @@ export default class PowerupManager {
         loop: false,
       });
     });
-  }
+  };
 
-  spawnTimeSlow = () => {
+  public spawnTimeSlow = () => {
     if (this.timeSlowTimer) {
       this.timeSlowTimer.destroy();
     }
     const x: number = this.scene.scale.width / 2;
     const y: number = this.scene.scale.height / 2;
-    const timeSlowSprite = this.scene.physics.add.sprite(x, y, 'timeSlowTexture');
+    const timeSlowSprite = this.scene.physics.add.sprite(
+      x,
+      y,
+      'timeSlowTexture'
+    );
     this.timeSlow = true;
     timeSlowSprite.scale = 0.5;
     timeSlowSprite.setData('type', 'timeSlow');
@@ -229,7 +315,6 @@ export default class PowerupManager {
     timeSlowSprite.on('animationcomplete', () => {
       timeSlowSprite.destroy();
       this.timeSlow = false;
-      // this.enemyCurrentSpeed = ENEMY_BASE_SPEED;
       this.timeSlowTimer = this.scene.time.addEvent({
         delay: this.timeSlowCooldown,
         callback: this.spawnTimeSlow,
@@ -237,9 +322,9 @@ export default class PowerupManager {
         loop: false,
       });
     });
-  }
+  };
 
-  spawnTornado = () => {
+  public spawnTornado = () => {
     const x: number = this.scene.scale.width * Math.random();
     const y: number = this.scene.scale.height * Math.random();
     const tornadoSprite = this.scene.physics.add.sprite(x, y, 'tornadoRepeat1');

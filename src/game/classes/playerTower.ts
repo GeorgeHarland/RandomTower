@@ -1,4 +1,4 @@
-import { TOWER_BASE_HITPOINTS } from "../../constants";
+import { TOWER_BASE_HITPOINTS } from '../../constants';
 
 export default class PlayerTower {
   public currentGold: number = 0;

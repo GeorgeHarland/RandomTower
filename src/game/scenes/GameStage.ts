@@ -1,6 +1,5 @@
 import Phaser from 'phaser';
 import CircleWeapon from '../classes/CircleWeapon';
-import Item from '../classes/Item';
 import PlayerTower from '../classes/PlayerTower';
 import ShopBox from '../classes/ShopBox';
 import { secondsToMMSS } from './helpers/gameHelpers';
@@ -12,7 +11,6 @@ import {
   DEV_TEXT_AT_TOP,
   ENEMY_BASE_SPEED,
   TORNADO_BASE_SHAKE_AMOUNT,
-  PowerupRecord,
 } from '../../constants';
 import EnemyManager from '../classes/EnemyManager';
 import PowerupManager from '../classes/PowerupManager';
@@ -22,12 +20,12 @@ export default class GameStageScene extends Phaser.Scene {
   public enemyManager: EnemyManager = new EnemyManager(this, this.playerTower);
   public powerupManager: PowerupManager = new PowerupManager(this);
   private startTime: number = 0;
-  private elapsedSeconds: number = 0;
+  public elapsedSeconds: number = 0;
   public circleWeapons: Phaser.Physics.Arcade.Group | undefined;
   public tower: Phaser.Physics.Arcade.Sprite | undefined;
   public weapons: Phaser.Physics.Arcade.Group | undefined;
   public PermanentWeapons: Phaser.Physics.Arcade.Group | undefined;
-  private shopBoxes: Phaser.GameObjects.Group | undefined;
+  public shopBoxes: Phaser.GameObjects.Group | undefined;
   public generatedItems: PowerupType[] = [];
   public additionalPrice: number = 0;
 
@@ -62,7 +60,7 @@ export default class GameStageScene extends Phaser.Scene {
 
     this.enemyManager = new EnemyManager(this, this.playerTower);
     this.enemyManager.initialize();
-    this.powerupManager = new PowerupManager(this)
+    this.powerupManager = new PowerupManager(this);
 
     const bg = this.add.tileSprite(
       0,
@@ -74,7 +72,7 @@ export default class GameStageScene extends Phaser.Scene {
     bg.setOrigin(0, 0);
 
     const towerImage = this.towerSprites[0];
-    
+
     const centerX = this.scale.width / 2;
     const centerY = this.scale.height / 2;
     this.tower = this.physics.add.sprite(
@@ -83,8 +81,12 @@ export default class GameStageScene extends Phaser.Scene {
       'towerSpriteSheet',
       towerImage.frame.name
     );
-    this.tower.setBodySize(this.tower.displayWidth , this.tower.displayHeight * 0.7, true)
-    this.tower.setOffset(0, this.tower.displayHeight * 0.25)
+    this.tower.setBodySize(
+      this.tower.displayWidth,
+      this.tower.displayHeight * 0.7,
+      true
+    );
+    this.tower.setOffset(0, this.tower.displayHeight * 0.25);
     this.tower.scale = this.scale.width / 800;
 
     this.tower.setImmovable(true);
@@ -191,13 +193,19 @@ export default class GameStageScene extends Phaser.Scene {
       );
     }
 
-    this.physics.add.collider(this.enemyManager.enemies as Phaser.Types.Physics.Arcade.ArcadeColliderType, this.tower, (_, enemy) => {
-      this.enemyManager.enemyTowerCollision(
-        enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody
-      );
-    });
     this.physics.add.collider(
-      this.enemyManager.enemies as Phaser.Types.Physics.Arcade.ArcadeColliderType,
+      this.enemyManager
+        .enemies as Phaser.Types.Physics.Arcade.ArcadeColliderType,
+      this.tower,
+      (_, enemy) => {
+        this.enemyManager.enemyTowerCollision(
+          enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody
+        );
+      }
+    );
+    this.physics.add.collider(
+      this.enemyManager
+        .enemies as Phaser.Types.Physics.Arcade.ArcadeColliderType,
       this.circleWeapons,
       (enemy, circle) => {
         this.enemyManager.enemyWeaponCollision(
@@ -208,15 +216,21 @@ export default class GameStageScene extends Phaser.Scene {
       }
     );
 
-    this.physics.add.collider(this.enemyManager.enemies as Phaser.Types.Physics.Arcade.ArcadeColliderType, this.weapons, (enemy, weapon) => {
-      this.enemyManager.enemyWeaponCollision(
-        weapon as Phaser.Types.Physics.Arcade.GameObjectWithBody,
-        enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody,
-        true
-      );
-    });
     this.physics.add.collider(
-      this.enemyManager.enemies as Phaser.Types.Physics.Arcade.ArcadeColliderType,
+      this.enemyManager
+        .enemies as Phaser.Types.Physics.Arcade.ArcadeColliderType,
+      this.weapons,
+      (enemy, weapon) => {
+        this.enemyManager.enemyWeaponCollision(
+          weapon as Phaser.Types.Physics.Arcade.GameObjectWithBody,
+          enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody,
+          true
+        );
+      }
+    );
+    this.physics.add.collider(
+      this.enemyManager
+        .enemies as Phaser.Types.Physics.Arcade.ArcadeColliderType,
       this.PermanentWeapons,
       (enemy, weapon) => {
         this.enemyManager.enemyWeaponCollision(
@@ -289,7 +303,8 @@ export default class GameStageScene extends Phaser.Scene {
       }
     });
 
-    if (this.powerupManager.timeSlow) this.enemyManager.enemyCurrentSpeed *= 0.95;
+    if (this.powerupManager.timeSlow)
+      this.enemyManager.enemyCurrentSpeed *= 0.95;
     else if (this.enemyManager.enemyCurrentSpeed < ENEMY_BASE_SPEED / 10)
       this.enemyManager.enemyCurrentSpeed = ENEMY_BASE_SPEED / 10;
     else if (this.enemyManager.enemyCurrentSpeed < ENEMY_BASE_SPEED)
@@ -350,49 +365,18 @@ export default class GameStageScene extends Phaser.Scene {
             this.enemyManager.enemyCurrentSpeed * JUGGERNAUT_SPEED_MULTIPLIER
           );
         else
-          this.physics.moveToObject(enemy, this.tower, this.enemyManager.enemyCurrentSpeed);
+          this.physics.moveToObject(
+            enemy,
+            this.tower,
+            this.enemyManager.enemyCurrentSpeed
+          );
       }
     });
 
-    this.shopBoxes?.children.entries.forEach((box, index) => {
-      const shopBox = box as ShopBox;
-      if (shopBox.getItem() === null) {
-        if(this.elapsedSeconds > 1) (shopBox as ShopBox).addItem((shopBox as ShopBox).generateRandomItem());
-        else if (index === 0) shopBox.addItem(new Item(
-          shopBox.scene,
-          0,
-          0,
-          'item0',
-          'arrowRate',
-          PowerupRecord['arrowRate'],
-          10
-        ));
-        else if (index === 1) shopBox.addItem(new Item(
-          shopBox.scene,
-          0,
-          0,
-          'item0',
-          'circleStrength',
-          PowerupRecord['circleStrength'],
-          10
-        ));
-        else if (index === 2) shopBox.addItem(new Item(
-          shopBox.scene,
-          0,
-          0,
-          'item0',
-          'tornado',
-          PowerupRecord['tornado'],
-          8
-        ));
-      }
-      if (shopBox.getItem != null) {
-        this.generatedItems.push((shopBox.getItem() as Item).powerup);
-      }
-    });
+    this.powerupManager.initShopBoxes();
 
     if (this.playerTower.currentHp <= 0) {
-      this.data.set('gametime', this.elapsedSeconds)
+      this.data.set('gametime', this.elapsedSeconds);
       // this.scene.remove();
       this.scene.start('GameOverScene');
     }
