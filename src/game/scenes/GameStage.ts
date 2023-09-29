@@ -1,6 +1,8 @@
 import Phaser from 'phaser';
 import CircleWeapon from '../classes/CircleWeapon';
+import EnemyManager from '../classes/EnemyManager';
 import PlayerTower from '../classes/PlayerTower';
+import PowerupManager from '../classes/PowerupManager';
 import ShopBox from '../classes/ShopBox';
 import { secondsToMMSS } from './helpers/gameHelpers';
 import { extractTowerFrames, loadSprites } from './helpers/spriteHelpers';
@@ -12,36 +14,34 @@ import {
   ENEMY_BASE_SPEED,
   TORNADO_BASE_SHAKE_AMOUNT,
 } from '../../constants';
-import EnemyManager from '../classes/EnemyManager';
-import PowerupManager from '../classes/PowerupManager';
+import { setupAnimations, setupKeybindings } from './helpers/setupHelpers';
 
 export default class GameStageScene extends Phaser.Scene {
-  public playerTower: PlayerTower = new PlayerTower();
-  public enemyManager: EnemyManager = new EnemyManager(this, this.playerTower);
-  public powerupManager: PowerupManager = new PowerupManager(this);
-  private startTime: number = 0;
-  public elapsedSeconds: number = 0;
+  public additionalPrice: number = 0;
   public circleWeapons: Phaser.Physics.Arcade.Group | undefined;
+  public elapsedSeconds: number = 0;
+  public generatedItems: PowerupType[] = [];
+  public PermanentWeapons: Phaser.Physics.Arcade.Group | undefined;
+  public playerTower: PlayerTower = new PlayerTower();
+  public shopBoxes: Phaser.GameObjects.Group | undefined;
   public tower: Phaser.Physics.Arcade.Sprite | undefined;
   public weapons: Phaser.Physics.Arcade.Group | undefined;
-  public PermanentWeapons: Phaser.Physics.Arcade.Group | undefined;
-  public shopBoxes: Phaser.GameObjects.Group | undefined;
-  public generatedItems: PowerupType[] = [];
-  public additionalPrice: number = 0;
 
-  private towerSprites: Phaser.GameObjects.Image[] = [];
+  public enemyManager: EnemyManager = new EnemyManager(this, this.playerTower);
+  public powerupManager: PowerupManager = new PowerupManager(this);
+  public keyQ: Phaser.Input.Keyboard.Key | null = null;
+  public keyW: Phaser.Input.Keyboard.Key | null = null;
+  public keyE: Phaser.Input.Keyboard.Key | null = null;
+  public keyU: Phaser.Input.Keyboard.Key | null = null;
+  public keyK: Phaser.Input.Keyboard.Key | null = null;
 
-  private towerLifeText: Phaser.GameObjects.Text | undefined;
+  private arrowRateText: Phaser.GameObjects.Text | undefined;
+  private enemyRateText: Phaser.GameObjects.Text | undefined;
   private gameTimeText: Phaser.GameObjects.Text | undefined;
   private goldText: Phaser.GameObjects.Text | undefined;
-  private enemyRateText: Phaser.GameObjects.Text | undefined;
-  private arrowRateText: Phaser.GameObjects.Text | undefined;
-
-  private keyQ: Phaser.Input.Keyboard.Key | null = null;
-  private keyW: Phaser.Input.Keyboard.Key | null = null;
-  private keyE: Phaser.Input.Keyboard.Key | null = null;
-  private keyU: Phaser.Input.Keyboard.Key | null = null;
-  private keyK: Phaser.Input.Keyboard.Key | null = null;
+  private startTime: number = 0;
+  private towerLifeText: Phaser.GameObjects.Text | undefined;
+  private towerSprites: Phaser.GameObjects.Image[] = [];
 
   public constructor() {
     super({ key: 'GameStageScene' });
@@ -55,8 +55,8 @@ export default class GameStageScene extends Phaser.Scene {
     generateTextures(this.make);
     this.towerSprites = extractTowerFrames(this);
 
-    this.setupKeybindings();
-    this.setupAnimations();
+    setupKeybindings(this);
+    setupAnimations(this);
 
     this.enemyManager = new EnemyManager(this, this.playerTower);
     this.enemyManager.initialize();
@@ -402,61 +402,6 @@ export default class GameStageScene extends Phaser.Scene {
           'Arrows per second: ' + this.powerupManager.arrowRate.toFixed(1)
         );
     }
-  }
-
-  private setupKeybindings() {
-    if (this.input.keyboard) {
-      this.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
-      this.keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-      this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
-      this.keyU = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.U);
-      this.keyK = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
-    }
-  }
-
-  private setupAnimations() {
-    this.anims.create({
-      key: 'darkBlastAnimation',
-      frames: Array.from({ length: 15 }, (_, i) => ({
-        key: `darkBlastSprite${i}`,
-      })),
-      frameRate: 14,
-      repeat: -1,
-    });
-    this.anims.create({
-      key: 'fireBlastAnimation',
-      frames: Array.from({ length: 15 }, (_, i) => ({
-        key: `fireBlastSprite${i}`,
-      })),
-      frameRate: 14,
-      repeat: -1,
-    });
-    this.anims.create({
-      key: 'regenAnimation',
-      frames: this.anims.generateFrameNumbers('healEffectSheet', {
-        start: 0,
-        end: 15,
-      }),
-      frameRate: 12,
-      repeat: 0,
-    });
-    this.anims.create({
-      key: 'timeSlowAnimation',
-      frames: this.anims.generateFrameNumbers('timeSlowAnimationSheet', {
-        start: 0,
-        end: 14,
-      }),
-      frameRate: 12,
-      repeat: 1,
-    });
-    this.anims.create({
-      key: 'tornadoAnimation',
-      frames: Array.from({ length: 9 }, (_, i) => ({
-        key: `tornadoRepeat${i}`,
-      })),
-      frameRate: 28,
-      repeat: -1,
-    });
   }
 
   public increasePrices = (): void => {

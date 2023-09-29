@@ -1,10 +1,11 @@
 export const generateTextures = (
   objectCreator: Phaser.GameObjects.GameObjectCreator
 ) => {
+  // initial light green background
   const bgGraphic = objectCreator.graphics();
   bgGraphic.fillStyle(0x448811, 1);
   bgGraphic.fillRect(0, 0, 200, 200);
-  // random grass texture
+  // random darker grass dotted about
   for (let i = 0; i < 1000; i++) {
     const x = Math.random() * 200;
     const y = Math.random() * 200;
