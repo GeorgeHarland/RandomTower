@@ -17,6 +17,7 @@ import {
   REGEN_BASE_HEAL_AMOUNT,
   REGEN_LEVELUP_COOLDOWN_MULTIPLIER,
   REGEN_LEVELUP_HEAL_INCREASE,
+  REGEN_LEVELUP_MAXHP_INCREASE,
   TIMESLOW_BASE_COOLDOWN,
   TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER,
 } from '../../constants';
@@ -159,7 +160,7 @@ export default class PowerupManager {
         this.spawnFireBlast();
         break;
       case 'regen':
-        this.scene.playerTower.maxHp += 5;
+        this.scene.playerTower.maxHp += REGEN_LEVELUP_MAXHP_INCREASE;
         if (this.regenTimer) {
           this.regenCooldown *= REGEN_LEVELUP_COOLDOWN_MULTIPLIER;
           this.regenAmount += REGEN_LEVELUP_HEAL_INCREASE;
@@ -252,7 +253,7 @@ export default class PowerupManager {
         fireBlastSprite.body.velocity
       );
       fireBlastSprite.angle = this.fireBlastDirection;
-      if (this.fireBlastDirection + this.fireBlastAngleChange > 0)
+      if (this.fireBlastDirection - this.fireBlastAngleChange > 0)
         this.fireBlastDirection -= this.fireBlastAngleChange;
       else this.fireBlastDirection = 360;
     });
