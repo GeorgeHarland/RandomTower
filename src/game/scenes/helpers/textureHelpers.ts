@@ -1,10 +1,13 @@
+import GameStageScene from "../GameStage";
+
 export const generateTextures = (
-  objectCreator: Phaser.GameObjects.GameObjectCreator
+  scene: GameStageScene
 ) => {
+  const objectCreator = scene.make;
   // initial light green background
   const bgGraphic = objectCreator.graphics();
   bgGraphic.fillStyle(0x448811, 1);
-  bgGraphic.fillRect(0, 0, 200, 200);
+  bgGraphic.fillRect(0, 0, scene.scale.width, scene.scale.height);
   // random darker grass dotted about
   for (let i = 0; i < 1000; i++) {
     const x = Math.random() * 200;
@@ -16,17 +19,11 @@ export const generateTextures = (
   }
   bgGraphic.generateTexture('bgTexture', 200, 200);
 
-  const towerGraphic = objectCreator.graphics();
-  towerGraphic.fillStyle(0x000000, 1);
-  towerGraphic.fillRect(0, 0, 40, 40);
-  towerGraphic.fillStyle(0x888888, 1);
-  towerGraphic.fillRect(2, 2, 36, 36);
-  towerGraphic.generateTexture('towerTexture', 40, 40);
-
   const circleGraphic = objectCreator.graphics();
   circleGraphic.fillStyle(0xffff00, 1);
-  circleGraphic.fillCircle(15, 15, 15);
-  circleGraphic.generateTexture('circleTexture', 30, 30);
+  const circleSize = scene.scale.width / 22;
+  circleGraphic.fillCircle(circleSize / 2, circleSize / 2, circleSize / 2);
+  circleGraphic.generateTexture('circleTexture', circleSize, circleSize);
 
   const enemyGraphic = objectCreator.graphics();
   enemyGraphic.fillStyle(0x000000, 1);

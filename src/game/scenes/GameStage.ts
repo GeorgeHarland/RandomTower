@@ -52,7 +52,7 @@ export default class GameStageScene extends Phaser.Scene {
   }
 
   public create() {
-    generateTextures(this.make);
+    generateTextures(this);
     this.towerSprites = extractTowerFrames(this);
 
     setupKeybindings(this);
@@ -98,8 +98,8 @@ export default class GameStageScene extends Phaser.Scene {
     for (let i = 0; i < 3; i++) {
       const currentWeapon = new CircleWeapon({
         scene: this,
-        x: 400,
-        y: 280,
+        x: this.scale.width / 2,
+        y: this.scale.height / 2.2,
         texture: 'circleTexture',
         circleNumber: i,
       });
