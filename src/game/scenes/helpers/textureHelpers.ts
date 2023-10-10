@@ -27,16 +27,20 @@ export const generateTextures = (
 
   const enemyGraphic = objectCreator.graphics();
   enemyGraphic.fillStyle(0x000000, 1);
-  enemyGraphic.fillRect(0, 0, 10, 10);
+  const enemySize = scene.scale.width / 80;
+  const enemyPadding = scene.scale.width > 700 ? enemySize / 12 : enemySize / 6;
+  enemyGraphic.fillRect(0, 0, enemySize, enemySize);
   enemyGraphic.fillStyle(0xdd3333, 1);
-  enemyGraphic.fillRect(1, 1, 8, 8);
-  enemyGraphic.generateTexture('enemyTexture', 10, 10);
+  enemyGraphic.fillRect(enemyPadding, enemyPadding, enemySize - enemyPadding*2, enemySize - enemyPadding*2);
+  enemyGraphic.generateTexture('enemyTexture', enemySize, enemySize);
 
   const juggernautGraphic = objectCreator.graphics();
   juggernautGraphic.fillStyle(0x000000, 1);
-  juggernautGraphic.fillRect(0, 0, 20, 20);
+  const juggernautSize = scene.scale.width / 40;
+  const juggernautPadding = scene.scale.width > 700 ? juggernautSize / 12 : juggernautSize / 6;
+  juggernautGraphic.fillRect(0, 0, juggernautSize, juggernautSize);
   juggernautGraphic.fillStyle(0xdd33dd, 1);
-  juggernautGraphic.fillRect(1, 1, 18, 18);
+  juggernautGraphic.fillRect(juggernautPadding, juggernautPadding, juggernautSize - juggernautPadding*2, juggernautSize - juggernautPadding*2);
   juggernautGraphic.generateTexture('juggernautTexture', 20, 20);
 
   const arrowGraphic = objectCreator.graphics();
