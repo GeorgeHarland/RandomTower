@@ -59,11 +59,11 @@ export const generateTextures = (
   shopBoxTexture.fillRect(0, 0, shopBoxSize, bevelSize); // top
   shopBoxTexture.fillRect(0, 0, bevelSize, shopBoxSize); // left
   // bottom bevel
-  shopBoxTexture.fillStyle(0x8a1d1d, 1);
+  shopBoxTexture.fillStyle(0x790c0c, 1);
   shopBoxTexture.fillRect(0, shopBoxSize - bevelSize, shopBoxSize, bevelSize); // bottom
   shopBoxTexture.fillRect(shopBoxSize - bevelSize, 0, bevelSize, shopBoxSize); // right
   // inner box
-  shopBoxTexture.fillStyle(0xa52a2a, 1);
+  shopBoxTexture.fillStyle(0x941919, 1);
   shopBoxTexture.fillRect(bevelSize, bevelSize, shopBoxSize - 2 * bevelSize, shopBoxSize - 2 * bevelSize);
 
   shopBoxTexture.generateTexture('shopBoxTexture', shopBoxSize, shopBoxSize);

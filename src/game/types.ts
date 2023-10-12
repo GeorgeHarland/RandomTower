@@ -4,13 +4,13 @@ export type KeybindType = 'Q' | 'W' | 'E' | 'Z';
 export type ItemGradeType = 'S' | 'A' | 'B' | 'C' | 'D';
 
 export type PowerupType =
-  | 'arrowRate'
-  | 'circleStrength'
-  | 'darkBlast'
-  | 'fireBlast'
-  | 'regen'
-  | 'timeSlow'
-  | 'tornado';
+  | 'Arrow Rate'
+  | 'Circle Speed'
+  | 'Dark Blast'
+  | 'Fire Blast'
+  | 'Regen'
+  | 'Time Slow'
+  | 'Tornado';
 
 export type CoordinateType = {
   x: number;

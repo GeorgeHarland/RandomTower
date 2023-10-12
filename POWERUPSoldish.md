@@ -2,7 +2,7 @@
 
 Powerups are rated as D,C,B,A, or S. The better grade, the more expensive the powerup.
 
-### ArrowRate
+### Arrow Rate
 
 - Grade: C
 - Increases the spawn rate of the arrows firing from the tower.

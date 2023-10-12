@@ -20,13 +20,13 @@ export const loadSprites = (scene: Phaser.Scene): void => {
     }
   );
 
-  scene.load.image('arrowRate', 'sprites/powerupIcons/arrow-scope.png');
-  scene.load.image('circleStrength', 'sprites/powerupIcons/magic-swirl.png');
-  scene.load.image('darkBlast', 'sprites/powerupIcons/foamy-disc.png');
-  scene.load.image('fireBlast', 'sprites/powerupIcons/flaming-sheet.png');
-  scene.load.image('regen', 'sprites/powerupIcons/nested-hearts.png');
-  scene.load.image('timeSlow', 'sprites/powerupIcons/embrassed-energy.png');
-  scene.load.image('tornado', 'sprites/powerupIcons/tornado.png');
+  scene.load.image('Arrow Rate', 'sprites/powerupIcons/arrow-scope.png');
+  scene.load.image('Circle Speed', 'sprites/powerupIcons/magic-swirl.png');
+  scene.load.image('Dark Blast', 'sprites/powerupIcons/foamy-disc.png');
+  scene.load.image('Fire Blast', 'sprites/powerupIcons/flaming-sheet.png');
+  scene.load.image('Regen', 'sprites/powerupIcons/nested-hearts.png');
+  scene.load.image('Time Slow', 'sprites/powerupIcons/embrassed-energy.png');
+  scene.load.image('Tornado', 'sprites/powerupIcons/tornado.png');
 
   for (let i = 1; i <= 9; i++) {
     scene.load.image(

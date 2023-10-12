@@ -26,13 +26,13 @@ export const TOWER_BASE_HITPOINTS = 100;
 // Powerups
 
 export const PowerupRecord: Record<PowerupType, ItemGradeType> = {
-  arrowRate: 'C',
-  circleStrength: 'C',
-  darkBlast: 'B',
-  fireBlast: 'B',
-  regen: 'D',
-  timeSlow: 'S',
-  tornado: 'D',
+  'Arrow Rate': 'C',
+  'Circle Speed': 'C',
+  'Dark Blast': 'B',
+  'Fire Blast': 'B',
+  'Regen': 'D',
+  'Time Slow': 'S',
+  'Tornado': 'D',
 };
 
 export const gradeCost: Record<ItemGradeType, number> = {

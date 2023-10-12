@@ -63,8 +63,8 @@ export default class PowerupManager {
               0,
               0,
               'item0',
-              'arrowRate',
-              PowerupRecord['arrowRate'],
+              'Arrow Rate',
+              PowerupRecord['Arrow Rate'],
               10
             )
           );
@@ -75,8 +75,8 @@ export default class PowerupManager {
               0,
               0,
               'item0',
-              'circleStrength',
-              PowerupRecord['circleStrength'],
+              'Circle Speed',
+              PowerupRecord['Circle Speed'],
               10
             )
           );
@@ -87,8 +87,8 @@ export default class PowerupManager {
               0,
               0,
               'item0',
-              'tornado',
-              PowerupRecord['tornado'],
+              'Tornado',
+              PowerupRecord['Tornado'],
               8
             )
           );
@@ -125,11 +125,11 @@ export default class PowerupManager {
 
   public addPowerup = (item: Item) => {
     switch (item.powerup) {
-      case 'arrowRate':
+      case 'Arrow Rate':
         this.arrowRate += item.cost * ARROW_RATE_INCREASE;
         this.spawnArrow();
         break;
-      case 'circleStrength':
+      case 'Circle Speed':
         this.scene.circleWeapons?.children.entries.forEach((circle) => {
           const weaponCircle = circle as CircleWeapon;
           weaponCircle.circleSpeed += CIRCLE_SPEED_INCREASE;
@@ -141,7 +141,7 @@ export default class PowerupManager {
           weaponCircle.y = currentY;
         });
         break;
-      case 'darkBlast':
+      case 'Dark Blast':
         if (this.darkBlastTimer) {
           this.darkBlastCooldown =
             this.darkBlastCooldown * DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER;
@@ -150,7 +150,7 @@ export default class PowerupManager {
         }
         this.spawnDarkBlast();
         break;
-      case 'fireBlast':
+      case 'Fire Blast':
         if (this.fireBlastTimer) {
           this.fireBlastCooldown =
             this.fireBlastCooldown * FIREBLAST_LEVELUP_COOLDOWN_MULTIPLIER;
@@ -159,7 +159,7 @@ export default class PowerupManager {
         }
         this.spawnFireBlast();
         break;
-      case 'regen':
+      case 'Regen':
         this.scene.playerTower.maxHp += REGEN_LEVELUP_MAXHP_INCREASE;
         if (this.regenTimer) {
           this.regenCooldown *= REGEN_LEVELUP_COOLDOWN_MULTIPLIER;
@@ -167,13 +167,13 @@ export default class PowerupManager {
         }
         this.spawnRegen();
         break;
-      case 'timeSlow':
+      case 'Time Slow':
         if (this.timeSlowTimer) {
           this.timeSlowCooldown *= TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER;
         }
         this.spawnTimeSlow();
         break;
-      case 'tornado':
+      case 'Tornado':
         this.spawnTornado();
         break;
       default:
