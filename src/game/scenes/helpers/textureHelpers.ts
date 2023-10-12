@@ -41,17 +41,30 @@ export const generateTextures = (
   juggernautGraphic.fillRect(0, 0, juggernautSize, juggernautSize);
   juggernautGraphic.fillStyle(0xdd33dd, 1);
   juggernautGraphic.fillRect(juggernautPadding, juggernautPadding, juggernautSize - juggernautPadding*2, juggernautSize - juggernautPadding*2);
-  juggernautGraphic.generateTexture('juggernautTexture', 20, 20);
+  juggernautGraphic.generateTexture('juggernautTexture', juggernautSize, juggernautSize);
 
   const arrowGraphic = objectCreator.graphics();
   arrowGraphic.fillStyle(0x000000, 1);
-  arrowGraphic.fillRect(0, 0, 12, 3);
+  arrowGraphic.fillRect(0, 0, scene.scale.width / 60, scene.scale.width / 150);
   arrowGraphic.generateTexture('arrowTexture', 12, 3);
 
   const shopBoxTexture = objectCreator.graphics();
-  shopBoxTexture.fillStyle(0x000000, 1);
-  shopBoxTexture.fillRect(0, 0, 80, 80);
+  const shopBoxSize = scene.scale.width / 10;
+  const bevelSize = scene.scale.width > 700 ? shopBoxSize / 18 : shopBoxSize / 22;
   shopBoxTexture.fillStyle(0xa52a2a, 1);
-  shopBoxTexture.fillRect(2, 2, 76, 76);
-  shopBoxTexture.generateTexture('shopBoxTexture', 80, 80);
+  shopBoxTexture.fillRect(0, 0, shopBoxSize, shopBoxSize);
+
+  // top bevel
+  shopBoxTexture.fillStyle(0xc03a3a, 1);
+  shopBoxTexture.fillRect(0, 0, shopBoxSize, bevelSize); // top
+  shopBoxTexture.fillRect(0, 0, bevelSize, shopBoxSize); // left
+  // bottom bevel
+  shopBoxTexture.fillStyle(0x8a1d1d, 1);
+  shopBoxTexture.fillRect(0, shopBoxSize - bevelSize, shopBoxSize, bevelSize); // bottom
+  shopBoxTexture.fillRect(shopBoxSize - bevelSize, 0, bevelSize, shopBoxSize); // right
+  // inner box
+  shopBoxTexture.fillStyle(0xa52a2a, 1);
+  shopBoxTexture.fillRect(bevelSize, bevelSize, shopBoxSize - 2 * bevelSize, shopBoxSize - 2 * bevelSize);
+
+  shopBoxTexture.generateTexture('shopBoxTexture', shopBoxSize, shopBoxSize);
 };

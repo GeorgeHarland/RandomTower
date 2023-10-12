@@ -21,16 +21,18 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
   private keybind: KeybindType;
   private keybindText: Phaser.GameObjects.Text;
   private priceText: Phaser.GameObjects.Text | null = null;
+  private dynamicFontSize: string;
 
   public constructor({ scene, x, y, key, keybind }: ShopBoxConfig) {
     super(scene, x, y, key);
 
     this.gameScene = scene as GameStageScene;
     this.keybind = keybind;
+    this.dynamicFontSize = `${(scene.scale.width / 50).toString()}px Arial`
 
     scene.add.existing(this);
-    this.keybindText = scene.add.text(x - 35, y + 20, keybind, {
-      font: '16px Arial',
+    this.keybindText = scene.add.text(x - scene.scale.width / 25, y + scene.scale.height / 35, keybind, {
+      font: this.dynamicFontSize,
       color: '#FFFFFF',
     });
     scene.add.existing(this.keybindText);
@@ -42,16 +44,18 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
     this.priceText?.destroy();
     this.itemImage?.destroy();
     this.priceText = this.scene.add.text(
-      this.x - 35,
-      this.y - 35,
+      this.x + this.scene.scale.width / 25,
+      this.y + this.scene.scale.height / 35,
       item.cost.toString(),
-      { font: '16px Arial', color: '#000000' }
+      { font: this.dynamicFontSize, color: '#000000' }
     );
+    this.priceText.setOrigin(1, 0)
     this.itemImage = this.scene.physics.add.sprite(
       this.x,
       this.y,
       item.powerup
     );
+    this.itemImage.setScale(this.scene.scale.width / 22 / this.itemImage.width);
   };
 
   public buyItem = (player: Player): Item | null => {

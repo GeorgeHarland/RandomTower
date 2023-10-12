@@ -134,8 +134,8 @@ export default class GameStageScene extends Phaser.Scene {
       if (i === 2) keybind = 'E';
       const shopBox = new ShopBox({
         scene: this,
-        x: 80 + 100 * i,
-        y: this.scale.height - 80,
+        x: this.scale.width / 10 + (this.scale.width / 8) * i,
+        y: this.scale.height - this.scale.height / 8,
         key: 'shopBoxTexture',
         keybind: keybind,
       });
