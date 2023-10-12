@@ -30,8 +30,8 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
 
     this.gameScene = scene as GameStageScene;
     this.keybind = keybind;
-    this.dynamicFontSize = `${(scene.scale.width / 50).toString()}px Arial`
-    this.titleFontSize = `${(scene.scale.width / 75).toString()}px Arial`
+    this.dynamicFontSize = `${(scene.scale.width / 50).toString()}px PressStart2P`
+    this.titleFontSize = `${(scene.scale.width / 75).toString()}px PressStart2P`
 
     scene.add.existing(this);
     this.keybindText = scene.add.text(x - scene.scale.width / 25, y + scene.scale.height / 35, keybind, {
