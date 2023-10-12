@@ -1,3 +1,4 @@
+import * as WebFont from 'webfontloader';
 import GameStageScene from './GameStage';
 
 export default class MainMenuScene extends Phaser.Scene {
@@ -8,6 +9,16 @@ export default class MainMenuScene extends Phaser.Scene {
   public preload() {
     this.load.audio('backgroundMusic', 'audio/sandsOfTime.mp3');
     this.load.image('background', 'sprites/background.png');
+    this.load.start();
+
+    WebFont.load({
+      google: {
+        families: ['PressStart2P', 'VT323']
+      },
+      active: () => {
+        this.load.on(('complete'), () => {})
+      }
+    });
   }
 
   public create() {
