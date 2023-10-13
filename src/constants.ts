@@ -30,9 +30,9 @@ export const PowerupRecord: Record<PowerupType, ItemGradeType> = {
   'Circle Speed': 'C',
   'Dark Blast': 'B',
   'Fire Blast': 'B',
-  'Regen': 'D',
+  Regen: 'D',
   'Time Slow': 'S',
-  'Tornado': 'D',
+  Tornado: 'D',
 };
 
 export const gradeCost: Record<ItemGradeType, number> = {

@@ -30,14 +30,19 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
 
     this.gameScene = scene as GameStageScene;
     this.keybind = keybind;
-    this.dynamicFontSize = `${(scene.scale.width / 50).toString()}px Arial`
-    this.titleFontSize = `${(scene.scale.width / 75).toString()}px Arial`
+    this.dynamicFontSize = `${(scene.scale.width / 50).toString()}px Arial`;
+    this.titleFontSize = `${(scene.scale.width / 75).toString()}px Arial`;
 
     scene.add.existing(this);
-    this.keybindText = scene.add.text(x - scene.scale.width / 25, y + scene.scale.height / 35, keybind, {
-      font: this.dynamicFontSize,
-      color: '#FFFFFF',
-    });
+    this.keybindText = scene.add.text(
+      x - scene.scale.width / 25,
+      y + scene.scale.height / 35,
+      keybind,
+      {
+        font: this.dynamicFontSize,
+        color: '#FFFFFF',
+      }
+    );
     scene.add.existing(this.keybindText);
   }
 
@@ -53,7 +58,7 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
       item.cost.toString(),
       { font: this.dynamicFontSize, color: '#000000' }
     );
-    this.priceText.setOrigin(1, 0)
+    this.priceText.setOrigin(1, 0);
     this.powerupText = this.scene.add.text(
       this.x - this.scene.scale.width / 25,
       this.y - this.scene.scale.height / 18,

@@ -1,8 +1,6 @@
-import GameStageScene from "../GameStage";
+import GameStageScene from '../GameStage';
 
-export const generateTextures = (
-  scene: GameStageScene
-) => {
+export const generateTextures = (scene: GameStageScene) => {
   const objectCreator = scene.make;
   // initial light green background
   const bgGraphic = objectCreator.graphics();
@@ -31,17 +29,32 @@ export const generateTextures = (
   const enemyPadding = scene.scale.width > 700 ? enemySize / 12 : enemySize / 6;
   enemyGraphic.fillRect(0, 0, enemySize, enemySize);
   enemyGraphic.fillStyle(0xdd3333, 1);
-  enemyGraphic.fillRect(enemyPadding, enemyPadding, enemySize - enemyPadding*2, enemySize - enemyPadding*2);
+  enemyGraphic.fillRect(
+    enemyPadding,
+    enemyPadding,
+    enemySize - enemyPadding * 2,
+    enemySize - enemyPadding * 2
+  );
   enemyGraphic.generateTexture('enemyTexture', enemySize, enemySize);
 
   const juggernautGraphic = objectCreator.graphics();
   juggernautGraphic.fillStyle(0x000000, 1);
   const juggernautSize = scene.scale.width / 40;
-  const juggernautPadding = scene.scale.width > 700 ? juggernautSize / 12 : juggernautSize / 6;
+  const juggernautPadding =
+    scene.scale.width > 700 ? juggernautSize / 12 : juggernautSize / 6;
   juggernautGraphic.fillRect(0, 0, juggernautSize, juggernautSize);
   juggernautGraphic.fillStyle(0xdd33dd, 1);
-  juggernautGraphic.fillRect(juggernautPadding, juggernautPadding, juggernautSize - juggernautPadding*2, juggernautSize - juggernautPadding*2);
-  juggernautGraphic.generateTexture('juggernautTexture', juggernautSize, juggernautSize);
+  juggernautGraphic.fillRect(
+    juggernautPadding,
+    juggernautPadding,
+    juggernautSize - juggernautPadding * 2,
+    juggernautSize - juggernautPadding * 2
+  );
+  juggernautGraphic.generateTexture(
+    'juggernautTexture',
+    juggernautSize,
+    juggernautSize
+  );
 
   const arrowGraphic = objectCreator.graphics();
   arrowGraphic.fillStyle(0x000000, 1);
@@ -50,7 +63,8 @@ export const generateTextures = (
 
   const shopBoxTexture = objectCreator.graphics();
   const shopBoxSize = scene.scale.width / 10;
-  const bevelSize = scene.scale.width > 700 ? shopBoxSize / 18 : shopBoxSize / 22;
+  const bevelSize =
+    scene.scale.width > 700 ? shopBoxSize / 18 : shopBoxSize / 22;
   shopBoxTexture.fillStyle(0xa52a2a, 1);
   shopBoxTexture.fillRect(0, 0, shopBoxSize, shopBoxSize);
 
@@ -64,7 +78,12 @@ export const generateTextures = (
   shopBoxTexture.fillRect(shopBoxSize - bevelSize, 0, bevelSize, shopBoxSize); // right
   // inner box
   shopBoxTexture.fillStyle(0x941919, 1);
-  shopBoxTexture.fillRect(bevelSize, bevelSize, shopBoxSize - 2 * bevelSize, shopBoxSize - 2 * bevelSize);
+  shopBoxTexture.fillRect(
+    bevelSize,
+    bevelSize,
+    shopBoxSize - 2 * bevelSize,
+    shopBoxSize - 2 * bevelSize
+  );
 
   shopBoxTexture.generateTexture('shopBoxTexture', shopBoxSize, shopBoxSize);
 };
