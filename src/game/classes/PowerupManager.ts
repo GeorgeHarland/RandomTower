@@ -113,7 +113,7 @@ export default class PowerupManager {
         this.scene.tower
       );
       if (closestEnemy) {
-        this.scene.physics.moveToObject(arrow, closestEnemy, ARROW_BASE_SPEED);
+        this.scene.physics.moveToObject(arrow, closestEnemy, ARROW_BASE_SPEED* this.scene.gameSpeedScale);
       } else {
         const angle = Phaser.Math.Between(0, 360);
         this.scene.physics.velocityFromAngle(angle, 200, arrow.body.velocity);
@@ -132,7 +132,7 @@ export default class PowerupManager {
       case 'Circle Speed':
         this.scene.circleWeapons?.children.entries.forEach((circle) => {
           const weaponCircle = circle as CircleWeapon;
-          weaponCircle.circleSpeed += CIRCLE_SPEED_INCREASE;
+          weaponCircle.circleSpeed += CIRCLE_SPEED_INCREASE * this.scene.gameSpeedScale;
           const currentX = weaponCircle.x;
           const currentY = weaponCircle.y;
           weaponCircle.scaleX *= CIRCLE_SCALE_MULTIPLIER;
@@ -204,7 +204,7 @@ export default class PowerupManager {
       y,
       'darkBlastSprite1'
     );
-    darkBlastSprite.scale = 2;
+    darkBlastSprite.scale = 2 * this.scene.gameSpeedScale;
     darkBlastSprite.setData('type', 'darkBlast');
     darkBlastSprite.setData('id', `weapon-${this.weaponCounter++}`);
     darkBlastSprite.play('darkBlastAnimation');
@@ -212,7 +212,7 @@ export default class PowerupManager {
     this.scene.time.delayedCall(1, () => {
       this.scene.physics.velocityFromAngle(
         this.darkBlastDirection,
-        200,
+        200 * this.scene.gameSpeedScale,
         darkBlastSprite.body.velocity
       );
       darkBlastSprite.angle = this.darkBlastDirection;
@@ -241,7 +241,7 @@ export default class PowerupManager {
       y,
       'fireBlastSprite1'
     );
-    fireBlastSprite.scale = 2;
+    fireBlastSprite.scale = 2 * this.scene.gameSpeedScale;
     fireBlastSprite.setData('type', 'fireBlast');
     fireBlastSprite.setData('id', `weapon-${this.weaponCounter++}`);
     fireBlastSprite.play('fireBlastAnimation');
@@ -249,7 +249,7 @@ export default class PowerupManager {
     this.scene.time.delayedCall(1, () => {
       this.scene.physics.velocityFromAngle(
         this.fireBlastDirection,
-        200,
+        200 * this.scene.gameSpeedScale,
         fireBlastSprite.body.velocity
       );
       fireBlastSprite.angle = this.fireBlastDirection;
@@ -274,7 +274,7 @@ export default class PowerupManager {
     const x: number = this.scene.scale.width / 2;
     const y: number = this.scene.scale.height / 2.3;
     const regenSprite = this.scene.physics.add.sprite(x, y, 'regen');
-    regenSprite.scale = 1.2;
+    regenSprite.scale = 1.2 * this.scene.gameSpeedScale;
     regenSprite.setData('type', 'regen');
     regenSprite.play('regenAnimation');
     regenSprite.setImmovable(true);
@@ -309,7 +309,7 @@ export default class PowerupManager {
       'timeSlowTexture'
     );
     this.timeSlow = true;
-    timeSlowSprite.scale = 0.5;
+    timeSlowSprite.scale = 0.5 * this.scene.gameSpeedScale;
     timeSlowSprite.setData('type', 'timeSlow');
     timeSlowSprite.play('timeSlowAnimation');
     timeSlowSprite.setImmovable(true);
@@ -329,7 +329,7 @@ export default class PowerupManager {
     const x: number = this.scene.scale.width * Math.random();
     const y: number = this.scene.scale.height * Math.random();
     const tornadoSprite = this.scene.physics.add.sprite(x, y, 'tornadoRepeat1');
-    tornadoSprite.scale = 0.2;
+    tornadoSprite.scale = 0.2 * this.scene.gameSpeedScale;
     tornadoSprite.setData('type', 'tornado');
     tornadoSprite.setData('id', `weapon-${this.weaponCounter++}`);
     this.scene.PermanentWeapons?.add(tornadoSprite);

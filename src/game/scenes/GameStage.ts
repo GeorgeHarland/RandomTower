@@ -17,6 +17,7 @@ import {
 import { setupAnimations, setupKeybindings } from './helpers/setupHelpers';
 
 export default class GameStageScene extends Phaser.Scene {
+  public gameSpeedScale: number = 1;
   public additionalPrice: number = 0;
   public circleWeapons: Phaser.Physics.Arcade.Group | undefined;
   public elapsedSeconds: number = 0;
@@ -26,7 +27,6 @@ export default class GameStageScene extends Phaser.Scene {
   public shopBoxes: Phaser.GameObjects.Group | undefined;
   public tower: Phaser.Physics.Arcade.Sprite | undefined;
   public weapons: Phaser.Physics.Arcade.Group | undefined;
-
   public enemyManager: EnemyManager = new EnemyManager(this, this.playerTower);
   public powerupManager: PowerupManager = new PowerupManager(this);
   public keyQ: Phaser.Input.Keyboard.Key | null = null;
@@ -269,6 +269,7 @@ export default class GameStageScene extends Phaser.Scene {
       loop: true,
     });
 
+    this.gameSpeedScale = this.scale.width / 800;
     this.startTime = this.time.now;
     this.elapsedSeconds = 0;
   }
@@ -310,7 +311,7 @@ export default class GameStageScene extends Phaser.Scene {
     else if (this.enemyManager.enemyCurrentSpeed < ENEMY_BASE_SPEED)
       this.enemyManager.enemyCurrentSpeed /= 0.95;
     if (this.enemyManager.enemyCurrentSpeed > ENEMY_BASE_SPEED)
-      this.enemyManager.enemyCurrentSpeed = ENEMY_BASE_SPEED;
+      this.enemyManager.enemyCurrentSpeed = ENEMY_BASE_SPEED * this.gameSpeedScale;
 
     const shopBoxKeybinds: { [id: string]: ShopBox } = {};
     this.shopBoxes?.children.entries.forEach(
@@ -362,13 +363,13 @@ export default class GameStageScene extends Phaser.Scene {
           this.physics.moveToObject(
             enemy,
             this.tower,
-            this.enemyManager.enemyCurrentSpeed * JUGGERNAUT_SPEED_MULTIPLIER
+            this.enemyManager.enemyCurrentSpeed * JUGGERNAUT_SPEED_MULTIPLIER * this.gameSpeedScale
           );
         else
           this.physics.moveToObject(
             enemy,
             this.tower,
-            this.enemyManager.enemyCurrentSpeed
+            this.enemyManager.enemyCurrentSpeed * this.gameSpeedScale
           );
       }
     });

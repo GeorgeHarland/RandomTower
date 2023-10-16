@@ -23,12 +23,13 @@ export default class EnemyManager {
   public spawnJuggernautTimer: Phaser.Time.TimerEvent | undefined;
   public enemyRate: number = ENEMY_BASE_RATE;
   public juggernautRate: number = JUGGERNAUT_BASE_RATE;
-  public enemyCurrentSpeed: number = ENEMY_BASE_SPEED;
+  public enemyCurrentSpeed: number;
   public weaponJuggernautHitMap = new Map();
 
   public constructor(scene: GameStageScene, playerTower: PlayerTower) {
     this.scene = scene;
     this.playerTower = playerTower;
+    this.enemyCurrentSpeed = ENEMY_BASE_SPEED * this.scene.gameSpeedScale;
   }
 
   public initialize = () => {
