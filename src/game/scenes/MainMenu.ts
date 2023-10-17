@@ -41,13 +41,14 @@ export default class MainMenuScene extends Phaser.Scene {
         this.cameras.main.centerX,
         this.cameras.main.centerY - this.scale.height / 10,
         'Random Tower',
-        { fontSize: `${titleFontSize}px`, color: '#ff0000' }
+        { fontSize: `${titleFontSize}px`, color: '#ff0000', fontFamily: 'MedievalSharp' }
       )
       .setOrigin(0.5);
     const button = this.add
       .text(this.cameras.main.centerX, this.cameras.main.centerY, 'Start', {
         fontSize: `${buttonFontSize}px`,
         color: '#FFFFFF',
+        fontFamily: 'MedievalSharp'
       })
       .setOrigin(0.5);
     button.setInteractive({ useHandCursor: true });

@@ -8,6 +8,7 @@ import {
   DARKBLAST_BASE_COOLDOWN,
   DARKBLAST_LEVELUP_ANGLE_MULTIPLIER,
   DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER,
+  ENEMY_BASE_SPEED,
   FIREBLAST_BASE_ANGLE_CHANGE,
   FIREBLAST_BASE_COOLDOWN,
   FIREBLAST_LEVELUP_ANGLE_MULTIPLIER,
@@ -340,4 +341,15 @@ export default class PowerupManager {
     tornadoSprite.play('tornadoAnimation');
     tornadoSprite.setImmovable(true);
   };
+
+  public updateTimeSlow = () => {
+    if (this.timeSlow)
+      this.scene.enemyManager.enemyCurrentSpeed *= 0.95;
+    else if (this.scene.enemyManager.enemyCurrentSpeed < ENEMY_BASE_SPEED / 10)
+      this.scene.enemyManager.enemyCurrentSpeed = ENEMY_BASE_SPEED / 10;
+    else if (this.scene.enemyManager.enemyCurrentSpeed < ENEMY_BASE_SPEED)
+      this.scene.enemyManager.enemyCurrentSpeed /= 0.95;
+    if (this.scene.enemyManager.enemyCurrentSpeed > ENEMY_BASE_SPEED)
+      this.scene.enemyManager.enemyCurrentSpeed = ENEMY_BASE_SPEED * this.scene.gameSpeedScale;
+  }
 }

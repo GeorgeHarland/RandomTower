@@ -36,19 +36,20 @@ export default class GameOverScene extends Phaser.Scene {
         this.cameras.main.centerX,
         this.cameras.main.centerY - this.scale.height / 10,
         'Game over',
-        { fontSize: `${titleFontSize}px`, color: '#FFFFFF' }
+        { fontSize: `${titleFontSize}px`, color: '#FFFFFF', fontFamily: 'MedievalSharp' }
       )
       .setOrigin(0.5);
     this.add.text(
       this.scale.width / 20,
       this.scale.height / 20,
       'Survived: ' + secondsToMMSS(gametime),
-      { fontSize: `${timeFontSize}px`, color: '#FFFFFF' }
+      { fontSize: `${timeFontSize}px`, color: '#FFFFFF', fontFamily: 'MedievalSharp' }
     );
     const button = this.add
       .text(this.cameras.main.centerX, this.cameras.main.centerY, 'Restart', {
         fontSize: `${buttonFontSize}px`,
         color: '#FFFFFF',
+        fontFamily: 'MedievalSharp'
       })
       .setOrigin(0.5);
     button.setInteractive({ useHandCursor: true });

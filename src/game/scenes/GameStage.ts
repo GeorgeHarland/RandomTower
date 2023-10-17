@@ -11,7 +11,6 @@ import { KeybindType, PowerupType } from '../types';
 import {
   JUGGERNAUT_SPEED_MULTIPLIER,
   DEV_TEXT_AT_TOP,
-  ENEMY_BASE_SPEED,
   TORNADO_BASE_SHAKE_AMOUNT,
 } from '../../constants';
 import { setupAnimations, setupKeybindings } from './helpers/setupHelpers';
@@ -287,10 +286,6 @@ export default class GameStageScene extends Phaser.Scene {
       (circle as CircleWeapon)?.moveCircle(cursors);
     });
 
-    // this.weapons?.children.entries.forEach((weapon) => {
-    //   if (weapon.getData('type') === 'darkBlast') { }
-    // });
-
     this.PermanentWeapons?.children.entries.forEach((weapon) => {
       if (weapon.getData('type') === 'tornado') {
         const dir = Math.random();
@@ -309,14 +304,7 @@ export default class GameStageScene extends Phaser.Scene {
       }
     });
 
-    if (this.powerupManager.timeSlow)
-      this.enemyManager.enemyCurrentSpeed *= 0.95;
-    else if (this.enemyManager.enemyCurrentSpeed < ENEMY_BASE_SPEED / 10)
-      this.enemyManager.enemyCurrentSpeed = ENEMY_BASE_SPEED / 10;
-    else if (this.enemyManager.enemyCurrentSpeed < ENEMY_BASE_SPEED)
-      this.enemyManager.enemyCurrentSpeed /= 0.95;
-    if (this.enemyManager.enemyCurrentSpeed > ENEMY_BASE_SPEED)
-      this.enemyManager.enemyCurrentSpeed = ENEMY_BASE_SPEED * this.gameSpeedScale;
+    this.powerupManager.updateTimeSlow();
 
     const shopBoxKeybinds: { [id: string]: ShopBox } = {};
     this.shopBoxes?.children.entries.forEach(
