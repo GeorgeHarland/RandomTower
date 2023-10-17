@@ -13,7 +13,7 @@ export default class MainMenuScene extends Phaser.Scene {
 
     WebFont.load({
       google: {
-        families: ['PressStart2P', 'VT323'],
+        families: ['PressStart2P', 'VT323', 'MedievalSharp'],
       },
       active: () => {
         this.load.on('complete', () => {});

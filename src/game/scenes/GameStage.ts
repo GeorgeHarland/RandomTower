@@ -142,7 +142,7 @@ export default class GameStageScene extends Phaser.Scene {
       this.shopBoxes?.add(shopBox);
     }
 
-    const topTextSize = Math.floor(this.sys.canvas.width / 25);
+    const topTextSize = Math.floor(this.sys.canvas.width / 22);
 
     this.towerLifeText = this.add.text(
       this.scale.width / 40,
@@ -151,6 +151,7 @@ export default class GameStageScene extends Phaser.Scene {
       {
         fontSize: `${topTextSize}px`,
         color: '#000000',
+        fontFamily: 'MedievalSharp'
       }
     );
     this.goldText = this.add.text(
@@ -160,6 +161,7 @@ export default class GameStageScene extends Phaser.Scene {
       {
         fontSize: `${topTextSize}px`,
         color: '#eeee00',
+        fontFamily: 'MedievalSharp'
       }
     );
     this.gameTimeText = this.add.text(
@@ -170,6 +172,7 @@ export default class GameStageScene extends Phaser.Scene {
         fontSize: `${topTextSize}px`,
         color: '#000000',
         align: 'right',
+        fontFamily: 'MedievalSharp'
       }
     );
     if (DEV_TEXT_AT_TOP) {
@@ -180,6 +183,7 @@ export default class GameStageScene extends Phaser.Scene {
         {
           fontSize: `${topTextSize}px`,
           color: '#cccccc',
+          fontFamily: 'MedievalSharp'
         }
       );
       this.arrowRateText = this.add.text(
@@ -189,11 +193,12 @@ export default class GameStageScene extends Phaser.Scene {
         {
           fontSize: `${topTextSize}px`,
           color: '#cccccc',
+          fontFamily: 'MedievalSharp'
         }
       );
     }
 
-    this.physics.add.collider(
+    this.physics.add.overlap(
       this.enemyManager
         .enemies as Phaser.Types.Physics.Arcade.ArcadeColliderType,
       this.tower,
@@ -203,7 +208,7 @@ export default class GameStageScene extends Phaser.Scene {
         );
       }
     );
-    this.physics.add.collider(
+    this.physics.add.overlap(
       this.enemyManager
         .enemies as Phaser.Types.Physics.Arcade.ArcadeColliderType,
       this.circleWeapons,
@@ -216,7 +221,7 @@ export default class GameStageScene extends Phaser.Scene {
       }
     );
 
-    this.physics.add.collider(
+    this.physics.add.overlap(
       this.enemyManager
         .enemies as Phaser.Types.Physics.Arcade.ArcadeColliderType,
       this.weapons,
@@ -228,7 +233,7 @@ export default class GameStageScene extends Phaser.Scene {
         );
       }
     );
-    this.physics.add.collider(
+    this.physics.add.overlap(
       this.enemyManager
         .enemies as Phaser.Types.Physics.Arcade.ArcadeColliderType,
       this.PermanentWeapons,
