@@ -1,17 +1,16 @@
 import GameStageScene from './GameStage';
+import MainMenuScene from './MainMenu';
 import { secondsToMMSS } from './helpers/gameHelpers';
 
 export default class GameOverScene extends Phaser.Scene {
   private gameScene: GameStageScene | null = null;
+  private mainMenuScene: MainMenuScene | null = null;
 
   public constructor() {
     super({ key: 'GameOverScene' });
   }
 
-  public preload() {
-    this.load.audio('backgroundMusic', 'audio/sandsOfTime.mp3');
-    this.load.image('gameOverBackground', 'sprites/gameOverBackground.png');
-  }
+  public preload() {}
 
   public create() {
     this.gameScene = this.scene.get('GameStageScene') as GameStageScene;
@@ -36,27 +35,60 @@ export default class GameOverScene extends Phaser.Scene {
         this.cameras.main.centerX,
         this.cameras.main.centerY - this.scale.height / 10,
         'Game over',
-        { fontSize: `${titleFontSize}px`, color: '#FFFFFF', fontFamily: 'MedievalSharp' }
+        {
+          fontSize: `${titleFontSize}px`,
+          color: '#FFFFFF',
+          fontFamily: 'MedievalSharp',
+        }
       )
       .setOrigin(0.5);
     this.add.text(
       this.scale.width / 20,
       this.scale.height / 20,
       'Survived: ' + secondsToMMSS(gametime),
-      { fontSize: `${timeFontSize}px`, color: '#FFFFFF', fontFamily: 'MedievalSharp' }
-    );
-    const button = this.add
-      .text(this.cameras.main.centerX, this.cameras.main.centerY, 'Restart', {
-        fontSize: `${buttonFontSize}px`,
+      {
+        fontSize: `${timeFontSize}px`,
         color: '#FFFFFF',
-        fontFamily: 'MedievalSharp'
-      })
+        fontFamily: 'MedievalSharp',
+      }
+    );
+    const restartButton = this.add
+      .text(
+        this.cameras.main.centerX,
+        this.cameras.main.centerY + this.scale.height / 15,
+        'Restart',
+        {
+          fontSize: `${buttonFontSize}px`,
+          color: '#FFFFFF',
+          fontFamily: 'MedievalSharp',
+        }
+      )
       .setOrigin(0.5);
-    button.setInteractive({ useHandCursor: true });
-    button.on(
+    restartButton.setInteractive({ useHandCursor: true });
+    restartButton.on(
       'pointerup',
       () => {
         this.restartGame();
+      },
+      this
+    );
+    const menuButton = this.add
+      .text(
+        this.cameras.main.centerX,
+        this.cameras.main.centerY + this.scale.height / 7,
+        'Main Menu',
+        {
+          fontSize: `${buttonFontSize}px`,
+          color: '#FFFFFF',
+          fontFamily: 'MedievalSharp',
+        }
+      )
+      .setOrigin(0.5);
+    menuButton.setInteractive({ useHandCursor: true });
+    menuButton.on(
+      'pointerup',
+      () => {
+        this.startMainMenu();
       },
       this
     );
@@ -68,6 +100,13 @@ export default class GameOverScene extends Phaser.Scene {
     !this.scene.get('GameStageScene') &&
       this.scene.add('GameStageScene', GameStageScene);
     this.scene.start('GameStageScene');
+  }
+
+  private startMainMenu() {
+    this.mainMenuScene && this.mainMenuScene.scene.remove();
+    !this.scene.get('MainMenuScene') &&
+      this.scene.add('MainMenuScene', MainMenuScene);
+    this.scene.start('MainMenuScene');
   }
 
   private setupKeybindings() {

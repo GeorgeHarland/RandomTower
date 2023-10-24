@@ -25,8 +25,10 @@ export const generateTextures = (scene: GameStageScene) => {
 
   const enemyGraphic = objectCreator.graphics();
   enemyGraphic.fillStyle(0x000000, 1);
-  const enemySize = scene.scale.width > 700 ? scene.scale.width / 80 : scene.scale.width / 60;
-  const enemyPadding = scene.scale.width > 700 ? enemySize / 12 : enemySize / 5.5;
+  const enemySize =
+    scene.scale.width > 700 ? scene.scale.width / 80 : scene.scale.width / 60;
+  const enemyPadding =
+    scene.scale.width > 700 ? enemySize / 12 : enemySize / 5.5;
   enemyGraphic.fillRect(0, 0, enemySize, enemySize);
   enemyGraphic.fillStyle(0xdd3333, 1);
   enemyGraphic.fillRect(
@@ -39,7 +41,8 @@ export const generateTextures = (scene: GameStageScene) => {
 
   const juggernautGraphic = objectCreator.graphics();
   juggernautGraphic.fillStyle(0x000000, 1);
-  const juggernautSize = scene.scale.width > 700 ? scene.scale.width / 40 : scene.scale.width / 30;
+  const juggernautSize =
+    scene.scale.width > 700 ? scene.scale.width / 40 : scene.scale.width / 30;
   const juggernautPadding =
     scene.scale.width > 700 ? juggernautSize / 12 : juggernautSize / 9;
   juggernautGraphic.fillRect(0, 0, juggernautSize, juggernautSize);

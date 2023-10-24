@@ -1,4 +1,4 @@
-import GameStageScene from "../scenes/GameStage";
+import GameStageScene from '../scenes/GameStage';
 
 type Props = {
   scene: Phaser.Scene;

@@ -8,6 +8,7 @@ export type PowerupType =
   | 'Circle Speed'
   | 'Dark Blast'
   | 'Fire Blast'
+  | 'Ice Spike'
   | 'Regen'
   | 'Time Slow'
   | 'Tornado';

@@ -24,6 +24,7 @@ export const loadSprites = (scene: Phaser.Scene): void => {
   scene.load.image('Circle Speed', 'sprites/powerupIcons/magic-swirl.png');
   scene.load.image('Dark Blast', 'sprites/powerupIcons/foamy-disc.png');
   scene.load.image('Fire Blast', 'sprites/powerupIcons/flaming-sheet.png');
+  scene.load.image('Ice Spike', 'sprites/powerupIcons/mountaintop.png');
   scene.load.image('Regen', 'sprites/powerupIcons/nested-hearts.png');
   scene.load.image('Time Slow', 'sprites/powerupIcons/embrassed-energy.png');
   scene.load.image('Tornado', 'sprites/powerupIcons/tornado.png');

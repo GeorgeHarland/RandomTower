@@ -114,7 +114,11 @@ export default class PowerupManager {
         this.scene.tower
       );
       if (closestEnemy) {
-        this.scene.physics.moveToObject(arrow, closestEnemy, ARROW_BASE_SPEED* this.scene.gameSpeedScale);
+        this.scene.physics.moveToObject(
+          arrow,
+          closestEnemy,
+          ARROW_BASE_SPEED * this.scene.gameSpeedScale
+        );
       } else {
         const angle = Phaser.Math.Between(0, 360);
         this.scene.physics.velocityFromAngle(angle, 200, arrow.body.velocity);
@@ -133,7 +137,8 @@ export default class PowerupManager {
       case 'Circle Speed':
         this.scene.circleWeapons?.children.entries.forEach((circle) => {
           const weaponCircle = circle as CircleWeapon;
-          weaponCircle.circleSpeed += CIRCLE_SPEED_INCREASE * this.scene.gameSpeedScale;
+          weaponCircle.circleSpeed +=
+            CIRCLE_SPEED_INCREASE * this.scene.gameSpeedScale;
           const currentX = weaponCircle.x;
           const currentY = weaponCircle.y;
           weaponCircle.scaleX *= CIRCLE_SCALE_MULTIPLIER;
@@ -313,13 +318,17 @@ export default class PowerupManager {
     timeSlowSprite.scale = 0.5 * this.scene.gameSpeedScale;
     timeSlowSprite.setData('type', 'timeSlow');
     timeSlowSprite.play('timeSlowAnimation');
-    if(this.scene.enemyManager.spawnEnemyTimer) this.scene.enemyManager.spawnEnemyTimer.paused = true;
-    if(this.scene.enemyManager.spawnJuggernautTimer) this.scene.enemyManager.spawnJuggernautTimer.paused = true;
+    if (this.scene.enemyManager.spawnEnemyTimer)
+      this.scene.enemyManager.spawnEnemyTimer.paused = true;
+    if (this.scene.enemyManager.spawnJuggernautTimer)
+      this.scene.enemyManager.spawnJuggernautTimer.paused = true;
     timeSlowSprite.setImmovable(true);
     timeSlowSprite.on('animationcomplete', () => {
       timeSlowSprite.destroy();
-      if(this.scene.enemyManager.spawnEnemyTimer) this.scene.enemyManager.spawnEnemyTimer.paused = false;
-      if(this.scene.enemyManager.spawnJuggernautTimer) this.scene.enemyManager.spawnJuggernautTimer.paused = false;
+      if (this.scene.enemyManager.spawnEnemyTimer)
+        this.scene.enemyManager.spawnEnemyTimer.paused = false;
+      if (this.scene.enemyManager.spawnJuggernautTimer)
+        this.scene.enemyManager.spawnJuggernautTimer.paused = false;
       this.timeSlow = false;
       this.timeSlowTimer = this.scene.time.addEvent({
         delay: this.timeSlowCooldown,
@@ -343,13 +352,13 @@ export default class PowerupManager {
   };
 
   public updateTimeSlow = () => {
-    if (this.timeSlow)
-      this.scene.enemyManager.enemyCurrentSpeed *= 0.95;
+    if (this.timeSlow) this.scene.enemyManager.enemyCurrentSpeed *= 0.95;
     else if (this.scene.enemyManager.enemyCurrentSpeed < ENEMY_BASE_SPEED / 10)
       this.scene.enemyManager.enemyCurrentSpeed = ENEMY_BASE_SPEED / 10;
     else if (this.scene.enemyManager.enemyCurrentSpeed < ENEMY_BASE_SPEED)
       this.scene.enemyManager.enemyCurrentSpeed /= 0.95;
     if (this.scene.enemyManager.enemyCurrentSpeed > ENEMY_BASE_SPEED)
-      this.scene.enemyManager.enemyCurrentSpeed = ENEMY_BASE_SPEED * this.scene.gameSpeedScale;
-  }
+      this.scene.enemyManager.enemyCurrentSpeed =
+        ENEMY_BASE_SPEED * this.scene.gameSpeedScale;
+  };
 }

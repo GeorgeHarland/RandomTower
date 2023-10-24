@@ -5,7 +5,7 @@ import PlayerTower from '../classes/PlayerTower';
 import PowerupManager from '../classes/PowerupManager';
 import ShopBox from '../classes/ShopBox';
 import { secondsToMMSS } from './helpers/gameHelpers';
-import { extractTowerFrames, loadSprites } from './helpers/spriteHelpers';
+import { extractTowerFrames } from './helpers/spriteHelpers';
 import { generateTextures } from './helpers/textureHelpers';
 import { KeybindType, PowerupType } from '../types';
 import {
@@ -46,9 +46,7 @@ export default class GameStageScene extends Phaser.Scene {
     super({ key: 'GameStageScene' });
   }
 
-  public preload() {
-    loadSprites(this);
-  }
+  public preload() {}
 
   public create() {
     generateTextures(this);
@@ -150,7 +148,7 @@ export default class GameStageScene extends Phaser.Scene {
       {
         fontSize: `${topTextSize}px`,
         color: '#000000',
-        fontFamily: 'MedievalSharp'
+        fontFamily: 'MedievalSharp',
       }
     );
     this.goldText = this.add.text(
@@ -160,7 +158,7 @@ export default class GameStageScene extends Phaser.Scene {
       {
         fontSize: `${topTextSize}px`,
         color: '#eeee00',
-        fontFamily: 'MedievalSharp'
+        fontFamily: 'MedievalSharp',
       }
     );
     this.gameTimeText = this.add.text(
@@ -171,7 +169,7 @@ export default class GameStageScene extends Phaser.Scene {
         fontSize: `${topTextSize}px`,
         color: '#000000',
         align: 'right',
-        fontFamily: 'MedievalSharp'
+        fontFamily: 'MedievalSharp',
       }
     );
     if (DEV_TEXT_AT_TOP) {
@@ -182,7 +180,7 @@ export default class GameStageScene extends Phaser.Scene {
         {
           fontSize: `${topTextSize}px`,
           color: '#cccccc',
-          fontFamily: 'MedievalSharp'
+          fontFamily: 'MedievalSharp',
         }
       );
       this.arrowRateText = this.add.text(
@@ -192,7 +190,7 @@ export default class GameStageScene extends Phaser.Scene {
         {
           fontSize: `${topTextSize}px`,
           color: '#cccccc',
-          fontFamily: 'MedievalSharp'
+          fontFamily: 'MedievalSharp',
         }
       );
     }
@@ -356,7 +354,9 @@ export default class GameStageScene extends Phaser.Scene {
           this.physics.moveToObject(
             enemy,
             this.tower,
-            this.enemyManager.enemyCurrentSpeed * JUGGERNAUT_SPEED_MULTIPLIER * this.gameSpeedScale
+            this.enemyManager.enemyCurrentSpeed *
+              JUGGERNAUT_SPEED_MULTIPLIER *
+              this.gameSpeedScale
           );
         else
           this.physics.moveToObject(

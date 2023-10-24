@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import GameStageScene from '../game/scenes/GameStage';
 import GameOverScene from '../game/scenes/GameOver';
+import HowToPlayScene from '../game/scenes/HowToPlayScene';
 import MainMenuScene from '../game/scenes/MainMenu';
 import { useEffect, useRef } from 'preact/hooks';
 
@@ -24,7 +25,7 @@ const PhaserGame = () => {
       type: Phaser.AUTO,
       width: 800,
       height: 600,
-      scene: [MainMenuScene, GameStageScene, GameOverScene],
+      scene: [MainMenuScene, HowToPlayScene, GameStageScene, GameOverScene],
       physics: {
         default: 'arcade',
         arcade: {

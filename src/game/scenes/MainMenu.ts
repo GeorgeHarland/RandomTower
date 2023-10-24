@@ -1,7 +1,11 @@
 import * as WebFont from 'webfontloader';
 import GameStageScene from './GameStage';
+import HowToPlayScene from './HowToPlayScene';
+import { loadSprites } from './helpers/spriteHelpers';
 
 export default class MainMenuScene extends Phaser.Scene {
+  private gameScene: GameStageScene | null = null;
+
   public constructor() {
     super({ key: 'MainMenuScene' });
   }
@@ -9,6 +13,8 @@ export default class MainMenuScene extends Phaser.Scene {
   public preload() {
     this.load.audio('backgroundMusic', 'audio/sandsOfTime.mp3');
     this.load.image('background', 'sprites/background.png');
+    this.load.image('gameOverBackground', 'sprites/gameOverBackground.png');
+    loadSprites(this);
     this.load.start();
 
     WebFont.load({
@@ -22,6 +28,7 @@ export default class MainMenuScene extends Phaser.Scene {
   }
 
   public create() {
+    this.gameScene = this.scene.get('GameStageScene') as GameStageScene;
     const music = this.sound.add('backgroundMusic', { loop: true });
     music.play();
 
@@ -41,30 +48,61 @@ export default class MainMenuScene extends Phaser.Scene {
         this.cameras.main.centerX,
         this.cameras.main.centerY - this.scale.height / 10,
         'Random Tower',
-        { fontSize: `${titleFontSize}px`, color: '#ff0000', fontFamily: 'MedievalSharp' }
+        {
+          fontSize: `${titleFontSize}px`,
+          color: '#ff0000',
+          fontFamily: 'MedievalSharp',
+        }
       )
       .setOrigin(0.5);
-    const button = this.add
+    const startButton = this.add
       .text(this.cameras.main.centerX, this.cameras.main.centerY, 'Start', {
         fontSize: `${buttonFontSize}px`,
         color: '#FFFFFF',
-        fontFamily: 'MedievalSharp'
+        fontFamily: 'MedievalSharp',
       })
       .setOrigin(0.5);
-    button.setInteractive({ useHandCursor: true });
-    button.on(
+    startButton.setInteractive({ useHandCursor: true });
+    startButton.on(
       'pointerup',
       () => {
         this.startGame();
       },
       this
     );
+    const htpButton = this.add
+      .text(
+        this.cameras.main.centerX,
+        this.cameras.main.centerY + this.scale.height / 10,
+        'How to play',
+        {
+          fontSize: `${buttonFontSize}px`,
+          color: '#FFFFFF',
+          fontFamily: 'MedievalSharp',
+        }
+      )
+      .setOrigin(0.5);
+    htpButton.setInteractive({ useHandCursor: true });
+    htpButton.on(
+      'pointerup',
+      () => {
+        this.startHtp();
+      },
+      this
+    );
   }
 
   private startGame() {
+    this.gameScene && this.gameScene.scene.remove();
     !this.scene.get('GameStageScene') &&
       this.scene.add('GameStageScene', GameStageScene);
     this.scene.start('GameStageScene');
+  }
+
+  private startHtp() {
+    !this.scene.get('HowToPlayScene') &&
+      this.scene.add('HowToPlayScene', HowToPlayScene);
+    this.scene.start('HowToPlayScene');
   }
 
   private setupKeybindings() {
