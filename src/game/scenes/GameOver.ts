@@ -14,7 +14,9 @@ export default class GameOverScene extends Phaser.Scene {
 
   public create() {
     this.gameScene = this.scene.get('GameStageScene') as GameStageScene;
-    this.sound.stopByKey('backgroundMusic');
+    this.sound.stopAll();
+    const music = this.sound.add('gameOverMusic', { loop: true });
+    music.play();
 
     this.setupKeybindings();
 
@@ -95,14 +97,15 @@ export default class GameOverScene extends Phaser.Scene {
   }
 
   private restartGame() {
+    this.sound.stopAll();
     this.gameScene && this.gameScene.scene.remove();
-    this.sound.get('backgroundMusic').play();
     !this.scene.get('GameStageScene') &&
       this.scene.add('GameStageScene', GameStageScene);
     this.scene.start('GameStageScene');
   }
 
   private startMainMenu() {
+    this.sound.stopAll();
     this.mainMenuScene && this.mainMenuScene.scene.remove();
     !this.scene.get('MainMenuScene') &&
       this.scene.add('MainMenuScene', MainMenuScene);

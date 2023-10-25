@@ -38,7 +38,7 @@ export default class HowToPlayScene extends Phaser.Scene {
     this.add
       .text(
         this.cameras.main.centerX,
-        this.cameras.main.centerY - this.scale.height / 4.5,
+        this.cameras.main.centerY - this.scale.height / 11,
         'The goal of Random Tower is to protect your tower against\n' +
           'invading enemies for as long as possible.\n\n' +
           'Use the arrow keys to move your lightning weapon to hit enemies.\n\n' +

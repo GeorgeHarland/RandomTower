@@ -1,7 +1,5 @@
-import * as WebFont from 'webfontloader';
 import GameStageScene from './GameStage';
 import HowToPlayScene from './HowToPlayScene';
-import { loadSprites } from './helpers/spriteHelpers';
 
 export default class MainMenuScene extends Phaser.Scene {
   private gameScene: GameStageScene | null = null;
@@ -10,29 +8,14 @@ export default class MainMenuScene extends Phaser.Scene {
     super({ key: 'MainMenuScene' });
   }
 
-  public preload() {
-    this.load.audio('backgroundMusic', 'audio/sandsOfTime.mp3');
-    this.load.image('background', 'sprites/background.png');
-    this.load.image('gameOverBackground', 'sprites/gameOverBackground.png');
-    loadSprites(this);
-    this.load.start();
-
-    WebFont.load({
-      google: {
-        families: ['PressStart2P', 'VT323', 'MedievalSharp'],
-      },
-      active: () => {
-        this.load.on('complete', () => {});
-      },
-    });
-  }
+  public preload() {}
 
   public create() {
     this.gameScene = this.scene.get('GameStageScene') as GameStageScene;
-    const music = this.sound.add('backgroundMusic', { loop: true });
-    music.play();
-
     this.setupKeybindings();
+
+    const music = this.sound.add('mainMenuMusic', { loop: true });
+    music.play();
 
     const background = this.add.image(0, 0, 'background');
     background.setOrigin(0, 0);
@@ -93,6 +76,7 @@ export default class MainMenuScene extends Phaser.Scene {
   }
 
   private startGame() {
+    this.sound.stopAll();
     this.gameScene && this.gameScene.scene.remove();
     !this.scene.get('GameStageScene') &&
       this.scene.add('GameStageScene', GameStageScene);
