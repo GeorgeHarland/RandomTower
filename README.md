@@ -48,7 +48,13 @@ Spell effects:
 
 - Time Slow, https://pipoya.itch.io/pipoya-free-vfx-time-magic
 
-Background music - Sands of Time, https://pixabay.com/users/juan_sanchez_music-8771929/
+Music:
+
+- Main menu, https://pixabay.com/music/horror-scene-walk-alone-dark-cinematic-music-horror-music-153445/
+
+- Game, https://pixabay.com/music/beautiful-plays-inspiring-cinematic-ambient-116199/
+
+- Game Over, https://pixabay.com/music/modern-classical-lonestar-136900/
 
 ## Gallery
 

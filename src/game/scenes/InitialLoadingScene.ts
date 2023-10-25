@@ -41,7 +41,7 @@ export default class InitialLoadingScene extends Phaser.Scene {
       .setOrigin(0.5);
 
       this.load.audio('mainMenuMusic', 'audio/walk-alone-dark-cinematic-music-horror-music-153445.mp3');
-      this.load.audio('gameMusic1', 'audio/mountain-path-125573.mp3');
+      this.load.audio('gameMusic1', 'audio/inspiring-cinematic-ambient-116199.mp3');
       this.load.audio('gameOverMusic', 'audio/lonestar-136900.mp3');
 
       this.load.image('background', 'sprites/background.png');

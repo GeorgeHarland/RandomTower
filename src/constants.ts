@@ -27,7 +27,7 @@ export const TOWER_BASE_HITPOINTS = 100;
 
 export const PowerupRecord: Record<PowerupType, ItemGradeType> = {
   'Arrow Rate': 'B',
-  'Circle Speed': 'C',
+  'Circle Speed': 'D',
   'Dark Blast': 'C',
   'Fire Blast': 'C',
   'Ice Spike': 'A',
