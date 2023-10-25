@@ -8,11 +8,17 @@ Enemies spawn in increasing numbers. Slower enemies that can take more hits spaw
 
 Enemies are destroyed by the player's circle weapon (arrow keys) or the tower's automatic arrow or powerup attacks.
 
-The bigger enemies can be pushed back, so try to use the circle weapon against those.
-
-There are currently 7 powerups in the game. Press Q, W, E after getting some gold to try them out!
+There are currently 8 powerups in the game. Press Q, W, E after getting some gold to try them out!
 
 Powerups get more expensive each purchase, by 1 gold + the amount of minutes played.
+
+## Gallery
+
+![image](https://github.com/GeorgeHarland/RandomTower/assets/37070520/f57536ee-b45f-4349-bc3d-488d7c872ced)
+
+![image](https://github.com/GeorgeHarland/RandomTower/assets/37070520/eb5cf1c6-f486-4b3f-a876-8d24494c6c8e)
+
+![image](https://github.com/GeorgeHarland/RandomTower/assets/37070520/cfd211ea-cca7-4c32-99d0-5975e7a24498)
 
 ## Controls
 
@@ -55,10 +61,6 @@ Music:
 - Game, https://pixabay.com/music/beautiful-plays-inspiring-cinematic-ambient-116199/
 
 - Game Over, https://pixabay.com/music/modern-classical-lonestar-136900/
-
-## Gallery
-
-![image](https://github.com/GeorgeHarland/RandomTower/assets/37070520/e6f0baf8-138e-416b-8d70-cc475f5276eb)
 
 ## How to open the project on your computer:
 
