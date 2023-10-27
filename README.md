@@ -1,6 +1,6 @@
 # RandomTower
 
-A small hobby. Making a tower survival game with TypeScript, Preact, and Phaser.JS.
+A tower survival game built with TypeScript, Preact, and Phaser.JS.
 
 Open to contributions and opinions! I'll add more issues over time.
 
