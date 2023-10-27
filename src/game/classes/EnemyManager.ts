@@ -12,6 +12,7 @@ import {
 } from '../../constants';
 import GameStageScene from '../scenes/GameStage';
 import { getRandomEdgeOfScreen } from '../scenes/helpers/gameHelpers';
+import { EnemyTypes } from '../types';
 import PlayerTower from './PlayerTower';
 
 export default class EnemyManager {
@@ -23,13 +24,13 @@ export default class EnemyManager {
   public spawnJuggernautTimer: Phaser.Time.TimerEvent | undefined;
   public enemyRate: number = ENEMY_BASE_RATE;
   public juggernautRate: number = JUGGERNAUT_BASE_RATE;
-  public enemyCurrentSpeed: number;
+  public enemiesCurrentSpeed: number;
   public weaponJuggernautHitMap = new Map();
 
   public constructor(scene: GameStageScene, playerTower: PlayerTower) {
     this.scene = scene;
     this.playerTower = playerTower;
-    this.enemyCurrentSpeed = ENEMY_BASE_SPEED * this.scene.gameSpeedScale;
+    this.enemiesCurrentSpeed = ENEMY_BASE_SPEED * this.scene.gameSpeedScale;
   }
 
   public initialize = () => {
@@ -43,6 +44,7 @@ export default class EnemyManager {
     const enemy = this.scene.physics.add.sprite(x, y, 'enemyTexture');
     enemy.setImmovable(true);
     enemy.setData('id', `enemy-${this.enemyCounter++}`);
+    enemy.setData('type', 'minion');
     this.enemies?.add(enemy);
     if (this.spawnEnemyTimer) {
       this.spawnEnemyTimer.destroy();
@@ -84,13 +86,26 @@ export default class EnemyManager {
     enemy.destroy();
   };
 
+  public enemyTerrainCollision = (
+    effect: Phaser.Types.Physics.Arcade.GameObjectWithBody,
+    enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
+  ) => {
+    switch(effect.getData('type')) {
+      case('icePool'):
+        enemy && enemy.setData('chilled', true)
+        break;
+      default:
+        break;
+    }
+  }
+
   public enemyWeaponCollision = (
     weapon: Phaser.Types.Physics.Arcade.GameObjectWithBody,
     enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody,
     weaponDestroyed = false
   ) => {
     const currentTime = Date.now();
-    const hitCooldown = 200; // milliseconds
+    const hitCooldown = 200;
     const weaponId = weapon.getData('id');
     const juggernautId = enemy.getData('id');
 
@@ -112,6 +127,9 @@ export default class EnemyManager {
 
     if (weaponDestroyed) {
       weapon.destroy();
+    } else if ((weapon.getData('type') === 'iceSpike') && (enemy.getData('type') === 'juggernaut')) {
+      this.scene.powerupManager.spawnIceSpikeExplosion(weapon.body.x + (weapon.body.width/2), weapon.body.y + (weapon.body.height/2));
+      weapon.destroy();
     }
   };
 
@@ -124,22 +142,24 @@ export default class EnemyManager {
     enemy.destroy();
   };
 
-  public getClosestEnemy = (origin: Phaser.Physics.Arcade.Sprite) => {
+  public getClosestEnemy = (origin: Phaser.Physics.Arcade.Sprite, type: EnemyTypes | null = null): Phaser.Physics.Arcade.Sprite | null => {
     let closestEnemy = null;
     let closestDistance = Number.MAX_VALUE;
 
     this.enemies?.children.entries.forEach(
       (enemy: Phaser.GameObjects.GameObject) => {
-        const enemySprite = enemy as Phaser.Physics.Arcade.Sprite;
-        const distance = Phaser.Math.Distance.Between(
-          origin.x,
-          origin.y,
-          enemySprite.x,
-          enemySprite.y
-        );
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closestEnemy = enemySprite;
+        if(!type || enemy.getData('type') === type) {
+          const enemySprite = enemy as Phaser.Physics.Arcade.Sprite;
+          const distance = Phaser.Math.Distance.Between(
+            origin.x,
+            origin.y,
+            enemySprite.x,
+            enemySprite.y
+          );
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestEnemy = enemySprite;
+          }
         }
       }
     );

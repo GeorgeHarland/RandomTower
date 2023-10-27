@@ -13,6 +13,12 @@ import {
   FIREBLAST_BASE_COOLDOWN,
   FIREBLAST_LEVELUP_ANGLE_MULTIPLIER,
   FIREBLAST_LEVELUP_COOLDOWN_MULTIPLIER,
+  ICEPOOL_DURATION,
+  ICEPOOL_SIZE_SCALE,
+  ICESPIKE_BASE_COOLDOWN,
+  ICESPIKE_BASE_SPEED,
+  ICESPIKE_LEVELUP_COOLDOWN_MULTIPLIER,
+  ICESPIKE_SIZE_SCALE,
   PowerupRecord,
   REGEN_BASE_COOLDOWN,
   REGEN_BASE_HEAL_AMOUNT,
@@ -35,6 +41,7 @@ export default class PowerupManager {
   public fireBlastAngleChange: number = FIREBLAST_BASE_ANGLE_CHANGE;
   public fireBlastCooldown: number = FIREBLAST_BASE_COOLDOWN;
   public fireBlastDirection: number = 180;
+  public iceSpikeCooldown: number = ICESPIKE_BASE_COOLDOWN;
   public regenAmount: number = REGEN_BASE_HEAL_AMOUNT;
   public regenCooldown: number = REGEN_BASE_COOLDOWN;
   public timeSlow: boolean = false;
@@ -44,17 +51,84 @@ export default class PowerupManager {
   public spawnArrowTimer: Phaser.Time.TimerEvent | undefined;
   public darkBlastTimer: Phaser.Time.TimerEvent | undefined;
   public fireBlastTimer: Phaser.Time.TimerEvent | undefined;
+  public icePoolTimer: Phaser.Time.TimerEvent | undefined;
+  public iceSpikeTimer: Phaser.Time.TimerEvent | undefined;
   public regenTimer: Phaser.Time.TimerEvent | undefined;
   public timeSlowTimer: Phaser.Time.TimerEvent | undefined;
-
+  
   public constructor(private scene: GameStageScene) {}
-
+  
+  public addPowerup = (item: Item) => {
+    switch (item.powerup) {
+      case 'Arrow Rate':
+        this.arrowRate += item.cost * ARROW_RATE_INCREASE;
+        this.spawnArrow();
+        break;
+      case 'Circle Speed':
+        this.scene.circleWeapons?.children.entries.forEach((circle) => {
+          const weaponCircle = circle as CircleWeapon;
+          weaponCircle.circleSpeed +=
+            CIRCLE_SPEED_INCREASE * this.scene.gameSpeedScale;
+          const currentX = weaponCircle.x;
+          const currentY = weaponCircle.y;
+          weaponCircle.scaleX *= CIRCLE_SCALE_MULTIPLIER;
+          weaponCircle.scaleY *= CIRCLE_SCALE_MULTIPLIER;
+          weaponCircle.x = currentX;
+          weaponCircle.y = currentY;
+        });
+        break;
+        case 'Dark Blast':
+          if (this.darkBlastTimer) {
+            this.darkBlastCooldown =
+            this.darkBlastCooldown * DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER;
+            this.darkBlastAngleChange =
+            this.darkBlastAngleChange * DARKBLAST_LEVELUP_ANGLE_MULTIPLIER;
+        }
+        this.spawnDarkBlast();
+        break;
+      case 'Fire Blast':
+        if (this.fireBlastTimer) {
+          this.fireBlastCooldown =
+            this.fireBlastCooldown * FIREBLAST_LEVELUP_COOLDOWN_MULTIPLIER;
+          this.fireBlastAngleChange =
+            this.fireBlastAngleChange * FIREBLAST_LEVELUP_ANGLE_MULTIPLIER;
+        }
+        this.spawnFireBlast();
+        break;
+      case 'Ice Spike':
+        if (this.iceSpikeTimer) {
+          this.iceSpikeCooldown = this.iceSpikeCooldown * ICESPIKE_LEVELUP_COOLDOWN_MULTIPLIER;
+        }
+        this.spawnIceSpike();
+        break;
+      case 'Regen':
+        this.scene.playerTower.maxHp += REGEN_LEVELUP_MAXHP_INCREASE;
+        if (this.regenTimer) {
+          this.regenCooldown *= REGEN_LEVELUP_COOLDOWN_MULTIPLIER;
+          this.regenAmount += REGEN_LEVELUP_HEAL_INCREASE;
+        }
+        this.spawnRegen();
+        break;
+      case 'Time Slow':
+        if (this.timeSlowTimer) {
+          this.timeSlowCooldown *= TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER;
+        }
+        this.spawnTimeSlow();
+        break;
+      case 'Tornado':
+        this.spawnTornado();
+        break;
+      default:
+        break;
+      }
+  };
+  
   public initShopBoxes = () => {
     this.scene.shopBoxes?.children.entries.forEach((box, index) => {
       const shopBox = box as ShopBox;
       if (shopBox.getItem() === null) {
         if (this.scene.elapsedSeconds > 1)
-          (shopBox as ShopBox).addItem(
+        (shopBox as ShopBox).addItem(
             (shopBox as ShopBox).generateRandomItem()
           );
         else if (index === 0)
@@ -99,11 +173,11 @@ export default class PowerupManager {
       }
     });
   };
-
+  
   public spawnArrow = () => {
     if (this.scene.tower) {
-      const x = this.scene.tower.x;
-      const y = this.scene.tower.y;
+      const x: number = this.scene.scale.width / 2;
+      const y: number = this.scene.scale.height / 2;
 
       const arrow = this.scene.physics.add.sprite(x, y, 'arrowTexture');
       arrow.setData('id', `weapon-${this.weaponCounter++}`);
@@ -121,72 +195,13 @@ export default class PowerupManager {
         );
       } else {
         const angle = Phaser.Math.Between(0, 360);
-        this.scene.physics.velocityFromAngle(angle, 200, arrow.body.velocity);
+        this.scene.physics.velocityFromAngle(angle, ARROW_BASE_SPEED * this.scene.gameSpeedScale, arrow.body.velocity);
       }
 
       this.updateArrowTimer();
     }
   };
-
-  public addPowerup = (item: Item) => {
-    switch (item.powerup) {
-      case 'Arrow Rate':
-        this.arrowRate += item.cost * ARROW_RATE_INCREASE;
-        this.spawnArrow();
-        break;
-      case 'Circle Speed':
-        this.scene.circleWeapons?.children.entries.forEach((circle) => {
-          const weaponCircle = circle as CircleWeapon;
-          weaponCircle.circleSpeed +=
-            CIRCLE_SPEED_INCREASE * this.scene.gameSpeedScale;
-          const currentX = weaponCircle.x;
-          const currentY = weaponCircle.y;
-          weaponCircle.scaleX *= CIRCLE_SCALE_MULTIPLIER;
-          weaponCircle.scaleY *= CIRCLE_SCALE_MULTIPLIER;
-          weaponCircle.x = currentX;
-          weaponCircle.y = currentY;
-        });
-        break;
-      case 'Dark Blast':
-        if (this.darkBlastTimer) {
-          this.darkBlastCooldown =
-            this.darkBlastCooldown * DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER;
-          this.darkBlastAngleChange =
-            this.darkBlastAngleChange * DARKBLAST_LEVELUP_ANGLE_MULTIPLIER;
-        }
-        this.spawnDarkBlast();
-        break;
-      case 'Fire Blast':
-        if (this.fireBlastTimer) {
-          this.fireBlastCooldown =
-            this.fireBlastCooldown * FIREBLAST_LEVELUP_COOLDOWN_MULTIPLIER;
-          this.fireBlastAngleChange =
-            this.fireBlastAngleChange * FIREBLAST_LEVELUP_ANGLE_MULTIPLIER;
-        }
-        this.spawnFireBlast();
-        break;
-      case 'Regen':
-        this.scene.playerTower.maxHp += REGEN_LEVELUP_MAXHP_INCREASE;
-        if (this.regenTimer) {
-          this.regenCooldown *= REGEN_LEVELUP_COOLDOWN_MULTIPLIER;
-          this.regenAmount += REGEN_LEVELUP_HEAL_INCREASE;
-        }
-        this.spawnRegen();
-        break;
-      case 'Time Slow':
-        if (this.timeSlowTimer) {
-          this.timeSlowCooldown *= TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER;
-        }
-        this.spawnTimeSlow();
-        break;
-      case 'Tornado':
-        this.spawnTornado();
-        break;
-      default:
-        break;
-    }
-  };
-
+  
   public updateArrowTimer = () => {
     if (this.spawnArrowTimer) {
       this.spawnArrowTimer.destroy();
@@ -273,6 +288,84 @@ export default class PowerupManager {
     });
   };
 
+  public spawnIceSpike = () => {
+    if (this.iceSpikeTimer) {
+      this.iceSpikeTimer.destroy();
+    }
+    if(this.scene.tower){
+    const x: number = this.scene.scale.width / 2;
+    const y: number = this.scene.scale.height / 2;
+    const iceSpikeSprite = this.scene.physics.add.sprite(
+      x,
+      y,
+      'iceSpikeImage1'
+    );
+    iceSpikeSprite.scale = ICESPIKE_SIZE_SCALE * this.scene.gameSpeedScale;
+    iceSpikeSprite.setData('type', 'iceSpike');
+    iceSpikeSprite.setData('id', `weapon-${this.weaponCounter++}`);
+    iceSpikeSprite.play('iceSpikeAnimation');
+    iceSpikeSprite.body.setImmovable(true)
+
+    const closestJuggernaut = this.scene.enemyManager.getClosestEnemy(
+      this.scene.tower, 'juggernaut'
+    );
+    const closestEnemy = this.scene.enemyManager.getClosestEnemy(this.scene.tower)
+
+    // prioritize nearest juggernaut -> then any other enemy -> then random direction
+    this.scene.time.delayedCall(1, () => {
+      if (closestJuggernaut) {
+        this.scene.physics.moveToObject(
+          iceSpikeSprite,
+          closestJuggernaut,
+          ICESPIKE_BASE_SPEED * this.scene.gameSpeedScale
+        );
+        iceSpikeSprite.angle = Phaser.Math.RadToDeg(Math.atan2(closestJuggernaut.y - iceSpikeSprite.y, closestJuggernaut.x - iceSpikeSprite.x));
+      } else if (closestEnemy) {
+        this.scene.physics.moveToObject(
+          iceSpikeSprite,
+          closestEnemy,
+          ICESPIKE_BASE_SPEED * this.scene.gameSpeedScale
+        );
+        iceSpikeSprite.angle = Phaser.Math.RadToDeg(Math.atan2(closestEnemy.y - iceSpikeSprite.y, closestEnemy.x - iceSpikeSprite.x));
+      } else {
+        const angle = Phaser.Math.Between(0, 360);
+        this.scene.physics.velocityFromAngle(angle, ICESPIKE_BASE_SPEED * this.scene.gameSpeedScale, iceSpikeSprite.body.velocity);
+        iceSpikeSprite.angle = angle;
+      }
+      });
+
+      this.scene.PermanentWeapons?.add(iceSpikeSprite);
+      this.iceSpikeTimer = this.scene.time.addEvent({
+        delay: this.iceSpikeCooldown,
+        callback: this.spawnIceSpike,
+        callbackScope: this,
+        loop: false,
+      });
+    }
+  };
+
+  public spawnIceSpikeExplosion = (x: number, y: number) => {
+    // spawn effect + add boom to permanent weapons
+    const icePoolSprite = this.scene.physics.add.sprite(
+      x,
+      y,
+      'icePoolImage'
+    );
+    icePoolSprite.scale = ICEPOOL_SIZE_SCALE * this.scene.gameSpeedScale;
+    icePoolSprite.setDepth(-0.1);
+    icePoolSprite.setData('type', 'icePool');
+    // icePoolImage
+    // spawn pool
+    // timer for pool to disappear
+    this.scene.terrainEffects?.add(icePoolSprite);
+    this.icePoolTimer = this.scene.time.addEvent({
+      delay: ICEPOOL_DURATION,
+      callback: (() => icePoolSprite.destroy()),
+      callbackScope: this,
+      loop: false,
+    });
+  }
+
   public spawnRegen = () => {
     if (this.regenTimer) {
       this.regenTimer.destroy();
@@ -352,13 +445,13 @@ export default class PowerupManager {
   };
 
   public updateTimeSlow = () => {
-    if (this.timeSlow) this.scene.enemyManager.enemyCurrentSpeed *= 0.95;
-    else if (this.scene.enemyManager.enemyCurrentSpeed < ENEMY_BASE_SPEED / 10)
-      this.scene.enemyManager.enemyCurrentSpeed = ENEMY_BASE_SPEED / 10;
-    else if (this.scene.enemyManager.enemyCurrentSpeed < ENEMY_BASE_SPEED)
-      this.scene.enemyManager.enemyCurrentSpeed /= 0.95;
-    if (this.scene.enemyManager.enemyCurrentSpeed > ENEMY_BASE_SPEED)
-      this.scene.enemyManager.enemyCurrentSpeed =
+    if (this.timeSlow) this.scene.enemyManager.enemiesCurrentSpeed *= 0.95;
+    else if (this.scene.enemyManager.enemiesCurrentSpeed < ENEMY_BASE_SPEED / 10)
+      this.scene.enemyManager.enemiesCurrentSpeed = ENEMY_BASE_SPEED / 10;
+    else if (this.scene.enemyManager.enemiesCurrentSpeed < ENEMY_BASE_SPEED)
+      this.scene.enemyManager.enemiesCurrentSpeed /= 0.95;
+    if (this.scene.enemyManager.enemiesCurrentSpeed > ENEMY_BASE_SPEED)
+      this.scene.enemyManager.enemiesCurrentSpeed =
         ENEMY_BASE_SPEED * this.scene.gameSpeedScale;
   };
 }

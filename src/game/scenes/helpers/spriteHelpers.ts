@@ -49,22 +49,24 @@ export const loadSprites = (scene: Phaser.Scene): void => {
       `sprites/spellEffects/fire/1/1_${i - 1}.png`
     );
   }
+
+  for (let i = 1; i <= 10; i++) {
+    scene.load.image(
+      `iceSpikeImage${i}`,
+      `sprites/spellEffects/ice/VFX 1 Repeatable${i}.png`
+    );
+  }
+  scene.load.image('icePoolImage', 'sprites/spellEffects/ice/ice_pool.png');
 };
 
 export const extractTowerFrames = (
   scene: Phaser.Scene
 ): Phaser.GameObjects.Image[] => {
   const frameNames = scene.textures.get('towerSpriteSheet').getFrameNames();
-  const towerSprites = [];
+  const towerSprites: Phaser.GameObjects.Image[] = [];
 
   for (const frameName of frameNames) {
-    const frame = scene.textures.getFrame('towerSpriteSheet', frameName);
-    const image = scene.add.image(
-      frame.x,
-      frame.y,
-      'towerSpriteSheet',
-      frameName
-    );
+    const image = scene.add.image(0, 0, 'towerSpriteSheet', frameName).setVisible(false);
     towerSprites.push(image);
   }
   return towerSprites;

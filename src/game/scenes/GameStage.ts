@@ -12,6 +12,7 @@ import {
   JUGGERNAUT_SPEED_MULTIPLIER,
   DEV_TEXT_AT_TOP,
   TORNADO_BASE_SHAKE_AMOUNT,
+  ICEPOOL_SLOW,
 } from '../../constants';
 import { setupAnimations, setupKeybindings } from './helpers/setupHelpers';
 
@@ -21,6 +22,7 @@ export default class GameStageScene extends Phaser.Scene {
   public circleWeapons: Phaser.Physics.Arcade.Group | undefined;
   public elapsedSeconds: number = 0;
   public generatedItems: PowerupType[] = [];
+  public terrainEffects: Phaser.Physics.Arcade.Group | undefined;
   public PermanentWeapons: Phaser.Physics.Arcade.Group | undefined;
   public playerTower: PlayerTower = new PlayerTower();
   public shopBoxes: Phaser.GameObjects.Group | undefined;
@@ -70,6 +72,7 @@ export default class GameStageScene extends Phaser.Scene {
       'bgTexture'
     );
     bg.setOrigin(0, 0);
+    bg.setDepth(-1);
 
     const towerImage = this.towerSprites[0];
 
@@ -119,6 +122,9 @@ export default class GameStageScene extends Phaser.Scene {
 
     this.weapons = this.physics.add.group({
       classType: Phaser.GameObjects.Rectangle,
+    });
+    this.terrainEffects = this.physics.add.group({
+      classType: Phaser.Physics.Arcade.Sprite,
     });
     this.PermanentWeapons = this.physics.add.group({
       classType: Phaser.Physics.Arcade.Sprite,
@@ -245,6 +251,17 @@ export default class GameStageScene extends Phaser.Scene {
         );
       }
     );
+    this.physics.add.overlap(
+      this.enemyManager
+        .enemies as Phaser.Types.Physics.Arcade.ArcadeColliderType,
+      this.terrainEffects,
+      (enemy, effect) => {
+        this.enemyManager.enemyTerrainCollision(
+          effect as Phaser.Types.Physics.Arcade.GameObjectWithBody,
+          enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody,
+        );
+      }
+    );
 
     this.powerupManager.spawnArrowTimer = this.time.addEvent({
       delay: 1000 / this.powerupManager.arrowRate,
@@ -302,6 +319,9 @@ export default class GameStageScene extends Phaser.Scene {
         if (dir >= 0.75)
           (weapon as Phaser.Physics.Arcade.Sprite).y -=
             TORNADO_BASE_SHAKE_AMOUNT;
+        }
+      if (weapon.getData('type') === 'iceSpike') {
+        
       }
     });
 
@@ -353,19 +373,20 @@ export default class GameStageScene extends Phaser.Scene {
 
     this.enemyManager.enemies?.children.entries.forEach((enemy) => {
       if (this.tower) {
+        const effectMultiplier = (enemy.getData('chilled') === true) ? ICEPOOL_SLOW : 1;
         if (enemy.getData('type') === 'juggernaut')
           this.physics.moveToObject(
             enemy,
             this.tower,
-            this.enemyManager.enemyCurrentSpeed *
+            this.enemyManager.enemiesCurrentSpeed *
               JUGGERNAUT_SPEED_MULTIPLIER *
-              this.gameSpeedScale
+              this.gameSpeedScale * effectMultiplier
           );
         else
           this.physics.moveToObject(
             enemy,
             this.tower,
-            this.enemyManager.enemyCurrentSpeed * this.gameSpeedScale
+            this.enemyManager.enemiesCurrentSpeed * this.gameSpeedScale * effectMultiplier
           );
       }
     });
@@ -374,7 +395,6 @@ export default class GameStageScene extends Phaser.Scene {
 
     if (this.playerTower.currentHp <= 0) {
       this.data.set('gametime', this.elapsedSeconds);
-      // this.scene.remove();
       this.scene.start('GameOverScene');
     }
 
