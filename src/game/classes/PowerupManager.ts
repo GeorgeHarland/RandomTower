@@ -18,7 +18,7 @@ import {
   ICESPIKE_BASE_COOLDOWN,
   ICESPIKE_BASE_SPEED,
   ICESPIKE_LEVELUP_COOLDOWN_MULTIPLIER,
-  ICESPIKE_SIZE_SCALE,
+  ICESPIKE_BASE_SIZE_SCALE,
   PowerupRecord,
   REGEN_BASE_COOLDOWN,
   REGEN_BASE_HEAL_AMOUNT,
@@ -27,6 +27,7 @@ import {
   REGEN_LEVELUP_MAXHP_INCREASE,
   TIMESLOW_BASE_COOLDOWN,
   TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER,
+  ICESPIKE_LEVELUP_POOL_INCREASE,
 } from '../../constants';
 import GameStageScene from '../scenes/GameStage';
 import CircleWeapon from './CircleWeapon';
@@ -41,6 +42,7 @@ export default class PowerupManager {
   public fireBlastAngleChange: number = FIREBLAST_BASE_ANGLE_CHANGE;
   public fireBlastCooldown: number = FIREBLAST_BASE_COOLDOWN;
   public fireBlastDirection: number = 180;
+  public icePoolSizeScale: number = ICESPIKE_BASE_SIZE_SCALE;
   public iceSpikeCooldown: number = ICESPIKE_BASE_COOLDOWN;
   public regenAmount: number = REGEN_BASE_HEAL_AMOUNT;
   public regenCooldown: number = REGEN_BASE_COOLDOWN;
@@ -98,6 +100,7 @@ export default class PowerupManager {
       case 'Ice Spike':
         if (this.iceSpikeTimer) {
           this.iceSpikeCooldown = this.iceSpikeCooldown * ICESPIKE_LEVELUP_COOLDOWN_MULTIPLIER;
+          this.icePoolSizeScale += ICESPIKE_LEVELUP_POOL_INCREASE;
         }
         this.spawnIceSpike();
         break;
@@ -300,7 +303,7 @@ export default class PowerupManager {
       y,
       'iceSpikeImage1'
     );
-    iceSpikeSprite.scale = ICESPIKE_SIZE_SCALE * this.scene.gameSpeedScale;
+    iceSpikeSprite.scale = this.icePoolSizeScale * this.scene.gameSpeedScale;
     iceSpikeSprite.setData('type', 'iceSpike');
     iceSpikeSprite.setData('id', `weapon-${this.weaponCounter++}`);
     iceSpikeSprite.play('iceSpikeAnimation');

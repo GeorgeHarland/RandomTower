@@ -66,9 +66,10 @@ export const ICEPOOL_SIZE_SCALE = 0.8;
 export const ICEPOOL_DURATION = 5000;
 export const ICEPOOL_SLOW = 0.3;
 export const ICESPIKE_BASE_COOLDOWN = 7000;
+export const ICESPIKE_BASE_SIZE_SCALE = 1.5;
 export const ICESPIKE_BASE_SPEED = 100;
-export const ICESPIKE_SIZE_SCALE = 1.8;
 export const ICESPIKE_LEVELUP_COOLDOWN_MULTIPLIER = 0.9;
+export const ICESPIKE_LEVELUP_POOL_INCREASE = 0.1;
 
 export const REGEN_BASE_COOLDOWN = 5000;
 export const REGEN_BASE_HEAL_AMOUNT = 5;

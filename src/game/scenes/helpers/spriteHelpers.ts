@@ -56,6 +56,12 @@ export const loadSprites = (scene: Phaser.Scene): void => {
       `sprites/spellEffects/ice/VFX 1 Repeatable${i}.png`
     );
   }
+  for (let i = 1; i <= 9; i++) {
+    scene.load.image(
+      `iceExplosionImage${i}`,
+      `sprites/spellEffects/ice/weak_ice000${i}.png`
+    );
+  }
   scene.load.image('icePoolImage', 'sprites/spellEffects/ice/ice_pool.png');
 };
 
