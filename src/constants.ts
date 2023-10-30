@@ -13,8 +13,8 @@ export const ENEMY_BASE_SPEED = 80;
 export const ENEMY_BASE_GOLD_VALUE = 1;
 
 export const JUGGERNAUT_BASE_DAMAGE = 20;
-// export const JUGGERNAUT_BASE_RATE = 0.03;
-export const JUGGERNAUT_BASE_RATE = 2;
+export const JUGGERNAUT_BASE_RATE = 0.03;
+// export const JUGGERNAUT_BASE_RATE = 2;
 export const JUGGERNAUT_RATE_MULTIPLIER = 1.012;
 export const JUGGERNAUT_BASE_GOLD_VALUE = 5;
 export const JUGGERNAUT_BASE_HITPOINTS = 40;

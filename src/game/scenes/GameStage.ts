@@ -347,17 +347,17 @@ export default class GameStageScene extends Phaser.Scene {
       if (
         Phaser.Input.Keyboard.JustDown(this.keyQ as Phaser.Input.Keyboard.Key)
       ) {
-        itemBought = shopBoxKeybinds.Q.buyItem(this.playerTower);
+        itemBought = shopBoxKeybinds.Q.buyItem();
       }
       if (
         Phaser.Input.Keyboard.JustDown(this.keyW as Phaser.Input.Keyboard.Key)
       ) {
-        itemBought = shopBoxKeybinds.W.buyItem(this.playerTower);
+        itemBought = shopBoxKeybinds.W.buyItem();
       }
       if (
         Phaser.Input.Keyboard.JustDown(this.keyE as Phaser.Input.Keyboard.Key)
       ) {
-        itemBought = shopBoxKeybinds.E.buyItem(this.playerTower);
+        itemBought = shopBoxKeybinds.E.buyItem();
       }
     }
     if (itemBought) {

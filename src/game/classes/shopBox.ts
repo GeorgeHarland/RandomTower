@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
 import Item from './Item';
 import { KeybindType, PowerupType } from '../types';
-import Player from './PlayerTower';
 import { getArrayRandomElement } from '../../utils';
 import { PowerupRecord, gradeCost } from '../../constants';
 import GameStageScene from '../scenes/GameStage';
@@ -48,6 +47,11 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
       }
     );
     scene.add.existing(this.keybindText);
+
+    this.setInteractive({ useHandCursor: true });
+    this.on('pointerdown', () => {
+      this.clickBuyItem();
+    });
   }
 
   public addItem = (item: Item | null = null): void => {
@@ -56,41 +60,54 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
     this.priceText?.destroy();
     this.powerupText?.destroy();
     this.itemImage?.destroy();
-    this.priceText = this.scene.add.text(
-      this.x + this.scene.scale.width / 25,
-      this.y + this.scene.scale.height / 35,
+    this.priceText = this.gameScene.add.text(
+      this.x + this.gameScene.scale.width / 25,
+      this.y + this.gameScene.scale.height / 35,
       item.cost.toString(),
       { font: this.dynamicFontSize, color: '#000000' }
     );
     this.priceText.setOrigin(1, 0);
-    this.powerupText = this.scene.add.text(
-      this.x - this.scene.scale.width / 25,
-      this.y - this.scene.scale.height / 18,
+    this.powerupText = this.gameScene.add.text(
+      this.x - this.gameScene.scale.width / 25,
+      this.y - this.gameScene.scale.height / 18,
       item.powerup,
       { font: this.titleFontSize, color: '#FFFFFF' }
     );
-    this.itemImage = this.scene.physics.add.sprite(
+    this.itemImage = this.gameScene.physics.add.sprite(
       this.x,
       this.y,
       item.powerup
     );
-    this.itemImage.setScale(this.scene.scale.width / 24 / this.itemImage.width);
+    this.itemImage.setScale(this.gameScene.scale.width / 24 / this.itemImage.width);
   };
 
-  public buyItem = (player: Player): Item | null => {
-    if (this.currentItem && player.currentGold >= this.currentItem.cost) {
+  public buyItem = (): Item | null => {
+    let result: Item | null = null;
+    if (this.currentItem && this.gameScene.playerTower.currentGold >= this.currentItem.cost) {
       const boughtItem = this.currentItem;
       this.currentItem = null;
-      this.powerupText && this.powerupText.destroy();
-      this.priceText && this.priceText.destroy();
-      this.itemImage && this.itemImage.destroy();
+      this.powerupText?.destroy();
+      this.priceText?.destroy();
+      this.itemImage?.destroy();
       this.addItem();
-      player.currentGold -= boughtItem.cost;
+      this.gameScene.playerTower.currentGold -= boughtItem.cost;
       this.gameScene.increasePrices();
-      return boughtItem;
+      result = boughtItem;
     }
-    return null;
+    return result;
   };
+
+  public clickBuyItem = () => {
+    const itemBought = this.buyItem();
+    
+    if(itemBought) {
+      this.gameScene.powerupManager.addPowerup(itemBought);
+        this.gameScene.generatedItems = [];
+        this.gameScene.shopBoxes?.children.entries.forEach((shopbox) => {
+          (shopbox as ShopBox).rerollItem();
+        });
+    }
+  }
 
   public removeItem = (): void => {
     this.currentItem = null;
@@ -123,7 +140,7 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
       this.gameScene.additionalPrice;
 
     return new Item(
-      this.scene,
+      this.gameScene,
       0,
       0,
       'item0',
