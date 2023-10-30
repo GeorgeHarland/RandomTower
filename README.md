@@ -50,6 +50,9 @@ Spell effects:
 
 - Dark Blast, https://xyezawr.itch.io/free-pixel-effects-pack8
 
+- Ice Spike, https://pimen.itch.io/ice-spell-effect-01
+- Ice Explosion, https://tiopalada.itch.io/spellbook-2d-v1
+
 - Regen, https://pimen.itch.io/cutting-and-healing
 
 - Tornado, https://tiopalada.itch.io/spellbook-2d-v1
