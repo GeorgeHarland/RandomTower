@@ -72,7 +72,9 @@ export const extractTowerFrames = (
   const towerSprites: Phaser.GameObjects.Image[] = [];
 
   for (const frameName of frameNames) {
-    const image = scene.add.image(0, 0, 'towerSpriteSheet', frameName).setVisible(false);
+    const image = scene.add
+      .image(0, 0, 'towerSpriteSheet', frameName)
+      .setVisible(false);
     towerSprites.push(image);
   }
   return towerSprites;

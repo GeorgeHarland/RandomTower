@@ -258,7 +258,7 @@ export default class GameStageScene extends Phaser.Scene {
       (enemy, effect) => {
         this.enemyManager.enemyTerrainCollision(
           effect as Phaser.Types.Physics.Arcade.GameObjectWithBody,
-          enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody,
+          enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody
         );
       }
     );
@@ -319,7 +319,7 @@ export default class GameStageScene extends Phaser.Scene {
         if (dir >= 0.75)
           (weapon as Phaser.Physics.Arcade.Sprite).y -=
             TORNADO_BASE_SHAKE_AMOUNT;
-        }
+      }
     });
 
     this.powerupManager.updateTimeSlow();
@@ -370,20 +370,24 @@ export default class GameStageScene extends Phaser.Scene {
 
     this.enemyManager.enemies?.children.entries.forEach((enemy) => {
       if (this.tower) {
-        const effectMultiplier = (enemy.getData('chilled') === true) ? ICEPOOL_SLOW : 1;
+        const effectMultiplier =
+          enemy.getData('chilled') === true ? ICEPOOL_SLOW : 1;
         if (enemy.getData('type') === 'juggernaut')
           this.physics.moveToObject(
             enemy,
             this.tower,
             this.enemyManager.enemiesCurrentSpeed *
               JUGGERNAUT_SPEED_MULTIPLIER *
-              this.gameSpeedScale * effectMultiplier
+              this.gameSpeedScale *
+              effectMultiplier
           );
         else
           this.physics.moveToObject(
             enemy,
             this.tower,
-            this.enemyManager.enemiesCurrentSpeed * this.gameSpeedScale * effectMultiplier
+            this.enemyManager.enemiesCurrentSpeed *
+              this.gameSpeedScale *
+              effectMultiplier
           );
       }
     });
@@ -418,8 +422,8 @@ export default class GameStageScene extends Phaser.Scene {
     }
 
     this.enemyManager.enemies?.children.entries.forEach((enemy) => {
-      enemy.setData('chilled', false)
-    })
+      enemy.setData('chilled', false);
+    });
   }
 
   public increasePrices = (): void => {

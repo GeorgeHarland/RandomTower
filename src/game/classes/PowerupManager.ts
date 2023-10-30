@@ -57,9 +57,9 @@ export default class PowerupManager {
   public iceSpikeTimer: Phaser.Time.TimerEvent | undefined;
   public regenTimer: Phaser.Time.TimerEvent | undefined;
   public timeSlowTimer: Phaser.Time.TimerEvent | undefined;
-  
+
   public constructor(private scene: GameStageScene) {}
-  
+
   public addPowerup = (item: Item) => {
     switch (item.powerup) {
       case 'Arrow Rate':
@@ -79,11 +79,11 @@ export default class PowerupManager {
           weaponCircle.y = currentY;
         });
         break;
-        case 'Dark Blast':
-          if (this.darkBlastTimer) {
-            this.darkBlastCooldown =
+      case 'Dark Blast':
+        if (this.darkBlastTimer) {
+          this.darkBlastCooldown =
             this.darkBlastCooldown * DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER;
-            this.darkBlastAngleChange =
+          this.darkBlastAngleChange =
             this.darkBlastAngleChange * DARKBLAST_LEVELUP_ANGLE_MULTIPLIER;
         }
         this.spawnDarkBlast();
@@ -99,7 +99,8 @@ export default class PowerupManager {
         break;
       case 'Ice Spike':
         if (this.iceSpikeTimer) {
-          this.iceSpikeCooldown = this.iceSpikeCooldown * ICESPIKE_LEVELUP_COOLDOWN_MULTIPLIER;
+          this.iceSpikeCooldown =
+            this.iceSpikeCooldown * ICESPIKE_LEVELUP_COOLDOWN_MULTIPLIER;
           this.icePoolSizeScale += ICESPIKE_LEVELUP_POOL_INCREASE;
         }
         this.spawnIceSpike();
@@ -123,15 +124,15 @@ export default class PowerupManager {
         break;
       default:
         break;
-      }
+    }
   };
-  
+
   public initShopBoxes = () => {
     this.scene.shopBoxes?.children.entries.forEach((box, index) => {
       const shopBox = box as ShopBox;
       if (shopBox.getItem() === null) {
         if (this.scene.elapsedSeconds > 1)
-        (shopBox as ShopBox).addItem(
+          (shopBox as ShopBox).addItem(
             (shopBox as ShopBox).generateRandomItem()
           );
         else if (index === 0)
@@ -176,7 +177,7 @@ export default class PowerupManager {
       }
     });
   };
-  
+
   public spawnArrow = () => {
     if (this.scene.tower) {
       const x: number = this.scene.scale.width / 2;
@@ -198,13 +199,17 @@ export default class PowerupManager {
         );
       } else {
         const angle = Phaser.Math.Between(0, 360);
-        this.scene.physics.velocityFromAngle(angle, ARROW_BASE_SPEED * this.scene.gameSpeedScale, arrow.body.velocity);
+        this.scene.physics.velocityFromAngle(
+          angle,
+          ARROW_BASE_SPEED * this.scene.gameSpeedScale,
+          arrow.body.velocity
+        );
       }
 
       this.updateArrowTimer();
     }
   };
-  
+
   public updateArrowTimer = () => {
     if (this.spawnArrowTimer) {
       this.spawnArrowTimer.destroy();
@@ -295,46 +300,64 @@ export default class PowerupManager {
     if (this.iceSpikeTimer) {
       this.iceSpikeTimer.destroy();
     }
-    if(this.scene.tower){
-    const x: number = this.scene.scale.width / 2;
-    const y: number = this.scene.scale.height / 2;
-    const iceSpikeSprite = this.scene.physics.add.sprite(
-      x,
-      y,
-      'iceSpikeImage1'
-    );
-    iceSpikeSprite.scale = ICESPIKE_BASE_SIZE_SCALE * this.scene.gameSpeedScale;
-    iceSpikeSprite.setData('type', 'iceSpike');
-    iceSpikeSprite.setData('id', `weapon-${this.weaponCounter++}`);
-    iceSpikeSprite.play('iceSpikeAnimation');
-    iceSpikeSprite.body.setImmovable(true)
+    if (this.scene.tower) {
+      const x: number = this.scene.scale.width / 2;
+      const y: number = this.scene.scale.height / 2;
+      const iceSpikeSprite = this.scene.physics.add.sprite(
+        x,
+        y,
+        'iceSpikeImage1'
+      );
+      iceSpikeSprite.scale =
+        ICESPIKE_BASE_SIZE_SCALE * this.scene.gameSpeedScale;
+      iceSpikeSprite.setData('type', 'iceSpike');
+      iceSpikeSprite.setData('id', `weapon-${this.weaponCounter++}`);
+      iceSpikeSprite.play('iceSpikeAnimation');
+      iceSpikeSprite.body.setImmovable(true);
 
-    const closestJuggernaut = this.scene.enemyManager.getClosestEnemy(
-      this.scene.tower, 'juggernaut'
-    );
-    const closestEnemy = this.scene.enemyManager.getClosestEnemy(this.scene.tower)
+      const closestJuggernaut = this.scene.enemyManager.getClosestEnemy(
+        this.scene.tower,
+        'juggernaut'
+      );
+      const closestEnemy = this.scene.enemyManager.getClosestEnemy(
+        this.scene.tower
+      );
 
-    // prioritize nearest juggernaut -> then any other enemy -> then random direction
-    this.scene.time.delayedCall(1, () => {
-      if (closestJuggernaut) {
-        this.scene.physics.moveToObject(
-          iceSpikeSprite,
-          closestJuggernaut,
-          ICESPIKE_BASE_SPEED * this.scene.gameSpeedScale
-        );
-        iceSpikeSprite.angle = Phaser.Math.RadToDeg(Math.atan2(closestJuggernaut.y - iceSpikeSprite.y, closestJuggernaut.x - iceSpikeSprite.x));
-      } else if (closestEnemy) {
-        this.scene.physics.moveToObject(
-          iceSpikeSprite,
-          closestEnemy,
-          ICESPIKE_BASE_SPEED * this.scene.gameSpeedScale
-        );
-        iceSpikeSprite.angle = Phaser.Math.RadToDeg(Math.atan2(closestEnemy.y - iceSpikeSprite.y, closestEnemy.x - iceSpikeSprite.x));
-      } else {
-        const angle = Phaser.Math.Between(0, 360);
-        this.scene.physics.velocityFromAngle(angle, ICESPIKE_BASE_SPEED * this.scene.gameSpeedScale, iceSpikeSprite.body.velocity);
-        iceSpikeSprite.angle = angle;
-      }
+      // prioritize nearest juggernaut -> then any other enemy -> then random direction
+      this.scene.time.delayedCall(1, () => {
+        if (closestJuggernaut) {
+          this.scene.physics.moveToObject(
+            iceSpikeSprite,
+            closestJuggernaut,
+            ICESPIKE_BASE_SPEED * this.scene.gameSpeedScale
+          );
+          iceSpikeSprite.angle = Phaser.Math.RadToDeg(
+            Math.atan2(
+              closestJuggernaut.y - iceSpikeSprite.y,
+              closestJuggernaut.x - iceSpikeSprite.x
+            )
+          );
+        } else if (closestEnemy) {
+          this.scene.physics.moveToObject(
+            iceSpikeSprite,
+            closestEnemy,
+            ICESPIKE_BASE_SPEED * this.scene.gameSpeedScale
+          );
+          iceSpikeSprite.angle = Phaser.Math.RadToDeg(
+            Math.atan2(
+              closestEnemy.y - iceSpikeSprite.y,
+              closestEnemy.x - iceSpikeSprite.x
+            )
+          );
+        } else {
+          const angle = Phaser.Math.Between(0, 360);
+          this.scene.physics.velocityFromAngle(
+            angle,
+            ICESPIKE_BASE_SPEED * this.scene.gameSpeedScale,
+            iceSpikeSprite.body.velocity
+          );
+          iceSpikeSprite.angle = angle;
+        }
       });
 
       this.scene.PermanentWeapons?.add(iceSpikeSprite);
@@ -353,32 +376,29 @@ export default class PowerupManager {
       y,
       'iceExplosionImage1'
     );
-    iceExplosionSprite.scale = this.icePoolSizeScale * this.scene.gameSpeedScale;
+    iceExplosionSprite.scale =
+      this.icePoolSizeScale * this.scene.gameSpeedScale;
     iceExplosionSprite.setData('type', 'iceExplosion');
     iceExplosionSprite.setData('id', `weapon-${this.weaponCounter++}`);
     iceExplosionSprite.play('iceExplosionAnimation');
-    iceExplosionSprite.body.setImmovable(true)
+    iceExplosionSprite.body.setImmovable(true);
     this.scene.PermanentWeapons?.add(iceExplosionSprite);
-    
-    const icePoolSprite = this.scene.physics.add.sprite(
-      x,
-      y,
-      'icePoolImage'
-    );
+
+    const icePoolSprite = this.scene.physics.add.sprite(x, y, 'icePoolImage');
     icePoolSprite.scale = this.icePoolSizeScale * this.scene.gameSpeedScale;
     icePoolSprite.setDepth(-0.1);
     icePoolSprite.setData('type', 'icePool');
     this.scene.terrainEffects?.add(icePoolSprite);
     this.icePoolTimer = this.scene.time.addEvent({
       delay: ICEPOOL_DURATION,
-      callback: (() => icePoolSprite.destroy()),
+      callback: () => icePoolSprite.destroy(),
       callbackScope: this,
       loop: false,
     });
     iceExplosionSprite.on('animationcomplete', () => {
       iceExplosionSprite.destroy();
     });
-  }
+  };
 
   public spawnRegen = () => {
     if (this.regenTimer) {
@@ -460,7 +480,10 @@ export default class PowerupManager {
 
   public updateTimeSlow = () => {
     if (this.timeSlow) this.scene.enemyManager.enemiesCurrentSpeed *= 0.95;
-    else if (this.scene.enemyManager.enemiesCurrentSpeed < ENEMY_BASE_SPEED / 10)
+    else if (
+      this.scene.enemyManager.enemiesCurrentSpeed <
+      ENEMY_BASE_SPEED / 10
+    )
       this.scene.enemyManager.enemiesCurrentSpeed = ENEMY_BASE_SPEED / 10;
     else if (this.scene.enemyManager.enemiesCurrentSpeed < ENEMY_BASE_SPEED)
       this.scene.enemyManager.enemiesCurrentSpeed /= 0.95;

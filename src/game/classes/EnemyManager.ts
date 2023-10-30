@@ -90,14 +90,14 @@ export default class EnemyManager {
     effect: Phaser.Types.Physics.Arcade.GameObjectWithBody,
     enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
   ) => {
-    switch(effect.getData('type')) {
-      case('icePool'):
-        enemy && enemy.setData('chilled', true)
+    switch (effect.getData('type')) {
+      case 'icePool':
+        enemy && enemy.setData('chilled', true);
         break;
       default:
         break;
     }
-  }
+  };
 
   public enemyWeaponCollision = (
     weapon: Phaser.Types.Physics.Arcade.GameObjectWithBody,
@@ -127,8 +127,14 @@ export default class EnemyManager {
 
     if (weaponDestroyed) {
       weapon.destroy();
-    } else if ((weapon.getData('type') === 'iceSpike') && (enemy.getData('type') === 'juggernaut')) {
-      this.scene.powerupManager.spawnIceSpikeExplosion(weapon.body.x + (weapon.body.width/2), weapon.body.y + (weapon.body.height/2));
+    } else if (
+      weapon.getData('type') === 'iceSpike' &&
+      enemy.getData('type') === 'juggernaut'
+    ) {
+      this.scene.powerupManager.spawnIceSpikeExplosion(
+        weapon.body.x + weapon.body.width / 2,
+        weapon.body.y + weapon.body.height / 2
+      );
       weapon.destroy();
     }
   };
@@ -142,13 +148,16 @@ export default class EnemyManager {
     enemy.destroy();
   };
 
-  public getClosestEnemy = (origin: Phaser.Physics.Arcade.Sprite, type: EnemyTypes | null = null): Phaser.Physics.Arcade.Sprite | null => {
+  public getClosestEnemy = (
+    origin: Phaser.Physics.Arcade.Sprite,
+    type: EnemyTypes | null = null
+  ): Phaser.Physics.Arcade.Sprite | null => {
     let closestEnemy = null;
     let closestDistance = Number.MAX_VALUE;
 
     this.enemies?.children.entries.forEach(
       (enemy: Phaser.GameObjects.GameObject) => {
-        if(!type || enemy.getData('type') === type) {
+        if (!type || enemy.getData('type') === type) {
           const enemySprite = enemy as Phaser.Physics.Arcade.Sprite;
           const distance = Phaser.Math.Distance.Between(
             origin.x,

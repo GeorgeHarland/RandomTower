@@ -3,10 +3,7 @@ export type KeybindType = 'Q' | 'W' | 'E' | 'Z';
 
 export type ItemGradeType = 'S' | 'A' | 'B' | 'C' | 'D';
 
-export type EnemyTypes = 
-  | 'all'
-  | 'minion'
-  | 'juggernaut';
+export type EnemyTypes = 'all' | 'minion' | 'juggernaut';
 
 export type PowerupType =
   | 'Arrow Rate'
