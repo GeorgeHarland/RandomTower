@@ -1,6 +1,6 @@
 # RandomTower
 
-A tower survival game built with TypeScript, Preact, and Phaser.JS.
+A tower survival game built with TypeScript, Preact, and Phaser.JS. Deployed here: https://georgeharland.github.io/RandomTower/
 
 Open to contributions and opinions! I'll add more issues over time.
 
