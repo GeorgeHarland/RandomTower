@@ -320,9 +320,6 @@ export default class GameStageScene extends Phaser.Scene {
           (weapon as Phaser.Physics.Arcade.Sprite).y -=
             TORNADO_BASE_SHAKE_AMOUNT;
         }
-      if (weapon.getData('type') === 'iceSpike') {
-        
-      }
     });
 
     this.powerupManager.updateTimeSlow();
@@ -419,6 +416,10 @@ export default class GameStageScene extends Phaser.Scene {
           'Arrows per second: ' + this.powerupManager.arrowRate.toFixed(1)
         );
     }
+
+    this.enemyManager.enemies?.children.entries.forEach((enemy) => {
+      enemy.setData('chilled', false)
+    })
   }
 
   public increasePrices = (): void => {

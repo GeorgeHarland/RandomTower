@@ -51,6 +51,14 @@ export const setupAnimations = (scene: GameStageScene) => {
     frameRate: 28,
     repeat: -1,
   });
+  scene.anims.create({
+    key: 'iceExplosionAnimation',
+    frames: Array.from({ length: 9 }, (_, i) => ({
+      key: `iceExplosionImage${i}`,
+    })),
+    frameRate: 18,
+    repeat: 0,
+  });
 };
 
 export const setupKeybindings = (scene: GameStageScene) => {

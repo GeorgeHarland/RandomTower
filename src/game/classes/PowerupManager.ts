@@ -14,7 +14,7 @@ import {
   FIREBLAST_LEVELUP_ANGLE_MULTIPLIER,
   FIREBLAST_LEVELUP_COOLDOWN_MULTIPLIER,
   ICEPOOL_DURATION,
-  ICEPOOL_SIZE_SCALE,
+  ICEPOOL_BASE_SIZE_SCALE,
   ICESPIKE_BASE_COOLDOWN,
   ICESPIKE_BASE_SPEED,
   ICESPIKE_LEVELUP_COOLDOWN_MULTIPLIER,
@@ -42,7 +42,7 @@ export default class PowerupManager {
   public fireBlastAngleChange: number = FIREBLAST_BASE_ANGLE_CHANGE;
   public fireBlastCooldown: number = FIREBLAST_BASE_COOLDOWN;
   public fireBlastDirection: number = 180;
-  public icePoolSizeScale: number = ICESPIKE_BASE_SIZE_SCALE;
+  public icePoolSizeScale: number = ICEPOOL_BASE_SIZE_SCALE;
   public iceSpikeCooldown: number = ICESPIKE_BASE_COOLDOWN;
   public regenAmount: number = REGEN_BASE_HEAL_AMOUNT;
   public regenCooldown: number = REGEN_BASE_COOLDOWN;
@@ -303,7 +303,7 @@ export default class PowerupManager {
       y,
       'iceSpikeImage1'
     );
-    iceSpikeSprite.scale = this.icePoolSizeScale * this.scene.gameSpeedScale;
+    iceSpikeSprite.scale = ICESPIKE_BASE_SIZE_SCALE * this.scene.gameSpeedScale;
     iceSpikeSprite.setData('type', 'iceSpike');
     iceSpikeSprite.setData('id', `weapon-${this.weaponCounter++}`);
     iceSpikeSprite.play('iceSpikeAnimation');
@@ -348,24 +348,35 @@ export default class PowerupManager {
   };
 
   public spawnIceSpikeExplosion = (x: number, y: number) => {
-    // spawn effect + add boom to permanent weapons
+    const iceExplosionSprite = this.scene.physics.add.sprite(
+      x,
+      y,
+      'iceExplosionImage1'
+    );
+    iceExplosionSprite.scale = this.icePoolSizeScale * this.scene.gameSpeedScale;
+    iceExplosionSprite.setData('type', 'iceExplosion');
+    iceExplosionSprite.setData('id', `weapon-${this.weaponCounter++}`);
+    iceExplosionSprite.play('iceExplosionAnimation');
+    iceExplosionSprite.body.setImmovable(true)
+    this.scene.PermanentWeapons?.add(iceExplosionSprite);
+    
     const icePoolSprite = this.scene.physics.add.sprite(
       x,
       y,
       'icePoolImage'
     );
-    icePoolSprite.scale = ICEPOOL_SIZE_SCALE * this.scene.gameSpeedScale;
+    icePoolSprite.scale = this.icePoolSizeScale * this.scene.gameSpeedScale;
     icePoolSprite.setDepth(-0.1);
     icePoolSprite.setData('type', 'icePool');
-    // icePoolImage
-    // spawn pool
-    // timer for pool to disappear
     this.scene.terrainEffects?.add(icePoolSprite);
     this.icePoolTimer = this.scene.time.addEvent({
       delay: ICEPOOL_DURATION,
       callback: (() => icePoolSprite.destroy()),
       callbackScope: this,
       loop: false,
+    });
+    iceExplosionSprite.on('animationcomplete', () => {
+      iceExplosionSprite.destroy();
     });
   }
 
