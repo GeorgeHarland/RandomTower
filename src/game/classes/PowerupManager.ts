@@ -467,8 +467,11 @@ export default class PowerupManager {
   };
 
   public spawnTornado = () => {
-    const x: number = this.scene.scale.width * Math.random();
-    const y: number = this.scene.scale.height * Math.random();
+    const marginWidth = this.scene.scale.width / 20;
+    const marginHeight = this.scene.scale.height / 20;
+    const x: number = Phaser.Math.Clamp(marginWidth + Math.random() * (this.scene.scale.width - 2 * marginWidth), marginWidth, this.scene.scale.width - marginWidth);
+    const y: number = Phaser.Math.Clamp(marginHeight + Math.random() * (this.scene.scale.height - 2 * marginHeight), marginHeight, this.scene.scale.height - marginHeight);
+    
     const tornadoSprite = this.scene.physics.add.sprite(x, y, 'tornadoRepeat1');
     tornadoSprite.scale = 0.2 * this.scene.gameSpeedScale;
     tornadoSprite.setData('type', 'tornado');

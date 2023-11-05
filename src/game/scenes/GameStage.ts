@@ -91,7 +91,6 @@ export default class GameStageScene extends Phaser.Scene {
     );
     this.tower.setOffset(0, this.tower.displayHeight * 0.25);
     this.tower.scale = this.scale.width / 800;
-
     this.tower.setImmovable(true);
 
     this.circleWeapons = this.physics.add.group({
@@ -307,20 +306,18 @@ export default class GameStageScene extends Phaser.Scene {
     this.PermanentWeapons?.children.entries.forEach((weapon) => {
       if (weapon.getData('type') === 'tornado') {
         const dir = Math.random();
+        const tornadoWeapon = weapon as Phaser.Physics.Arcade.Sprite
         if (dir < 0.25)
-          (weapon as Phaser.Physics.Arcade.Sprite).x +=
-            TORNADO_BASE_SHAKE_AMOUNT;
+          tornadoWeapon.x += TORNADO_BASE_SHAKE_AMOUNT;
         if (dir >= 0.25 && dir < 0.5)
-          (weapon as Phaser.Physics.Arcade.Sprite).x -=
-            TORNADO_BASE_SHAKE_AMOUNT;
+          tornadoWeapon.x -= TORNADO_BASE_SHAKE_AMOUNT;
         if (dir >= 0.5 && dir < 0.75)
-          (weapon as Phaser.Physics.Arcade.Sprite).y +=
-            TORNADO_BASE_SHAKE_AMOUNT;
-        if (dir >= 0.75)
-          (weapon as Phaser.Physics.Arcade.Sprite).y -=
-            TORNADO_BASE_SHAKE_AMOUNT;
+          tornadoWeapon.y += TORNADO_BASE_SHAKE_AMOUNT;
+        if (dir >= 0.75) tornadoWeapon.y -= TORNADO_BASE_SHAKE_AMOUNT;
+        tornadoWeapon.x = Phaser.Math.Clamp(tornadoWeapon.x, 0, this.scale.width);
+        tornadoWeapon.y = Phaser.Math.Clamp(tornadoWeapon.y, 0, this.scale.height);
       }
-    });
+    })
 
     this.powerupManager.updateTimeSlow();
 
