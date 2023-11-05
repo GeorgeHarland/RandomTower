@@ -78,12 +78,17 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
       this.y,
       item.powerup
     );
-    this.itemImage.setScale(this.gameScene.scale.width / 24 / this.itemImage.width);
+    this.itemImage.setScale(
+      this.gameScene.scale.width / 24 / this.itemImage.width
+    );
   };
 
   public buyItem = (): Item | null => {
     let result: Item | null = null;
-    if (this.currentItem && this.gameScene.playerTower.currentGold >= this.currentItem.cost) {
+    if (
+      this.currentItem &&
+      this.gameScene.playerTower.currentGold >= this.currentItem.cost
+    ) {
       const boughtItem = this.currentItem;
       this.currentItem = null;
       this.powerupText?.destroy();
@@ -99,15 +104,15 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
 
   public clickBuyItem = () => {
     const itemBought = this.buyItem();
-    
-    if(itemBought) {
+
+    if (itemBought) {
       this.gameScene.powerupManager.addPowerup(itemBought);
-        this.gameScene.generatedItems = [];
-        this.gameScene.shopBoxes?.children.entries.forEach((shopbox) => {
-          (shopbox as ShopBox).rerollItem();
-        });
+      this.gameScene.generatedItems = [];
+      this.gameScene.shopBoxes?.children.entries.forEach((shopbox) => {
+        (shopbox as ShopBox).rerollItem();
+      });
     }
-  }
+  };
 
   public removeItem = (): void => {
     this.currentItem = null;

@@ -14,7 +14,7 @@ import {
   TORNADO_BASE_SHAKE_AMOUNT,
   ICEPOOL_SLOW,
 } from '../../constants';
-import { setupAnimations, setupKeybindings } from './helpers/setupHelpers';
+import { setupAnimations, setupKeybindings } from './helpers/animationHelpers';
 
 export default class GameStageScene extends Phaser.Scene {
   public gameSpeedScale: number = 1;
@@ -306,18 +306,25 @@ export default class GameStageScene extends Phaser.Scene {
     this.PermanentWeapons?.children.entries.forEach((weapon) => {
       if (weapon.getData('type') === 'tornado') {
         const dir = Math.random();
-        const tornadoWeapon = weapon as Phaser.Physics.Arcade.Sprite
-        if (dir < 0.25)
-          tornadoWeapon.x += TORNADO_BASE_SHAKE_AMOUNT;
+        const tornadoWeapon = weapon as Phaser.Physics.Arcade.Sprite;
+        if (dir < 0.25) tornadoWeapon.x += TORNADO_BASE_SHAKE_AMOUNT;
         if (dir >= 0.25 && dir < 0.5)
           tornadoWeapon.x -= TORNADO_BASE_SHAKE_AMOUNT;
         if (dir >= 0.5 && dir < 0.75)
           tornadoWeapon.y += TORNADO_BASE_SHAKE_AMOUNT;
         if (dir >= 0.75) tornadoWeapon.y -= TORNADO_BASE_SHAKE_AMOUNT;
-        tornadoWeapon.x = Phaser.Math.Clamp(tornadoWeapon.x, 0, this.scale.width);
-        tornadoWeapon.y = Phaser.Math.Clamp(tornadoWeapon.y, 0, this.scale.height);
+        tornadoWeapon.x = Phaser.Math.Clamp(
+          tornadoWeapon.x,
+          0,
+          this.scale.width
+        );
+        tornadoWeapon.y = Phaser.Math.Clamp(
+          tornadoWeapon.y,
+          0,
+          this.scale.height
+        );
       }
-    })
+    });
 
     this.powerupManager.updateTimeSlow();
 
