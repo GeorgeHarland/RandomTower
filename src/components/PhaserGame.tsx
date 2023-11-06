@@ -5,7 +5,6 @@ import HowToPlayScene from '../game/scenes/HowToPlayScene';
 import MainMenuScene from '../game/scenes/MainMenu';
 import { useEffect, useRef } from 'preact/hooks';
 import InitialLoadingScene from '../game/scenes/InitialLoadingScene';
-import { goFullScreen } from '../game/scenes/helpers/gameHelpers';
 
 const PhaserGame = () => {
   const gameContainerRef = useRef<HTMLDivElement>(null);
@@ -51,13 +50,12 @@ const PhaserGame = () => {
 
     window.addEventListener('resize', resize);
     resize();
-    
-    game.canvas.addEventListener('click', goFullScreen);
-    game.canvas.addEventListener('touchstart', goFullScreen);
 
     return () => {
       game && game.destroy(true);
       window.removeEventListener('resize', resize);
+      // window.removeEventListener('click', goFullScreen);
+      // window.removeEventListener('touchstart', goFullScreen);
     };
   }, []);
 

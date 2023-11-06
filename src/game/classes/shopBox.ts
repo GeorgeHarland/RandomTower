@@ -4,6 +4,7 @@ import { KeybindType, PowerupType } from '../types';
 import { getArrayRandomElement } from '../../utils';
 import { PowerupRecord, gradeCost } from '../../constants';
 import GameStageScene from '../scenes/GameStage';
+import { goFullScreen } from '../scenes/helpers/gameHelpers';
 
 interface ShopBoxConfig {
   scene: Phaser.Scene;
@@ -51,6 +52,7 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
     this.setInteractive({ useHandCursor: true });
     this.on('pointerdown', () => {
       this.clickBuyItem();
+      goFullScreen();
     });
   }
 

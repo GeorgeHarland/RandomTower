@@ -22,12 +22,16 @@ export const goFullScreen = () => {
   let element: any = document.getElementById('game-container');
 
   if (element?.requestFullscreen) {
-    element.requestFullscreen();
+    element.requestFullscreen().catch((err : any) => {
+      console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+    });
   } else if (element?.mozRequestFullScreen) {
     element.mozRequestFullScreen(); // firefox
   } else if (element?.webkitRequestFullscreen) {
     element.webkitRequestFullscreen(); // chrome, Safari and Opera
   } else if (element?.msRequestFullscreen) {
     element.msRequestFullscreen(); // ie/edge
+  } else {
+    console.error('Fullscreen mode not avaliable')
   }
 }
