@@ -5,6 +5,7 @@ import HowToPlayScene from '../game/scenes/HowToPlayScene';
 import MainMenuScene from '../game/scenes/MainMenu';
 import { useEffect, useRef } from 'preact/hooks';
 import InitialLoadingScene from '../game/scenes/InitialLoadingScene';
+import { goFullScreen } from '../game/scenes/helpers/gameHelpers';
 
 const PhaserGame = () => {
   const gameContainerRef = useRef<HTMLDivElement>(null);
@@ -24,8 +25,9 @@ const PhaserGame = () => {
   useEffect(() => {
     const config = {
       type: Phaser.AUTO,
-      width: 800,
-      height: 600,
+      parent: 'game-container',
+      width: window.innerWidth,
+      height: window.innerHeight,
       scene: [
         InitialLoadingScene,
         MainMenuScene,
@@ -49,6 +51,9 @@ const PhaserGame = () => {
 
     window.addEventListener('resize', resize);
     resize();
+    
+    game.canvas.addEventListener('click', goFullScreen);
+    game.canvas.addEventListener('touchstart', goFullScreen);
 
     return () => {
       game && game.destroy(true);

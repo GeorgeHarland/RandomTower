@@ -17,3 +17,17 @@ export const getRandomEdgeOfScreen = (scene: Phaser.Scene): CoordinateType => {
 export const secondsToMMSS = (seconds: number): string => {
   return Duration.fromObject({ seconds }).toFormat('mm:ss');
 };
+
+export const goFullScreen = () => {
+  let element: any = document.getElementById('game-container');
+
+  if (element?.requestFullscreen) {
+    element.requestFullscreen();
+  } else if (element?.mozRequestFullScreen) {
+    element.mozRequestFullScreen(); // firefox
+  } else if (element?.webkitRequestFullscreen) {
+    element.webkitRequestFullscreen(); // chrome, Safari and Opera
+  } else if (element?.msRequestFullscreen) {
+    element.msRequestFullscreen(); // ie/edge
+  }
+}

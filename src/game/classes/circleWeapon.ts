@@ -1,3 +1,4 @@
+import { CIRCLE_BASE_SPEED } from '../../constants';
 import GameStageScene from '../scenes/GameStage';
 
 type Props = {
@@ -10,7 +11,7 @@ type Props = {
 
 export default class CircleWeapon extends Phaser.Physics.Arcade.Sprite {
   private circleNumber: number = 0;
-  public circleSpeed: number = 1;
+  public circleSpeed: number = CIRCLE_BASE_SPEED;
   private gameScene: GameStageScene;
   private pointerDown: boolean = false;
   private targetPosition: Phaser.Math.Vector2 | null = null;

@@ -49,8 +49,9 @@ export const ARROW_BASE_SPEED = 200;
 export const ARROW_BASE_RATE = 0.2;
 export const ARROW_RATE_INCREASE = 0.025;
 
-export const CIRCLE_SPEED_INCREASE = 0.35;
-export const CIRCLE_SCALE_MULTIPLIER = 1.1;
+export const CIRCLE_BASE_SPEED = 1.2;
+export const CIRCLE_SPEED_INCREASE = 0.30;
+export const CIRCLE_SCALE_MULTIPLIER = 1.15;
 
 export const DARKBLAST_BASE_ANGLE_CHANGE = 45;
 export const DARKBLAST_BASE_COOLDOWN = 1000;
