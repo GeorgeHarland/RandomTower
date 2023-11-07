@@ -1,6 +1,7 @@
 import WebFont from 'webfontloader';
 import MainMenuScene from './MainMenu';
 import { loadSprites } from './helpers/spriteHelpers';
+import { MOBILE_BREAKPOINT } from '../../constants';
 
 export default class InitialLoadingScene extends Phaser.Scene {
   private menuScene: MainMenuScene | null = null;
@@ -25,7 +26,7 @@ export default class InitialLoadingScene extends Phaser.Scene {
     // background.displayHeight = this.sys.canvas.height;
     // this.children.sendToBack(background);
 
-    const titleFontSize = Math.floor(this.sys.canvas.width / 20);
+    const titleFontSize = this.scale.width > MOBILE_BREAKPOINT ? this.sys.canvas.width / 20 : this.sys.canvas.width / 15;
 
     this.add
       .text(

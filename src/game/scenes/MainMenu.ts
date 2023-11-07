@@ -1,3 +1,4 @@
+import { MOBILE_BREAKPOINT } from '../../constants';
 import GameStageScene from './GameStage';
 import HowToPlayScene from './HowToPlayScene';
 
@@ -23,13 +24,14 @@ export default class MainMenuScene extends Phaser.Scene {
     background.displayHeight = this.sys.canvas.height;
     this.children.sendToBack(background);
 
-    const titleFontSize = Math.floor(this.sys.canvas.width / 20);
-    const buttonFontSize = Math.floor(this.sys.canvas.width / 25);
-
+    const titleFontSize = this.scale.width > MOBILE_BREAKPOINT ? this.sys.canvas.width / 20 : this.sys.canvas.width / 12.5;
+    const buttonFontSize = this.scale.width > MOBILE_BREAKPOINT ? this.sys.canvas.width / 25 : this.sys.canvas.width / 17.5;
+    const heightMod = this.scale.width > MOBILE_BREAKPOINT ? this.scale.height / 10 : this.scale.height / 7.5;
+    
     this.add
       .text(
         this.cameras.main.centerX,
-        this.cameras.main.centerY - this.scale.height / 10,
+        this.cameras.main.centerY - heightMod,
         'Random Tower',
         {
           fontSize: `${titleFontSize}px`,
@@ -56,7 +58,7 @@ export default class MainMenuScene extends Phaser.Scene {
     const htpButton = this.add
       .text(
         this.cameras.main.centerX,
-        this.cameras.main.centerY + this.scale.height / 10,
+        this.cameras.main.centerY + heightMod,
         'How to play',
         {
           fontSize: `${buttonFontSize}px`,
