@@ -1,8 +1,6 @@
 import { EnemyConfig, ItemGradeType, PowerupType } from './game/types';
 
-// Dev settings
-
-export const DEV_TEXT_AT_TOP = false;
+export const MOBILE_BREAKPOINT = 700;
 
 // Enemies
 

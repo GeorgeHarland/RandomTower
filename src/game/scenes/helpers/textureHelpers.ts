@@ -1,3 +1,4 @@
+import { MOBILE_BREAKPOINT } from '../../../constants';
 import GameStageScene from '../GameStage';
 
 export const generateTextures = (scene: GameStageScene) => {
@@ -26,9 +27,9 @@ export const generateTextures = (scene: GameStageScene) => {
   const enemyGraphic = objectCreator.graphics();
   enemyGraphic.fillStyle(0x000000, 1);
   const enemySize =
-    scene.scale.width > 700 ? scene.scale.width / 80 : scene.scale.width / 60;
+    scene.scale.width > MOBILE_BREAKPOINT ? scene.scale.width / 80 : scene.scale.width / 60;
   const enemyPadding =
-    scene.scale.width > 700 ? enemySize / 12 : enemySize / 5.5;
+    scene.scale.width > MOBILE_BREAKPOINT ? enemySize / 12 : enemySize / 5.5;
   enemyGraphic.fillRect(0, 0, enemySize, enemySize);
   enemyGraphic.fillStyle(0xdd3333, 1);
   enemyGraphic.fillRect(
@@ -42,9 +43,9 @@ export const generateTextures = (scene: GameStageScene) => {
   const juggernautGraphic = objectCreator.graphics();
   juggernautGraphic.fillStyle(0x000000, 1);
   const juggernautSize =
-    scene.scale.width > 700 ? scene.scale.width / 40 : scene.scale.width / 30;
+    scene.scale.width > MOBILE_BREAKPOINT ? scene.scale.width / 40 : scene.scale.width / 30;
   const juggernautPadding =
-    scene.scale.width > 700 ? juggernautSize / 12 : juggernautSize / 9;
+    scene.scale.width > MOBILE_BREAKPOINT ? juggernautSize / 12 : juggernautSize / 9;
   juggernautGraphic.fillRect(0, 0, juggernautSize, juggernautSize);
   juggernautGraphic.fillStyle(0xdd33dd, 1);
   juggernautGraphic.fillRect(
@@ -67,7 +68,7 @@ export const generateTextures = (scene: GameStageScene) => {
   const shopBoxTexture = objectCreator.graphics();
   const shopBoxSize = scene.scale.width / 10;
   const bevelSize =
-    scene.scale.width > 700 ? shopBoxSize / 18 : shopBoxSize / 22;
+    scene.scale.width > MOBILE_BREAKPOINT ? shopBoxSize / 18 : shopBoxSize / 22;
   shopBoxTexture.fillStyle(0xa52a2a, 1);
   shopBoxTexture.fillRect(0, 0, shopBoxSize, shopBoxSize);
 

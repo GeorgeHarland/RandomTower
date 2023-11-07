@@ -10,7 +10,6 @@ import { generateTextures } from './helpers/textureHelpers';
 import { KeybindType, PowerupType } from '../types';
 import {
   EnemyConstants,
-  DEV_TEXT_AT_TOP,
   TORNADO_BASE_SHAKE_AMOUNT,
   ICEPOOL_SLOW,
 } from '../../constants';
@@ -36,8 +35,6 @@ export default class GameStageScene extends Phaser.Scene {
   public keyU: Phaser.Input.Keyboard.Key | null = null;
   public keyK: Phaser.Input.Keyboard.Key | null = null;
 
-  private arrowRateText: Phaser.GameObjects.Text | undefined;
-  private enemyRateText: Phaser.GameObjects.Text | undefined;
   private gameTimeText: Phaser.GameObjects.Text | undefined;
   private goldText: Phaser.GameObjects.Text | undefined;
   private startTime: number = 0;
@@ -180,28 +177,6 @@ export default class GameStageScene extends Phaser.Scene {
         fontFamily: 'MedievalSharp',
       }
     );
-    if (DEV_TEXT_AT_TOP) {
-      this.enemyRateText = this.add.text(
-        this.scale.width / 40,
-        this.scale.height / 6,
-        'Enemies per second: ' + this.enemyManager.enemyRate.toFixed(1),
-        {
-          fontSize: `${topTextSize}px`,
-          color: '#cccccc',
-          fontFamily: 'MedievalSharp',
-        }
-      );
-      this.arrowRateText = this.add.text(
-        this.scale.width / 40,
-        this.scale.height / 4,
-        'Arrows per second: ' + this.powerupManager.arrowRate.toFixed(1),
-        {
-          fontSize: `${topTextSize}px`,
-          color: '#cccccc',
-          fontFamily: 'MedievalSharp',
-        }
-      );
-    }
 
     this.physics.add.overlap(
       this.enemyManager
@@ -414,16 +389,6 @@ export default class GameStageScene extends Phaser.Scene {
         this.scale.width / 1.05 - this.gameTimeText.width,
         this.scale.height / 40
       );
-    if (DEV_TEXT_AT_TOP) {
-      this.enemyRateText &&
-        this.enemyRateText.setText(
-          'Enemies per second: ' + this.enemyManager.enemyRate.toFixed(1)
-        );
-      this.arrowRateText &&
-        this.arrowRateText.setText(
-          'Arrows per second: ' + this.powerupManager.arrowRate.toFixed(1)
-        );
-    }
 
     this.enemyManager.enemies?.children.entries.forEach((enemy) => {
       enemy.setData('chilled', false);
