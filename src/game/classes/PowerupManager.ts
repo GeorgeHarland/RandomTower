@@ -449,6 +449,8 @@ export default class PowerupManager {
       this.scene.enemyManager.spawnEnemyTimer.paused = true;
     if (this.scene.enemyManager.spawnJuggernautTimer)
       this.scene.enemyManager.spawnJuggernautTimer.paused = true;
+    if (this.scene.enemyManager.spawnBossTimer)
+      this.scene.enemyManager.spawnBossTimer.paused = true;
     timeSlowSprite.setImmovable(true);
     timeSlowSprite.on('animationcomplete', () => {
       timeSlowSprite.destroy();
@@ -456,6 +458,8 @@ export default class PowerupManager {
         this.scene.enemyManager.spawnEnemyTimer.paused = false;
       if (this.scene.enemyManager.spawnJuggernautTimer)
         this.scene.enemyManager.spawnJuggernautTimer.paused = false;
+      if (this.scene.enemyManager.spawnBossTimer)
+        this.scene.enemyManager.spawnBossTimer.paused = false;
       this.timeSlow = false;
       this.timeSlowTimer = this.scene.time.addEvent({
         delay: this.timeSlowCooldown,

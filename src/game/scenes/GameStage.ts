@@ -251,6 +251,13 @@ export default class GameStageScene extends Phaser.Scene {
       loop: true,
     });
 
+    this.enemyManager.spawnBossTimer = this.time.addEvent({
+      delay: 1000 / this.enemyManager.bossRate,
+      callback: this.enemyManager.spawnBoss,
+      callbackScope: this,
+      loop: true,
+    });
+
     this.enemyManager.spawnEnemyTimer = this.time.addEvent({
       delay: 1000 / this.enemyManager.enemyRate,
       callback: this.enemyManager.spawnEnemy,
@@ -321,7 +328,11 @@ export default class GameStageScene extends Phaser.Scene {
         Phaser.Input.Keyboard.JustDown(this.keyK as Phaser.Input.Keyboard.Key)
       ) {
         this.enemyManager.enemyRate += 1;
+        this.enemyManager.spawnEnemy();
         this.enemyManager.juggernautRate += 1;
+        this.enemyManager.spawnJuggernaut();
+        this.enemyManager.bossRate += 1;
+        this.enemyManager.spawnBoss();
       }
       if (
         Phaser.Input.Keyboard.JustDown(this.keyQ as Phaser.Input.Keyboard.Key)
@@ -357,6 +368,15 @@ export default class GameStageScene extends Phaser.Scene {
             this.tower,
             this.enemyManager.enemiesCurrentSpeed *
               EnemyConstants.JUGGERNAUT.SPEED_MULTIPLIER *
+              this.gameSpeedScale *
+              effectMultiplier
+          );
+        else if (enemy.getData('type') === 'boss')
+          this.physics.moveToObject(
+            enemy,
+            this.tower,
+            this.enemyManager.enemiesCurrentSpeed *
+              EnemyConstants.BOSS.SPEED_MULTIPLIER *
               this.gameSpeedScale *
               effectMultiplier
           );

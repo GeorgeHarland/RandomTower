@@ -60,6 +60,26 @@ export const generateTextures = (scene: GameStageScene) => {
     juggernautSize
   );
 
+  const bossGraphic = objectCreator.graphics();
+  bossGraphic.fillStyle(0x000000, 1);
+  const bossSize =
+    scene.scale.width > MOBILE_BREAKPOINT ? scene.scale.width / 20 : scene.scale.width / 15;
+  const bossPadding =
+    scene.scale.width > MOBILE_BREAKPOINT ? bossSize / 12 : bossSize / 9;
+  bossGraphic.fillRect(0, 0, bossSize, bossSize);
+  bossGraphic.fillStyle(0x3333dd, 1);
+  bossGraphic.fillRect(
+    bossPadding,
+    bossPadding,
+    bossSize - bossPadding * 2,
+    bossSize - bossPadding * 2
+  );
+  bossGraphic.generateTexture(
+    'bossTexture',
+    bossSize,
+    bossSize
+  );
+
   const arrowGraphic = objectCreator.graphics();
   arrowGraphic.fillStyle(0x000000, 1);
   arrowGraphic.fillRect(0, 0, scene.scale.width / 60, scene.scale.width / 150);

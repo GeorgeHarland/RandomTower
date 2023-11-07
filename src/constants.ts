@@ -5,6 +5,7 @@ export const MOBILE_BREAKPOINT = 600;
 // Enemies
 
 export const ENEMY_BASE_SPEED = 80;
+export const ENEMY_WEAPON_HIT_RATE = 200;
 
 export const EnemyConstants: Record<string, EnemyConfig> = {
   MINION: {
@@ -23,6 +24,14 @@ export const EnemyConstants: Record<string, EnemyConfig> = {
     HITPOINTS: 40,
     GOLD_VALUE: 5,
   },
+  BOSS: {
+    DAMAGE: 50,
+    RATE: 0.01,
+    RATE_MULTIPLIER: 1.012,
+    SPEED_MULTIPLIER: 0.10,
+    HITPOINTS: 400,
+    GOLD_VALUE: 50,
+  }
 };
 
 // Player / Tower
