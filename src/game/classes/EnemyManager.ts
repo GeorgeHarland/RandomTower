@@ -1,14 +1,6 @@
 import {
-  ENEMY_BASE_DAMAGE,
-  ENEMY_BASE_GOLD_VALUE,
-  ENEMY_BASE_RATE,
   ENEMY_BASE_SPEED,
-  ENEMY_RATE_MULTIPLER,
-  JUGGERNAUT_BASE_DAMAGE,
-  JUGGERNAUT_BASE_GOLD_VALUE,
-  JUGGERNAUT_BASE_HITPOINTS,
-  JUGGERNAUT_BASE_RATE,
-  JUGGERNAUT_RATE_MULTIPLIER,
+  EnemyConstants
 } from '../../constants';
 import GameStageScene from '../scenes/GameStage';
 import { getRandomEdgeOfScreen } from '../scenes/helpers/gameHelpers';
@@ -22,8 +14,8 @@ export default class EnemyManager {
   public enemies: Phaser.Physics.Arcade.Group | undefined;
   public spawnEnemyTimer: Phaser.Time.TimerEvent | undefined;
   public spawnJuggernautTimer: Phaser.Time.TimerEvent | undefined;
-  public enemyRate: number = ENEMY_BASE_RATE;
-  public juggernautRate: number = JUGGERNAUT_BASE_RATE;
+  public enemyRate: number = EnemyConstants.MINION.RATE;
+  public juggernautRate: number = EnemyConstants.JUGGERNAUT.RATE;
   public enemiesCurrentSpeed: number;
   public weaponJuggernautHitMap = new Map();
 
@@ -61,7 +53,7 @@ export default class EnemyManager {
     const { x, y } = getRandomEdgeOfScreen(this.scene);
     const juggernaut = this.scene.physics.add.sprite(x, y, 'juggernautTexture');
     juggernaut.setData('type', 'juggernaut');
-    juggernaut.setData('hitpoints', JUGGERNAUT_BASE_HITPOINTS);
+    juggernaut.setData('hitpoints', EnemyConstants.JUGGERNAUT.HITPOINTS);
     juggernaut.setData('id', `enemy-${this.enemyCounter++}`);
     juggernaut.setImmovable(true);
 
@@ -81,8 +73,8 @@ export default class EnemyManager {
     enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
   ) => {
     if (enemy.getData('type') === 'juggernaut')
-      this.playerTower.currentHp -= JUGGERNAUT_BASE_DAMAGE;
-    else this.playerTower.currentHp -= ENEMY_BASE_DAMAGE;
+      this.playerTower.currentHp -= EnemyConstants.JUGGERNAUT.DAMAGE;
+    else this.playerTower.currentHp -= EnemyConstants.MINION.DAMAGE;
     enemy.destroy();
   };
 
@@ -143,8 +135,8 @@ export default class EnemyManager {
     enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
   ) => {
     if (enemy.getData('type') === 'juggernaut')
-      this.playerTower.currentGold += JUGGERNAUT_BASE_GOLD_VALUE;
-    else this.playerTower.currentGold += ENEMY_BASE_GOLD_VALUE;
+      this.playerTower.currentGold += EnemyConstants.JUGGERNAUT.GOLD_VALUE;
+    else this.playerTower.currentGold += EnemyConstants.MINION.GOLD_VALUE;
     enemy.destroy();
   };
 
@@ -177,7 +169,7 @@ export default class EnemyManager {
   };
 
   public updateEnemyRates = () => {
-    this.enemyRate *= ENEMY_RATE_MULTIPLER;
-    this.juggernautRate *= JUGGERNAUT_RATE_MULTIPLIER;
+    this.enemyRate *= EnemyConstants.MINION.RATE_MULTIPLIER;
+    this.juggernautRate *= EnemyConstants.JUGGERNAUT.RATE_MULTIPLIER;
   };
 }

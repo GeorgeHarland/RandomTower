@@ -1,4 +1,4 @@
-import { ItemGradeType, PowerupType } from './game/types';
+import { EnemyConfig, ItemGradeType, PowerupType } from './game/types';
 
 // Dev settings
 
@@ -6,19 +6,26 @@ export const DEV_TEXT_AT_TOP = false;
 
 // Enemies
 
-export const ENEMY_BASE_DAMAGE = 5;
-export const ENEMY_BASE_RATE = 0.4;
-export const ENEMY_RATE_MULTIPLER = 1.012;
 export const ENEMY_BASE_SPEED = 80;
-export const ENEMY_BASE_GOLD_VALUE = 1;
 
-export const JUGGERNAUT_BASE_DAMAGE = 20;
-export const JUGGERNAUT_BASE_RATE = 0.03;
-// export const JUGGERNAUT_BASE_RATE = 2;
-export const JUGGERNAUT_RATE_MULTIPLIER = 1.012;
-export const JUGGERNAUT_BASE_GOLD_VALUE = 5;
-export const JUGGERNAUT_BASE_HITPOINTS = 40;
-export const JUGGERNAUT_SPEED_MULTIPLIER = 0.25;
+export const EnemyConstants: Record<string, EnemyConfig> = {
+  MINION: {
+    DAMAGE: 5,
+    RATE: 0.5,
+    RATE_MULTIPLIER: 1.012,
+    SPEED_MULTIPLIER: 1,
+    HITPOINTS: 1,
+    GOLD_VALUE: 1,
+  },
+  JUGGERNAUT: {
+    DAMAGE: 20,
+    RATE: 0.03,
+    RATE_MULTIPLIER: 1.013,
+    SPEED_MULTIPLIER: 0.25,
+    HITPOINTS: 40,
+    GOLD_VALUE: 5,
+  },
+};
 
 // Player / Tower
 

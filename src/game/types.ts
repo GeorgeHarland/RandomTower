@@ -5,6 +5,16 @@ export type ItemGradeType = 'S' | 'A' | 'B' | 'C' | 'D';
 
 export type EnemyTypes = 'all' | 'minion' | 'juggernaut';
 
+export type EnemyConfig = {
+  DAMAGE: number;
+  RATE: number;
+  RATE_MULTIPLIER: number;
+  SPEED?: number;
+  SPEED_MULTIPLIER: number;
+  GOLD_VALUE: number;
+  HITPOINTS: number;
+};
+
 export type PowerupType =
   | 'Arrow Rate'
   | 'Circle Speed'

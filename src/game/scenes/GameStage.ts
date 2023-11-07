@@ -9,7 +9,7 @@ import { extractTowerFrames } from './helpers/spriteHelpers';
 import { generateTextures } from './helpers/textureHelpers';
 import { KeybindType, PowerupType } from '../types';
 import {
-  JUGGERNAUT_SPEED_MULTIPLIER,
+  EnemyConstants,
   DEV_TEXT_AT_TOP,
   TORNADO_BASE_SHAKE_AMOUNT,
   ICEPOOL_SLOW,
@@ -381,7 +381,7 @@ export default class GameStageScene extends Phaser.Scene {
             enemy,
             this.tower,
             this.enemyManager.enemiesCurrentSpeed *
-              JUGGERNAUT_SPEED_MULTIPLIER *
+              EnemyConstants.JUGGERNAUT.SPEED_MULTIPLIER *
               this.gameSpeedScale *
               effectMultiplier
           );
