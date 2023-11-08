@@ -1,4 +1,9 @@
-import { EnemyConfig, ItemGradeType, PowerupType } from './game/types';
+import {
+  EnemyConfig,
+  EnemyTypes,
+  ItemGradeType,
+  PowerupType,
+} from './game/types';
 
 export const MOBILE_BREAKPOINT = 600;
 
@@ -7,8 +12,10 @@ export const MOBILE_BREAKPOINT = 600;
 export const ENEMY_BASE_SPEED = 80;
 export const ENEMY_WEAPON_HIT_RATE = 200;
 
-export const EnemyConstants: Record<string, EnemyConfig> = {
-  MINION: {
+export const EnemyConstants: Record<EnemyTypes, EnemyConfig> = {
+  minion: {
+    TYPE: 'minion',
+    TEXTURE: 'enemyTexture',
     DAMAGE: 5,
     RATE: 0.5,
     RATE_MULTIPLIER: 1.012,
@@ -16,7 +23,9 @@ export const EnemyConstants: Record<string, EnemyConfig> = {
     HITPOINTS: 1,
     GOLD_VALUE: 1,
   },
-  JUGGERNAUT: {
+  juggernaut: {
+    TYPE: 'juggernaut',
+    TEXTURE: 'juggernautTexture',
     DAMAGE: 20,
     RATE: 0.03,
     RATE_MULTIPLIER: 1.013,
@@ -24,14 +33,16 @@ export const EnemyConstants: Record<string, EnemyConfig> = {
     HITPOINTS: 40,
     GOLD_VALUE: 5,
   },
-  BOSS: {
+  boss: {
+    TYPE: 'boss',
+    TEXTURE: 'bossTexture',
     DAMAGE: 50,
     RATE: 0.01,
     RATE_MULTIPLIER: 1.012,
-    SPEED_MULTIPLIER: 0.10,
+    SPEED_MULTIPLIER: 0.1,
     HITPOINTS: 400,
     GOLD_VALUE: 50,
-  }
+  },
 };
 
 // Player / Tower
@@ -64,7 +75,7 @@ export const ARROW_BASE_RATE = 0.2;
 export const ARROW_RATE_INCREASE = 0.025;
 
 export const CIRCLE_BASE_SPEED = 1.2;
-export const CIRCLE_SPEED_INCREASE = 0.30;
+export const CIRCLE_SPEED_INCREASE = 0.3;
 export const CIRCLE_SCALE_MULTIPLIER = 1.15;
 
 export const DARKBLAST_BASE_ANGLE_CHANGE = 45;

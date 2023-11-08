@@ -445,21 +445,21 @@ export default class PowerupManager {
     timeSlowSprite.scale = 0.5 * this.scene.gameSpeedScale;
     timeSlowSprite.setData('type', 'timeSlow');
     timeSlowSprite.play('timeSlowAnimation');
-    if (this.scene.enemyManager.spawnEnemyTimer)
-      this.scene.enemyManager.spawnEnemyTimer.paused = true;
-    if (this.scene.enemyManager.spawnJuggernautTimer)
-      this.scene.enemyManager.spawnJuggernautTimer.paused = true;
-    if (this.scene.enemyManager.spawnBossTimer)
-      this.scene.enemyManager.spawnBossTimer.paused = true;
+    if (this.scene.enemyManager.enemyTimers.spawnMinionTimer)
+      this.scene.enemyManager.enemyTimers.spawnMinionTimer.paused = true;
+    if (this.scene.enemyManager.enemyTimers.spawnJuggernautTimer)
+      this.scene.enemyManager.enemyTimers.spawnJuggernautTimer.paused = true;
+    if (this.scene.enemyManager.enemyTimers.spawnBossTimer)
+      this.scene.enemyManager.enemyTimers.spawnBossTimer.paused = true;
     timeSlowSprite.setImmovable(true);
     timeSlowSprite.on('animationcomplete', () => {
       timeSlowSprite.destroy();
-      if (this.scene.enemyManager.spawnEnemyTimer)
-        this.scene.enemyManager.spawnEnemyTimer.paused = false;
-      if (this.scene.enemyManager.spawnJuggernautTimer)
-        this.scene.enemyManager.spawnJuggernautTimer.paused = false;
-      if (this.scene.enemyManager.spawnBossTimer)
-        this.scene.enemyManager.spawnBossTimer.paused = false;
+      if (this.scene.enemyManager.enemyTimers.spawnMinionTimer)
+        this.scene.enemyManager.enemyTimers.spawnMinionTimer.paused = false;
+      if (this.scene.enemyManager.enemyTimers.spawnJuggernautTimer)
+        this.scene.enemyManager.enemyTimers.spawnJuggernautTimer.paused = false;
+      if (this.scene.enemyManager.enemyTimers.spawnBossTimer)
+        this.scene.enemyManager.enemyTimers.spawnBossTimer.paused = false;
       this.timeSlow = false;
       this.timeSlowTimer = this.scene.time.addEvent({
         delay: this.timeSlowCooldown,

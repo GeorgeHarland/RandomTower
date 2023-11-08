@@ -1,11 +1,11 @@
 import {
   ENEMY_BASE_SPEED,
   ENEMY_WEAPON_HIT_RATE,
-  EnemyConstants
+  EnemyConstants,
 } from '../../constants';
 import GameStageScene from '../scenes/GameStage';
 import { getRandomEdgeOfScreen } from '../scenes/helpers/gameHelpers';
-import { EnemyTypes } from '../types';
+import { EnemyTimerMap, EnemyTypes } from '../types';
 import PlayerTower from './PlayerTower';
 
 export default class EnemyManager {
@@ -13,12 +13,13 @@ export default class EnemyManager {
   private playerTower: PlayerTower;
   private enemyCounter: number = 0;
   public enemies: Phaser.Physics.Arcade.Group | undefined;
-  public spawnEnemyTimer: Phaser.Time.TimerEvent | undefined;
-  public spawnJuggernautTimer: Phaser.Time.TimerEvent | undefined;
-  public spawnBossTimer: Phaser.Time.TimerEvent | undefined;
-  public enemyRate: number = EnemyConstants.MINION.RATE;
-  public juggernautRate: number = EnemyConstants.JUGGERNAUT.RATE;
-  public bossRate: number = EnemyConstants.BOSS.RATE;
+  // public spawnEnemyTimer: Phaser.Time.TimerEvent | undefined;
+  // public spawnJuggernautTimer: Phaser.Time.TimerEvent | undefined;
+  // public spawnBossTimer: Phaser.Time.TimerEvent | undefined;
+  public enemyTimers: EnemyTimerMap = {};
+  public enemyRate: number = EnemyConstants.minion.RATE;
+  public juggernautRate: number = EnemyConstants.juggernaut.RATE;
+  public bossRate: number = EnemyConstants.boss.RATE;
   public enemiesCurrentSpeed: number;
   public weaponEnemyHitMap = new Map();
 
@@ -34,59 +35,27 @@ export default class EnemyManager {
     });
   };
 
-  public spawnEnemy = () => {
+  public spawnEnemy = (enemyRecord: EnemyTypes) => {
     const { x, y } = getRandomEdgeOfScreen(this.scene);
-    const enemy = this.scene.physics.add.sprite(x, y, 'enemyTexture');
-    enemy.setImmovable(true);
+    const enemy = this.scene.physics.add.sprite(
+      x,
+      y,
+      EnemyConstants[enemyRecord].TEXTURE
+    );
+    enemy.setData('type', EnemyConstants[enemyRecord].TYPE);
+    enemy.setData('hitpoints', EnemyConstants[enemyRecord].HITPOINTS);
     enemy.setData('id', `enemy-${this.enemyCounter++}`);
-    enemy.setData('type', 'minion');
+    enemy.setImmovable(true);
+
     this.enemies?.add(enemy);
-    if (this.spawnEnemyTimer) {
-      this.spawnEnemyTimer.destroy();
-    }
-    this.spawnEnemyTimer = this.scene.time.addEvent({
-      delay: 1000 / this.enemyRate,
-      callback: this.spawnEnemy,
-      callbackScope: this,
-      loop: true,
-    });
-  };
 
-  public spawnJuggernaut = () => {
-    const { x, y } = getRandomEdgeOfScreen(this.scene);
-    const juggernaut = this.scene.physics.add.sprite(x, y, 'juggernautTexture');
-    juggernaut.setData('type', 'juggernaut');
-    juggernaut.setData('hitpoints', EnemyConstants.JUGGERNAUT.HITPOINTS);
-    juggernaut.setData('id', `enemy-${this.enemyCounter++}`);
-    juggernaut.setImmovable(true);
-
-    this.enemies?.add(juggernaut);
-    if (this.spawnJuggernautTimer) {
-      this.spawnJuggernautTimer.destroy();
-    }
-    this.spawnJuggernautTimer = this.scene.time.addEvent({
-      delay: 1000 / this.juggernautRate,
-      callback: this.spawnJuggernaut,
-      callbackScope: this,
-      loop: true,
-    });
-  };
-
-  public spawnBoss = () => {
-    const { x, y } = getRandomEdgeOfScreen(this.scene);
-    const boss = this.scene.physics.add.sprite(x, y, 'bossTexture');
-    boss.setData('type', 'boss');
-    boss.setData('hitpoints', EnemyConstants.BOSS.HITPOINTS);
-    boss.setData('id', `enemy-${this.enemyCounter++}`);
-    boss.setImmovable(true);
-
-    this.enemies?.add(boss);
-    if (this.spawnBossTimer) {
-      this.spawnBossTimer.destroy();
-    }
-    this.spawnBossTimer = this.scene.time.addEvent({
-      delay: 1000 / this.bossRate,
-      callback: this.spawnBoss,
+    const timerKey = `spawn${EnemyConstants[enemyRecord].TYPE.charAt(
+      0
+    ).toUpperCase()}Timer`;
+    this.enemyTimers[timerKey]?.destroy();
+    this.enemyTimers[timerKey] = this.scene.time.addEvent({
+      delay: 1000 / EnemyConstants[enemyRecord].RATE,
+      callback: () => this.spawnEnemy(enemyRecord),
       callbackScope: this,
       loop: true,
     });
@@ -95,11 +64,11 @@ export default class EnemyManager {
   public enemyTowerCollision = (
     enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
   ) => {
-    if (enemy.getData('type') === 'juggernaut')
-      this.playerTower.currentHp -= EnemyConstants.JUGGERNAUT.DAMAGE;
-    else if (enemy.getData('type') === 'boss')
-      this.playerTower.currentHp -= EnemyConstants.BOSS.DAMAGE;
-    else this.playerTower.currentHp -= EnemyConstants.MINION.DAMAGE;
+    if (enemy.getData('type') === EnemyConstants.juggernaut.TYPE)
+      this.playerTower.currentHp -= EnemyConstants.juggernaut.DAMAGE;
+    else if (enemy.getData('type') === EnemyConstants.boss.TYPE)
+      this.playerTower.currentHp -= EnemyConstants.boss.DAMAGE;
+    else this.playerTower.currentHp -= EnemyConstants.minion.DAMAGE;
     enemy.destroy();
   };
 
@@ -125,7 +94,11 @@ export default class EnemyManager {
     const hitCooldown = ENEMY_WEAPON_HIT_RATE;
     const weaponId = weapon.getData('id');
     const enemyId = enemy.getData('id');
-    const hasHitpoints = (enemy.getData('type') === 'juggernaut' || 'boss')
+    const hasHitpoints =
+      enemy.getData('type') === EnemyConstants.juggernaut.TYPE ||
+      EnemyConstants.boss.TYPE
+        ? true
+        : false;
 
     const compositeKey = `${weaponId}-${enemyId}`;
     const lastHitTime = this.weaponEnemyHitMap.get(compositeKey) || 0;
@@ -134,10 +107,7 @@ export default class EnemyManager {
     }
     this.weaponEnemyHitMap.set(compositeKey, currentTime);
 
-    if (hasHitpoints
-       &&
-      enemy.getData('hitpoints') > 0
-    ) {
+    if (hasHitpoints && enemy.getData('hitpoints') > 1) {
       enemy.setData('hitpoints', enemy.getData('hitpoints') - 5);
     } else {
       this.enemyDefeated(enemy);
@@ -145,10 +115,7 @@ export default class EnemyManager {
 
     if (weaponDestroyed) {
       weapon.destroy();
-    } else if (
-      weapon.getData('type') === 'iceSpike' &&
-      hasHitpoints 
-    ) {
+    } else if (weapon.getData('type') === 'iceSpike' && hasHitpoints) {
       this.scene.powerupManager.spawnIceSpikeExplosion(
         weapon.body.x + weapon.body.width / 2,
         weapon.body.y + weapon.body.height / 2
@@ -160,11 +127,11 @@ export default class EnemyManager {
   public enemyDefeated = (
     enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
   ) => {
-    if (enemy.getData('type') === 'juggernaut')
-      this.playerTower.currentGold += EnemyConstants.JUGGERNAUT.GOLD_VALUE;
-    if (enemy.getData('type') === 'boss')
-      this.playerTower.currentGold += EnemyConstants.BOSS.GOLD_VALUE;
-    else this.playerTower.currentGold += EnemyConstants.MINION.GOLD_VALUE;
+    if (enemy.getData('type') === EnemyConstants.juggernaut.TYPE)
+      this.playerTower.currentGold += EnemyConstants.juggernaut.GOLD_VALUE;
+    if (enemy.getData('type') === EnemyConstants.boss.TYPE)
+      this.playerTower.currentGold += EnemyConstants.boss.GOLD_VALUE;
+    else this.playerTower.currentGold += EnemyConstants.minion.GOLD_VALUE;
     enemy.destroy();
   };
 
@@ -197,7 +164,8 @@ export default class EnemyManager {
   };
 
   public updateEnemyRates = () => {
-    this.enemyRate *= EnemyConstants.MINION.RATE_MULTIPLIER;
-    this.juggernautRate *= EnemyConstants.JUGGERNAUT.RATE_MULTIPLIER;
+    this.enemyRate *= EnemyConstants.minion.RATE_MULTIPLIER;
+    this.juggernautRate *= EnemyConstants.juggernaut.RATE_MULTIPLIER;
+    this.bossRate *= EnemyConstants.boss.RATE_MULTIPLIER;
   };
 }

@@ -26,7 +26,10 @@ export default class InitialLoadingScene extends Phaser.Scene {
     // background.displayHeight = this.sys.canvas.height;
     // this.children.sendToBack(background);
 
-    const titleFontSize = this.scale.width > MOBILE_BREAKPOINT ? this.sys.canvas.width / 20 : this.sys.canvas.width / 15;
+    const titleFontSize =
+      this.scale.width > MOBILE_BREAKPOINT
+        ? this.sys.canvas.width / 20
+        : this.sys.canvas.width / 15;
 
     this.add
       .text(

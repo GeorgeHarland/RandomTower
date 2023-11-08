@@ -24,10 +24,19 @@ export default class MainMenuScene extends Phaser.Scene {
     background.displayHeight = this.sys.canvas.height;
     this.children.sendToBack(background);
 
-    const titleFontSize = this.scale.width > MOBILE_BREAKPOINT ? this.sys.canvas.width / 20 : this.sys.canvas.width / 12.5;
-    const buttonFontSize = this.scale.width > MOBILE_BREAKPOINT ? this.sys.canvas.width / 25 : this.sys.canvas.width / 17.5;
-    const heightMod = this.scale.width > MOBILE_BREAKPOINT ? this.scale.height / 10 : this.scale.height / 7.5;
-    
+    const titleFontSize =
+      this.scale.width > MOBILE_BREAKPOINT
+        ? this.sys.canvas.width / 20
+        : this.sys.canvas.width / 12.5;
+    const buttonFontSize =
+      this.scale.width > MOBILE_BREAKPOINT
+        ? this.sys.canvas.width / 25
+        : this.sys.canvas.width / 17.5;
+    const heightMod =
+      this.scale.width > MOBILE_BREAKPOINT
+        ? this.scale.height / 10
+        : this.scale.height / 7.5;
+
     this.add
       .text(
         this.cameras.main.centerX,

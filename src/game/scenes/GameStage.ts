@@ -244,23 +244,23 @@ export default class GameStageScene extends Phaser.Scene {
       loop: true,
     });
 
-    this.enemyManager.spawnJuggernautTimer = this.time.addEvent({
+    this.enemyManager.enemyTimers.spawnJuggernautTimer = this.time.addEvent({
       delay: 1000 / this.enemyManager.juggernautRate,
-      callback: this.enemyManager.spawnJuggernaut,
+      callback: () => this.enemyManager.spawnEnemy('juggernaut'),
       callbackScope: this,
       loop: true,
     });
 
-    this.enemyManager.spawnBossTimer = this.time.addEvent({
+    this.enemyManager.enemyTimers.spawnBossTimer = this.time.addEvent({
       delay: 1000 / this.enemyManager.bossRate,
-      callback: this.enemyManager.spawnBoss,
+      callback: () => this.enemyManager.spawnEnemy('boss'),
       callbackScope: this,
       loop: true,
     });
 
-    this.enemyManager.spawnEnemyTimer = this.time.addEvent({
+    this.enemyManager.enemyTimers.spawnMinionTimer = this.time.addEvent({
       delay: 1000 / this.enemyManager.enemyRate,
-      callback: this.enemyManager.spawnEnemy,
+      callback: () => this.enemyManager.spawnEnemy('minion'),
       callbackScope: this,
       loop: true,
     });
@@ -328,11 +328,11 @@ export default class GameStageScene extends Phaser.Scene {
         Phaser.Input.Keyboard.JustDown(this.keyK as Phaser.Input.Keyboard.Key)
       ) {
         this.enemyManager.enemyRate += 1;
-        this.enemyManager.spawnEnemy();
+        this.enemyManager.spawnEnemy('minion');
         this.enemyManager.juggernautRate += 1;
-        this.enemyManager.spawnJuggernaut();
+        this.enemyManager.spawnEnemy('juggernaut');
         this.enemyManager.bossRate += 1;
-        this.enemyManager.spawnBoss();
+        this.enemyManager.spawnEnemy('boss');
       }
       if (
         Phaser.Input.Keyboard.JustDown(this.keyQ as Phaser.Input.Keyboard.Key)
@@ -362,21 +362,21 @@ export default class GameStageScene extends Phaser.Scene {
       if (this.tower) {
         const effectMultiplier =
           enemy.getData('chilled') === true ? ICEPOOL_SLOW : 1;
-        if (enemy.getData('type') === 'juggernaut')
+        if (enemy.getData('type') === EnemyConstants.juggernaut.TYPE)
           this.physics.moveToObject(
             enemy,
             this.tower,
             this.enemyManager.enemiesCurrentSpeed *
-              EnemyConstants.JUGGERNAUT.SPEED_MULTIPLIER *
+              EnemyConstants.juggernaut.SPEED_MULTIPLIER *
               this.gameSpeedScale *
               effectMultiplier
           );
-        else if (enemy.getData('type') === 'boss')
+        else if (enemy.getData('type') === EnemyConstants.boss.TYPE)
           this.physics.moveToObject(
             enemy,
             this.tower,
             this.enemyManager.enemiesCurrentSpeed *
-              EnemyConstants.BOSS.SPEED_MULTIPLIER *
+              EnemyConstants.boss.SPEED_MULTIPLIER *
               this.gameSpeedScale *
               effectMultiplier
           );

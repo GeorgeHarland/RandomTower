@@ -3,9 +3,11 @@ export type KeybindType = 'Q' | 'W' | 'E' | 'Z';
 
 export type ItemGradeType = 'S' | 'A' | 'B' | 'C' | 'D';
 
-export type EnemyTypes = 'all' | 'minion' | 'juggernaut' | 'boss';
+export type EnemyTypes = 'minion' | 'juggernaut' | 'boss';
 
 export type EnemyConfig = {
+  TYPE: string;
+  TEXTURE: string;
   DAMAGE: number;
   RATE: number;
   RATE_MULTIPLIER: number;
@@ -13,6 +15,10 @@ export type EnemyConfig = {
   SPEED_MULTIPLIER: number;
   GOLD_VALUE: number;
   HITPOINTS: number;
+};
+
+export type EnemyTimerMap = {
+  [key: string]: Phaser.Time.TimerEvent | undefined;
 };
 
 export type PowerupType =
