@@ -16,6 +16,7 @@ export default class GameOverScene extends Phaser.Scene {
     this.gameScene = this.scene.get('GameStageScene') as GameStageScene;
     this.sound.stopAll();
     const music = this.sound.add('gameOverMusic', { loop: true });
+    music.setVolume(0.7);
     music.play();
 
     this.setupKeybindings();

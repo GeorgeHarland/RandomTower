@@ -55,6 +55,7 @@ export default class GameStageScene extends Phaser.Scene {
     setupAnimations(this);
 
     const music = this.sound.add('gameMusic1', { loop: true });
+    music.setVolume(0.7);
     music.play();
 
     this.enemyManager = new EnemyManager(this, this.playerTower);

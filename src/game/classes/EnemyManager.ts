@@ -13,9 +13,6 @@ export default class EnemyManager {
   private playerTower: PlayerTower;
   private enemyCounter: number = 0;
   public enemies: Phaser.Physics.Arcade.Group | undefined;
-  // public spawnEnemyTimer: Phaser.Time.TimerEvent | undefined;
-  // public spawnJuggernautTimer: Phaser.Time.TimerEvent | undefined;
-  // public spawnBossTimer: Phaser.Time.TimerEvent | undefined;
   public enemyTimers: EnemyTimerMap = {};
   public enemyRate: number = EnemyConstants.minion.RATE;
   public juggernautRate: number = EnemyConstants.juggernaut.RATE;

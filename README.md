@@ -30,11 +30,11 @@ Q W E - Buy items
 
 Up Down Left Right - Move the circle weapon
 
-Mouse/touch - Move the circle towards the cursor.
+Mouse/touch - Move the circle towards the cursor
 
-U - Dev command for 1000 gold
+U - Cheat command for 1000 gold
 
-K - Dev command to increase enemy spawn speed by 1 per second.
+K - Cheat command to increase enemy spawn speed by 1 per second.
 
 ## Credits
 
