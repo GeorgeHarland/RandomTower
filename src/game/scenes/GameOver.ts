@@ -16,12 +16,13 @@ export default class GameOverScene extends Phaser.Scene {
     this.gameScene = this.scene.get('GameStageScene') as GameStageScene;
     this.sound.stopAll();
     const music = this.sound.add('gameOverMusic', { loop: true });
-    music.setVolume(0.7);
+    music.setVolume(0.4);
     music.play();
 
     this.setupKeybindings();
 
     const gametime = this.gameScene.data.get('gametime');
+    // console.log('powerups bought in order: ', this.gameScene.data.get('powerupsBought'));
 
     const background = this.add.image(0, 0, 'gameOverBackground');
     background.setOrigin(0, 0);

@@ -16,7 +16,7 @@ export default class MainMenuScene extends Phaser.Scene {
     this.setupKeybindings();
 
     const music = this.sound.add('mainMenuMusic', { loop: true });
-    music.setVolume(0.7);
+    music.setVolume(0.4);
     music.play();
 
     const background = this.add.image(0, 0, 'background');

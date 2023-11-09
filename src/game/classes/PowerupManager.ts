@@ -125,6 +125,7 @@ export default class PowerupManager {
       default:
         break;
     }
+    this.scene.powerupsBought?.push(item?.powerup);
   };
 
   public initShopBoxes = () => {

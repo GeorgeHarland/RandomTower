@@ -29,6 +29,7 @@ export default class GameStageScene extends Phaser.Scene {
   public weapons: Phaser.Physics.Arcade.Group | undefined;
   public enemyManager: EnemyManager = new EnemyManager(this, this.playerTower);
   public powerupManager: PowerupManager = new PowerupManager(this);
+  public powerupsBought: string[] = [];
   public keyQ: Phaser.Input.Keyboard.Key | null = null;
   public keyW: Phaser.Input.Keyboard.Key | null = null;
   public keyE: Phaser.Input.Keyboard.Key | null = null;
@@ -55,7 +56,7 @@ export default class GameStageScene extends Phaser.Scene {
     setupAnimations(this);
 
     const music = this.sound.add('gameMusic1', { loop: true });
-    music.setVolume(0.7);
+    music.setVolume(0.4);
     music.play();
 
     this.enemyManager = new EnemyManager(this, this.playerTower);
@@ -396,6 +397,7 @@ export default class GameStageScene extends Phaser.Scene {
 
     if (this.playerTower.currentHp <= 0) {
       this.data.set('gametime', this.elapsedSeconds);
+      this.data.set('powerupsBought', this.powerupsBought);
       this.scene.start('GameOverScene');
     }
 
