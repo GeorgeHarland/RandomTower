@@ -15,7 +15,9 @@ export const ENEMY_WEAPON_HIT_RATE = 200;
 export const EnemyConstants: Record<EnemyTypes, EnemyConfig> = {
   minion: {
     TYPE: 'minion',
-    TEXTURE: 'enemyTexture',
+    TEXTURE: 'enemyTexture', // uses texture if sprite null
+    SPRITE: 'minionSprite',
+    SPRITE_SCALE: 0.05,
     DAMAGE: 5,
     RATE: 0.5,
     RATE_MULTIPLIER: 1.012,
@@ -26,9 +28,11 @@ export const EnemyConstants: Record<EnemyTypes, EnemyConfig> = {
   juggernaut: {
     TYPE: 'juggernaut',
     TEXTURE: 'juggernautTexture',
+    SPRITE: 'juggernautSprite',
+    SPRITE_SCALE: 0.125,
     DAMAGE: 20,
-    RATE: 0.03,
-    RATE_MULTIPLIER: 1.013,
+    RATE: 0.05,
+    RATE_MULTIPLIER: 1.02,
     SPEED_MULTIPLIER: 0.25,
     HITPOINTS: 40,
     GOLD_VALUE: 5,
@@ -36,9 +40,11 @@ export const EnemyConstants: Record<EnemyTypes, EnemyConfig> = {
   boss: {
     TYPE: 'boss',
     TEXTURE: 'bossTexture',
+    SPRITE: 'bossSprite',
+    SPRITE_SCALE: 0.25,
     DAMAGE: 50,
     RATE: 0.01,
-    RATE_MULTIPLIER: 1.012,
+    RATE_MULTIPLIER: 1.02,
     SPEED_MULTIPLIER: 0.1,
     HITPOINTS: 400,
     GOLD_VALUE: 50,

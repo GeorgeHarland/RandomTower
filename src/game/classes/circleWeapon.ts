@@ -56,10 +56,16 @@ export default class CircleWeapon extends Phaser.Physics.Arcade.Sprite {
         .clone()
         .subtract(this.getCenter())
         .normalize();
-      this.x += direction.x * this.circleSpeed * this.gameScene.gameSpeedScale;
-      this.y += direction.y * this.circleSpeed * this.gameScene.gameSpeedScale;
+      this.circleNumber === 0
+        ? this.moveToCursor(direction)
+        : setTimeout(() => this.moveToCursor(direction), this.circleNumber * 170);
     }
   };
+
+  private moveToCursor(direction: Phaser.Math.Vector2) {
+    this.x += direction.x * this.circleSpeed * this.gameScene.gameSpeedScale;
+    this.y += direction.y * this.circleSpeed * this.gameScene.gameSpeedScale;
+  }
 
   private moveUp() {
     this.y -= this.circleSpeed * this.gameScene.gameSpeedScale;
@@ -73,6 +79,7 @@ export default class CircleWeapon extends Phaser.Physics.Arcade.Sprite {
   private moveRight() {
     this.x += this.circleSpeed * this.gameScene.gameSpeedScale;
   }
+
   private onPointerDown(pointer: Phaser.Input.Pointer) {
     this.pointerDown = true;
     this.targetPosition = new Phaser.Math.Vector2(pointer.x, pointer.y);

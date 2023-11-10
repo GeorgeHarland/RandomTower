@@ -37,11 +37,12 @@ export default class EnemyManager {
     const enemy = this.scene.physics.add.sprite(
       x,
       y,
-      EnemyConstants[enemyRecord].TEXTURE
+      EnemyConstants[enemyRecord].SPRITE || EnemyConstants[enemyRecord].TEXTURE
     );
     enemy.setData('type', EnemyConstants[enemyRecord].TYPE);
     enemy.setData('hitpoints', EnemyConstants[enemyRecord].HITPOINTS);
     enemy.setData('id', `enemy-${this.enemyCounter++}`);
+    EnemyConstants[enemyRecord].SPRITE && enemy.setScale(EnemyConstants[enemyRecord].SPRITE_SCALE);
     enemy.setImmovable(true);
 
     this.enemies?.add(enemy);

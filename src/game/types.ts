@@ -8,6 +8,8 @@ export type EnemyTypes = 'minion' | 'juggernaut' | 'boss';
 export type EnemyConfig = {
   TYPE: string;
   TEXTURE: string;
+  SPRITE: string | null;
+  SPRITE_SCALE: number;
   DAMAGE: number;
   RATE: number;
   RATE_MULTIPLIER: number;
