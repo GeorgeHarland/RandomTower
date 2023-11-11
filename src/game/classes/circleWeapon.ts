@@ -1,4 +1,4 @@
-import { CIRCLE_BASE_SPEED } from '../../constants';
+import { CIRCLE_BASE_SIZE_DIVISION, CIRCLE_BASE_SPEED } from '../../constants';
 import GameStageScene from '../scenes/GameStage';
 
 type Props = {
@@ -22,7 +22,7 @@ export default class CircleWeapon extends Phaser.Physics.Arcade.Sprite {
     this.gameScene = scene as GameStageScene;
     this.setImmovable(true);
     this.circleNumber = circleNumber;
-    this.setScale(0.2 * this.gameScene.gameSpeedScale);
+    this.setScale(this.scene.scale.width / CIRCLE_BASE_SIZE_DIVISION);
     this.setDepth(0.9 - 0.1 * circleNumber);
 
     this.setInteractive();

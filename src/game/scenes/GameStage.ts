@@ -104,7 +104,7 @@ export default class GameStageScene extends Phaser.Scene {
         circleNumber: i,
       });
       if (i === 0) {
-        scale = currentWeapon.scaleX;
+        scale = currentWeapon.scaleX * this.gameSpeedScale;
       } else {
         const newScale = scale * 0.8;
         currentWeapon.scaleX = newScale;

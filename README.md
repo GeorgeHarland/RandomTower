@@ -36,7 +36,7 @@ U - Cheat command for 1000 gold
 
 K - Cheat command to increase enemy spawn speed by 1 per second.
 
-## Credits
+## External Assets
 
 All assets were free to use, but please check out the designers.
 

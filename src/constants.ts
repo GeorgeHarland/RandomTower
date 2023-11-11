@@ -19,7 +19,7 @@ export const EnemyConstants: Record<EnemyTypes, EnemyConfig> = {
     SPRITE: 'minionSprite',
     SPRITE_SCALE: 0.05,
     DAMAGE: 5,
-    RATE: 0.5,
+    RATE: 0.6,
     RATE_MULTIPLIER: 1.012,
     SPEED_MULTIPLIER: 1,
     HITPOINTS: 1,
@@ -31,10 +31,10 @@ export const EnemyConstants: Record<EnemyTypes, EnemyConfig> = {
     SPRITE: 'juggernautSprite',
     SPRITE_SCALE: 0.125,
     DAMAGE: 20,
-    RATE: 0.05,
+    RATE: 0.06,
     RATE_MULTIPLIER: 1.02,
     SPEED_MULTIPLIER: 0.25,
-    HITPOINTS: 40,
+    HITPOINTS: 50,
     GOLD_VALUE: 5,
   },
   boss: {
@@ -43,11 +43,11 @@ export const EnemyConstants: Record<EnemyTypes, EnemyConfig> = {
     SPRITE: 'bossSprite',
     SPRITE_SCALE: 0.25,
     DAMAGE: 50,
-    RATE: 0.01,
+    RATE: 0.02,
     RATE_MULTIPLIER: 1.02,
     SPEED_MULTIPLIER: 0.1,
     HITPOINTS: 400,
-    GOLD_VALUE: 50,
+    GOLD_VALUE: 30,
   },
 };
 
@@ -81,6 +81,7 @@ export const ARROW_BASE_RATE = 0.2;
 export const ARROW_RATE_INCREASE = 0.025;
 
 export const CIRCLE_BASE_SPEED = 1.2;
+export const CIRCLE_BASE_SIZE_DIVISION = 4000;
 export const CIRCLE_SPEED_INCREASE = 0.3;
 export const CIRCLE_SCALE_MULTIPLIER = 1.15;
 
