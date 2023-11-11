@@ -101,7 +101,6 @@ export default class GameStageScene extends Phaser.Scene {
         scene: this,
         x: this.scale.width / 2,
         y: this.scale.height / 2.2,
-        texture: 'circleTexture',
         circleNumber: i,
       });
       if (i === 0) {

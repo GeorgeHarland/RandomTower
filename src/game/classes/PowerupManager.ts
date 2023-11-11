@@ -387,7 +387,7 @@ export default class PowerupManager {
 
     const icePoolSprite = this.scene.physics.add.sprite(x, y, 'icePoolImage');
     icePoolSprite.scale = this.icePoolSizeScale * this.scene.gameSpeedScale;
-    icePoolSprite.setDepth(-0.1);
+    icePoolSprite.setDepth(-0.9);
     icePoolSprite.setData('type', 'icePool');
     this.scene.terrainEffects?.add(icePoolSprite);
     this.icePoolTimer = this.scene.time.addEvent({

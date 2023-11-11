@@ -5,7 +5,6 @@ type Props = {
   scene: Phaser.Scene;
   x: number;
   y: number;
-  texture: string;
   circleNumber: number;
 };
 
@@ -16,13 +15,15 @@ export default class CircleWeapon extends Phaser.Physics.Arcade.Sprite {
   private pointerDown: boolean = false;
   private targetPosition: Phaser.Math.Vector2 | null = null;
 
-  public constructor({ scene, x, y, texture, circleNumber }: Props) {
-    super(scene, x, y, texture);
+  public constructor({ scene, x, y, circleNumber }: Props) {
+    super(scene, x, y, 'circleSprite', 'circleAnimation');
     scene.physics.world.enable(this);
     scene.add.existing(this);
     this.gameScene = scene as GameStageScene;
     this.setImmovable(true);
     this.circleNumber = circleNumber;
+    this.setScale(0.2 * this.gameScene.gameSpeedScale);
+    this.setDepth(0.9 - 0.1 * circleNumber);
 
     this.setInteractive();
     this.scene.input.on('pointerdown', this.onPointerDown, this);
@@ -58,7 +59,10 @@ export default class CircleWeapon extends Phaser.Physics.Arcade.Sprite {
         .normalize();
       this.circleNumber === 0
         ? this.moveToCursor(direction)
-        : setTimeout(() => this.moveToCursor(direction), this.circleNumber * 170);
+        : setTimeout(
+            () => this.moveToCursor(direction),
+            this.circleNumber * 170
+          );
     }
   };
 

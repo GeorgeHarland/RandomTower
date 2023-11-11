@@ -2,6 +2,15 @@ import GameStageScene from '../GameStage';
 
 export const setupAnimations = (scene: GameStageScene) => {
   scene.anims.create({
+    key: 'circleAnimation',
+    frames: Array.from({ length: 1 }, () => ({
+      // key: `circleSprite${i}`,
+      key: 'circleSprite',
+    })),
+    frameRate: 14,
+    repeat: -1,
+  });
+  scene.anims.create({
     key: 'darkBlastAnimation',
     frames: Array.from({ length: 15 }, (_, i) => ({
       key: `darkBlastSprite${i}`,

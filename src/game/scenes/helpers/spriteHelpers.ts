@@ -29,6 +29,8 @@ export const loadSprites = (scene: Phaser.Scene): void => {
   scene.load.image('Time Slow', 'sprites/powerupIcons/embrassed-energy.png');
   scene.load.image('Tornado', 'sprites/powerupIcons/tornado.png');
 
+  scene.load.image('circleSprite', 'sprites/spellEffects/circleSprite.png');
+
   for (let i = 1; i <= 9; i++) {
     scene.load.image(
       `tornadoRepeat${i}`,
@@ -64,9 +66,9 @@ export const loadSprites = (scene: Phaser.Scene): void => {
   }
   scene.load.image('icePoolImage', 'sprites/spellEffects/ice/ice_pool2.png');
 
-  scene.load.image('bossSprite', 'sprites/enemies/bossSprite.png')
-  scene.load.image('minionSprite', 'sprites/enemies/minionSprite.png')
-  scene.load.image('juggernautSprite', 'sprites/enemies/juggernautSprite.png')
+  scene.load.image('bossSprite', 'sprites/enemies/bossSprite.png');
+  scene.load.image('minionSprite', 'sprites/enemies/minionSprite.png');
+  scene.load.image('juggernautSprite', 'sprites/enemies/juggernautSprite.png');
 };
 
 export const extractTowerFrames = (

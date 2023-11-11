@@ -42,7 +42,10 @@ export default class EnemyManager {
     enemy.setData('type', EnemyConstants[enemyRecord].TYPE);
     enemy.setData('hitpoints', EnemyConstants[enemyRecord].HITPOINTS);
     enemy.setData('id', `enemy-${this.enemyCounter++}`);
-    EnemyConstants[enemyRecord].SPRITE && enemy.setScale(EnemyConstants[enemyRecord].SPRITE_SCALE);
+    EnemyConstants[enemyRecord].SPRITE &&
+      enemy.setScale(
+        EnemyConstants[enemyRecord].SPRITE_SCALE * this.scene.gameSpeedScale
+      );
     enemy.setImmovable(true);
 
     this.enemies?.add(enemy);
