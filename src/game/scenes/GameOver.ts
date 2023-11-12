@@ -1,3 +1,4 @@
+import { PowerupRecord } from '../../constants';
 import GameStageScene from './GameStage';
 import MainMenuScene from './MainMenu';
 import { secondsToMMSS } from './helpers/gameHelpers';
@@ -22,7 +23,6 @@ export default class GameOverScene extends Phaser.Scene {
     this.setupKeybindings();
 
     const gametime = this.gameScene.data.get('gametime');
-    // console.log('powerups bought in order: ', this.gameScene.data.get('powerupsBought'));
 
     const background = this.add.image(0, 0, 'gameOverBackground');
     background.setOrigin(0, 0);
@@ -33,6 +33,8 @@ export default class GameOverScene extends Phaser.Scene {
     const titleFontSize = Math.floor(this.sys.canvas.width / 20);
     const timeFontSize = Math.floor(this.sys.canvas.width / 25);
     const buttonFontSize = Math.floor(this.sys.canvas.width / 25);
+
+    this.displayPowerupCount();
 
     this.add
       .text(
@@ -123,5 +125,61 @@ export default class GameOverScene extends Phaser.Scene {
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
     spacebar?.on('down', this.restartGame, this);
+  }
+
+  private displayPowerupCount() {
+    const powerupCountFontSize = Math.floor(this.sys.canvas.width / 40);
+    let x = this.scale.width / 4.75;
+    const initialY = this.scale.height - this.scale.height / 6;
+    let y = initialY;
+    let rowCount = 0;
+
+    const powerupCountDict = this.createPowerupCount();
+
+    for (const key in PowerupRecord) {
+      if (PowerupRecord.hasOwnProperty(key)) {
+        this.add.image(x, y, key);
+        this.add.text(
+          x + this.scale.width / 25,
+          y,
+          powerupCountDict[key]?.toString(),
+          {
+            fontSize: `${powerupCountFontSize}px`,
+            color: '#FFFFFF',
+            fontFamily: 'MedievalSharp',
+          }
+        );
+
+        rowCount++;
+        if (rowCount >= 2) {
+          x += this.scale.width / 6;
+          y = initialY;
+          rowCount = 0;
+        } else {
+          y += this.scale.height / 12;
+        }
+      }
+    }
+  }
+
+  private createPowerupCount() {
+    const powerupsBought = this.gameScene?.data.get(
+      'powerupsBought'
+    ) as string[];
+
+    for (const key in PowerupRecord) {
+      powerupsBought.push(key);
+    }
+
+    const powerupCount: { [PowerupType: string]: number } = {};
+
+    powerupsBought.forEach((powerup) => {
+      if (powerup in powerupCount) {
+        powerupCount[powerup]++;
+      } else {
+        powerupCount[powerup] = 0;
+      }
+    });
+    return powerupCount;
   }
 }
