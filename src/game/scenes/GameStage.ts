@@ -246,21 +246,21 @@ export default class GameStageScene extends Phaser.Scene {
     });
 
     this.enemyManager.enemyTimers.spawnJuggernautTimer = this.time.addEvent({
-      delay: 1000 / this.enemyManager.juggernautRate,
+      delay: 1000 / this.enemyManager.enemyRates.juggernautRate,
       callback: () => this.enemyManager.spawnEnemy('juggernaut'),
       callbackScope: this,
       loop: true,
     });
 
     this.enemyManager.enemyTimers.spawnBossTimer = this.time.addEvent({
-      delay: 1000 / this.enemyManager.bossRate,
+      delay: 1000 / this.enemyManager.enemyRates.bossRate,
       callback: () => this.enemyManager.spawnEnemy('boss'),
       callbackScope: this,
       loop: true,
     });
 
     this.enemyManager.enemyTimers.spawnMinionTimer = this.time.addEvent({
-      delay: 1000 / this.enemyManager.enemyRate,
+      delay: 1000 / this.enemyManager.enemyRates.minionRate,
       callback: () => this.enemyManager.spawnEnemy('minion'),
       callbackScope: this,
       loop: true,
@@ -328,11 +328,11 @@ export default class GameStageScene extends Phaser.Scene {
       if (
         Phaser.Input.Keyboard.JustDown(this.keyK as Phaser.Input.Keyboard.Key)
       ) {
-        this.enemyManager.enemyRate += 1;
+        this.enemyManager.enemyRates.minionRate += 1;
         this.enemyManager.spawnEnemy('minion');
-        this.enemyManager.juggernautRate += 1;
+        this.enemyManager.enemyRates.juggernautRate += 1;
         this.enemyManager.spawnEnemy('juggernaut');
-        this.enemyManager.bossRate += 1;
+        this.enemyManager.enemyRates.bossRate += 1;
         this.enemyManager.spawnEnemy('boss');
       }
       if (

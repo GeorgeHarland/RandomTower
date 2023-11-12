@@ -5,7 +5,7 @@ import {
 } from '../../constants';
 import GameStageScene from '../scenes/GameStage';
 import { getRandomEdgeOfScreen } from '../scenes/helpers/gameHelpers';
-import { EnemyTimerMap, EnemyTypes } from '../types';
+import { EnemyRatesMap, EnemyTimerMap, EnemyTypes } from '../types';
 import PlayerTower from './PlayerTower';
 
 export default class EnemyManager {
@@ -14,9 +14,11 @@ export default class EnemyManager {
   private enemyCounter: number = 0;
   public enemies: Phaser.Physics.Arcade.Group | undefined;
   public enemyTimers: EnemyTimerMap = {};
-  public enemyRate: number = EnemyConstants.minion.RATE;
-  public juggernautRate: number = EnemyConstants.juggernaut.RATE;
-  public bossRate: number = EnemyConstants.boss.RATE;
+  public enemyRates: EnemyRatesMap = {
+    minionRate: EnemyConstants.minion.RATE,
+    juggernautRate: EnemyConstants.juggernaut.RATE,
+    bossRate: EnemyConstants.boss.RATE
+  };
   public enemiesCurrentSpeed: number;
   public weaponEnemyHitMap = new Map();
 
@@ -53,9 +55,10 @@ export default class EnemyManager {
     const timerKey = `spawn${EnemyConstants[enemyRecord].TYPE.charAt(
       0
     ).toUpperCase()}Timer`;
+    const rateKey = `${EnemyConstants[enemyRecord].TYPE}Rate`
     this.enemyTimers[timerKey]?.destroy();
     this.enemyTimers[timerKey] = this.scene.time.addEvent({
-      delay: 1000 / EnemyConstants[enemyRecord].RATE,
+      delay: 1000 / this.enemyRates[rateKey],
       callback: () => this.spawnEnemy(enemyRecord),
       callbackScope: this,
       loop: true,
@@ -165,8 +168,8 @@ export default class EnemyManager {
   };
 
   public updateEnemyRates = () => {
-    this.enemyRate *= EnemyConstants.minion.RATE_MULTIPLIER;
-    this.juggernautRate *= EnemyConstants.juggernaut.RATE_MULTIPLIER;
-    this.bossRate *= EnemyConstants.boss.RATE_MULTIPLIER;
+    this.enemyRates.minionRate *= EnemyConstants.minion.RATE_MULTIPLIER;
+    this.enemyRates.juggernautRate *= EnemyConstants.juggernaut.RATE_MULTIPLIER;
+    this.enemyRates.bossRate *= EnemyConstants.boss.RATE_MULTIPLIER;
   };
 }

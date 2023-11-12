@@ -23,6 +23,10 @@ export type EnemyTimerMap = {
   [key: string]: Phaser.Time.TimerEvent | undefined;
 };
 
+export type EnemyRatesMap = {
+  [key: string]: number;
+};
+
 export type PowerupType =
   | 'Arrow Rate'
   | 'Circle Speed'
