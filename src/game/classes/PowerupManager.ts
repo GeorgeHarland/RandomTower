@@ -115,8 +115,8 @@ export default class PowerupManager {
         this.spawnIceSpike();
         break;
       case 'Poison Clouds':
-        if(this.poisonSpriteCooldownTimer) {
-          this.poisonCloudAmount++
+        if (this.poisonSpriteCooldownTimer) {
+          this.poisonCloudAmount++;
           this.poisonCloudScale += 0.1;
         }
         this.spawnPoisonClouds();
@@ -453,11 +453,7 @@ export default class PowerupManager {
     }
     const x: number = this.scene.scale.width / 2;
     const y: number = this.scene.scale.height / 2;
-    const timeSlowSprite = this.scene.physics.add.sprite(
-      x,
-      y,
-      ''
-    );
+    const timeSlowSprite = this.scene.physics.add.sprite(x, y, '');
     this.timeSlow = true;
     timeSlowSprite.scale = 0.5 * this.scene.gameSpeedScale;
     timeSlowSprite.setData('type', 'timeSlow');
@@ -488,10 +484,10 @@ export default class PowerupManager {
   };
 
   public spawnPoisonClouds = () => {
-    if(this.poisonSpriteCooldownTimer) this.poisonSpriteCooldownTimer.destroy;
+    if (this.poisonSpriteCooldownTimer) this.poisonSpriteCooldownTimer.destroy;
 
-    for(let i = 0; i < this.poisonCloudAmount; i++) {
-      const {x,y} = getRandomCoordinatesInBounds(this.scene);
+    for (let i = 0; i < this.poisonCloudAmount; i++) {
+      const { x, y } = getRandomCoordinatesInBounds(this.scene);
       const poisonSprite = this.scene.physics.add.sprite(x, y, 'poisonStart1');
       poisonSprite.scale = this.poisonCloudScale * this.scene.gameSpeedScale;
       poisonSprite.setData('type', 'poisonCloud');
@@ -510,21 +506,22 @@ export default class PowerupManager {
         poisonSprite.play('poisonCloudRepeatAnim');
       });
     }
-  }
+  };
 
   public destroyPoisonCloud = (poisonSprite: Phaser.Physics.Arcade.Sprite) => {
-    poisonSprite.destroy()
-    if(this.poisonSpriteCooldownTimer) this.poisonSpriteCooldownTimer.destroy();
+    poisonSprite.destroy();
+    if (this.poisonSpriteCooldownTimer)
+      this.poisonSpriteCooldownTimer.destroy();
     this.poisonSpriteCooldownTimer = this.scene.time.addEvent({
       delay: POISON_CLOUDS_BASE_COOLDOWN,
       callback: () => this.spawnPoisonClouds(),
       callbackScope: this,
       loop: false,
     });
-  }
+  };
 
   public spawnTornado = () => {
-    const {x,y} = getRandomCoordinatesInBounds(this.scene);
+    const { x, y } = getRandomCoordinatesInBounds(this.scene);
 
     const tornadoSprite = this.scene.physics.add.sprite(x, y, 'tornadoRepeat1');
     tornadoSprite.scale = 0.2 * this.scene.gameSpeedScale;

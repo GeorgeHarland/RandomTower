@@ -19,7 +19,7 @@ export const EnemyConstants: Record<EnemyTypes, EnemyConfig> = {
     SPRITE: 'minionSprite',
     SPRITE_SCALE: 0.05,
     DAMAGE: 5,
-    RATE: 0.4,
+    RATE: 0.3,
     RATE_MULTIPLIER: 1.012,
     SPEED_MULTIPLIER: 1,
     HITPOINTS: 1,
@@ -81,10 +81,10 @@ export const ARROW_BASE_SPEED = 200;
 export const ARROW_BASE_RATE = 0.2;
 export const ARROW_RATE_INCREASE = 0.025;
 
-export const CIRCLE_BASE_SPEED = 1.2;
+export const CIRCLE_BASE_SPEED = 1.1;
 export const CIRCLE_BASE_SIZE_DIVISION = 4000;
-export const CIRCLE_SPEED_INCREASE = 0.3;
-export const CIRCLE_SCALE_MULTIPLIER = 1.15;
+export const CIRCLE_SPEED_INCREASE = 0.4;
+export const CIRCLE_SCALE_MULTIPLIER = 1.05;
 
 export const DARKBLAST_BASE_ANGLE_CHANGE = 45;
 export const DARKBLAST_BASE_COOLDOWN = 1000;
@@ -107,7 +107,7 @@ export const ICESPIKE_LEVELUP_POOL_INCREASE = 0.05;
 
 export const POISON_CLOUDS_BASE_AMOUNT = 2;
 export const POISON_CLOUDS_BASE_DURATION = 2000;
-export const POISON_CLOUDS_BASE_SCALE = 0.35
+export const POISON_CLOUDS_BASE_SCALE = 0.35;
 export const POISON_CLOUDS_BASE_COOLDOWN = 5000;
 
 export const REGEN_BASE_COOLDOWN = 5000;
@@ -117,6 +117,6 @@ export const REGEN_LEVELUP_HEAL_INCREASE = 1;
 export const REGEN_LEVELUP_MAXHP_INCREASE = 5;
 
 export const TIMESLOW_BASE_COOLDOWN = 30000;
-export const TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER = 0.85;
+export const TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER = 0.9;
 
 export const TORNADO_BASE_SHAKE_AMOUNT = 4;

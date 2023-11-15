@@ -17,7 +17,7 @@ export default class EnemyManager {
   public enemyRates: EnemyRatesMap = {
     minionRate: EnemyConstants.minion.RATE,
     juggernautRate: EnemyConstants.juggernaut.RATE,
-    bossRate: EnemyConstants.boss.RATE
+    bossRate: EnemyConstants.boss.RATE,
   };
   public enemiesCurrentSpeed: number;
   public weaponEnemyHitMap = new Map();
@@ -35,6 +35,10 @@ export default class EnemyManager {
   };
 
   public spawnEnemy = (enemyRecord: EnemyTypes) => {
+    const timerKey = `spawn${EnemyConstants[enemyRecord].TYPE.charAt(
+      0
+    ).toUpperCase()}Timer`;
+    this.enemyTimers[timerKey]?.destroy();
     const { x, y } = getRandomEdgeOfScreen(this.scene);
     const enemy = this.scene.physics.add.sprite(
       x,
@@ -52,11 +56,7 @@ export default class EnemyManager {
 
     this.enemies?.add(enemy);
 
-    const timerKey = `spawn${EnemyConstants[enemyRecord].TYPE.charAt(
-      0
-    ).toUpperCase()}Timer`;
-    const rateKey = `${EnemyConstants[enemyRecord].TYPE}Rate`
-    this.enemyTimers[timerKey]?.destroy();
+    const rateKey = `${EnemyConstants[enemyRecord].TYPE}Rate`;
     this.enemyTimers[timerKey] = this.scene.time.addEvent({
       delay: 1000 / this.enemyRates[rateKey],
       callback: () => this.spawnEnemy(enemyRecord),

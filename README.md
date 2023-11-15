@@ -10,9 +10,9 @@ Enemies spawn in increasing numbers. Slower enemies that can take more hits spaw
 
 Enemies are destroyed by the player's circle weapon (arrow keys) or the tower's automatic arrow or powerup attacks.
 
-There are currently 8 powerups in the game. Press Q, W, E after getting some gold to try them out!
+There are currently 9 powerups in the game. Press Q, W, E after getting some gold to try them out!
 
-Powerups get more expensive each purchase, by 1 gold + the amount of minutes played.
+Powerups get more expensive each purchase, by 1 gold + 1 for every 30 seconds played.
 
 ## Gallery
 
