@@ -25,6 +25,7 @@ export const loadSprites = (scene: Phaser.Scene): void => {
   scene.load.image('Dark Blast', 'sprites/powerupIcons/foamy-disc.png');
   scene.load.image('Fire Blast', 'sprites/powerupIcons/flaming-sheet.png');
   scene.load.image('Ice Spike', 'sprites/powerupIcons/mountaintop.png');
+  scene.load.image('Poison Clouds', 'sprites/powerupIcons/foam.png');
   scene.load.image('Regen', 'sprites/powerupIcons/nested-hearts.png');
   scene.load.image('Time Slow', 'sprites/powerupIcons/embrassed-energy.png');
   scene.load.image('Tornado', 'sprites/powerupIcons/tornado.png');
@@ -49,6 +50,20 @@ export const loadSprites = (scene: Phaser.Scene): void => {
     scene.load.image(
       `fireBlastSprite${i}`,
       `sprites/spellEffects/fire/1/1_${i - 1}.png`
+    );
+  }
+
+  for (let i = 1; i <= 4; i++) {
+    scene.load.image(
+      `poisonStart${i}`,
+      `sprites/spellEffects/poison/p${i}.png`
+    );
+  }
+
+  for (let i = 1; i <= 5; i++) {
+    scene.load.image(
+      `poisonRepeat${i}`,
+      `sprites/spellEffects/poison/pR${i}.png`
     );
   }
 

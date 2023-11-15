@@ -28,6 +28,10 @@ import {
   TIMESLOW_BASE_COOLDOWN,
   TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER,
   ICESPIKE_LEVELUP_POOL_INCREASE,
+  POISON_SPRITE_BASE_DURATION,
+  POISON_SPRITE_BASE_AMOUNT,
+  POISON_SPRITE_BASE_SCALE,
+  POISON_SPRITE_BASE_COOLDOWN,
 } from '../../constants';
 import GameStageScene from '../scenes/GameStage';
 import CircleWeapon from './CircleWeapon';
@@ -44,6 +48,8 @@ export default class PowerupManager {
   public fireBlastDirection: number = 180;
   public icePoolSizeScale: number = ICEPOOL_BASE_SIZE_SCALE;
   public iceSpikeCooldown: number = ICESPIKE_BASE_COOLDOWN;
+  public poisonCloudAmount: number = POISON_SPRITE_BASE_AMOUNT;
+  public poisonCloudScale: number = POISON_SPRITE_BASE_SCALE;
   public regenAmount: number = REGEN_BASE_HEAL_AMOUNT;
   public regenCooldown: number = REGEN_BASE_COOLDOWN;
   public timeSlow: boolean = false;
@@ -55,6 +61,8 @@ export default class PowerupManager {
   public fireBlastTimer: Phaser.Time.TimerEvent | undefined;
   public icePoolTimer: Phaser.Time.TimerEvent | undefined;
   public iceSpikeTimer: Phaser.Time.TimerEvent | undefined;
+  public poisonSpriteDurationTimer: Phaser.Time.TimerEvent | undefined;
+  public poisonSpriteCooldownTimer: Phaser.Time.TimerEvent | undefined;
   public regenTimer: Phaser.Time.TimerEvent | undefined;
   public timeSlowTimer: Phaser.Time.TimerEvent | undefined;
 
@@ -104,6 +112,13 @@ export default class PowerupManager {
           this.icePoolSizeScale += ICESPIKE_LEVELUP_POOL_INCREASE;
         }
         this.spawnIceSpike();
+        break;
+      case 'Poison Clouds':
+        if(this.poisonSpriteCooldownTimer) {
+          this.poisonCloudAmount++
+          this.poisonCloudScale += 0.1;
+        }
+        this.spawnPoisonClouds();
         break;
       case 'Regen':
         this.scene.playerTower.maxHp += REGEN_LEVELUP_MAXHP_INCREASE;
@@ -440,7 +455,7 @@ export default class PowerupManager {
     const timeSlowSprite = this.scene.physics.add.sprite(
       x,
       y,
-      'timeSlowTexture'
+      ''
     );
     this.timeSlow = true;
     timeSlowSprite.scale = 0.5 * this.scene.gameSpeedScale;
@@ -470,6 +485,53 @@ export default class PowerupManager {
       });
     });
   };
+
+  public spawnPoisonClouds = () => {
+    if(this.poisonSpriteCooldownTimer) this.poisonSpriteCooldownTimer.destroy;
+    for(let i = 0; i < this.poisonCloudAmount; i++) {
+    const marginWidth = this.scene.scale.width / 20;
+    const marginHeight = this.scene.scale.height / 20;
+    const x: number = Phaser.Math.Clamp(
+      marginWidth + Math.random() * (this.scene.scale.width - 2 * marginWidth),
+      marginWidth,
+      this.scene.scale.width - marginWidth
+    );
+    const y: number = Phaser.Math.Clamp(
+      marginHeight +
+        Math.random() * (this.scene.scale.height - 2 * marginHeight),
+      marginHeight,
+      this.scene.scale.height - marginHeight
+    );
+    const poisonSprite = this.scene.physics.add.sprite(x, y, 'poisonStart1');
+    poisonSprite.scale = this.poisonCloudScale * this.scene.gameSpeedScale;
+    poisonSprite.setData('type', 'poisonCloud');
+    poisonSprite.setData('id', `weapon-${this.weaponCounter++}`);
+    this.scene.PermanentWeapons?.add(poisonSprite);
+    poisonSprite.play('poisonCloudStartAnim');
+    poisonSprite.setImmovable(true);
+    poisonSprite.setAlpha(0.6);
+    this.poisonSpriteDurationTimer = this.scene.time.addEvent({
+      delay: POISON_SPRITE_BASE_DURATION,
+      callback: () => this.destroyPoisonCloud(poisonSprite),
+      callbackScope: this,
+      loop: false,
+    });
+    poisonSprite.on('animationcomplete', () => {
+      poisonSprite.play('poisonCloudRepeatAnim');
+    });
+    }
+  }
+
+  public destroyPoisonCloud = (poisonSprite: Phaser.Physics.Arcade.Sprite) => {
+    poisonSprite.destroy()
+    if(this.poisonSpriteCooldownTimer) this.poisonSpriteCooldownTimer.destroy();
+    this.poisonSpriteCooldownTimer = this.scene.time.addEvent({
+      delay: POISON_SPRITE_BASE_COOLDOWN,
+      callback: () => this.spawnPoisonClouds(),
+      callbackScope: this,
+      loop: false,
+    });
+  }
 
   public spawnTornado = () => {
     const marginWidth = this.scene.scale.width / 20;

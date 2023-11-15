@@ -27,6 +27,22 @@ export const setupAnimations = (scene: GameStageScene) => {
     repeat: -1,
   });
   scene.anims.create({
+    key: 'poisonCloudStartAnim',
+    frames: Array.from({ length: 4 }, (_, i) => ({
+      key: `poisonStart${i}`,
+    })),
+    frameRate: 8,
+    repeat: 0,
+  });
+  scene.anims.create({
+    key: 'poisonCloudRepeatAnim',
+    frames: Array.from({ length: 5 }, (_, i) => ({
+      key: `poisonRepeat${i}`,
+    })),
+    frameRate: 8,
+    repeat: -1,
+  });
+  scene.anims.create({
     key: 'regenAnimation',
     frames: scene.anims.generateFrameNumbers('healEffectSheet', {
       start: 0,

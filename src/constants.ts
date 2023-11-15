@@ -63,6 +63,7 @@ export const PowerupRecord: Record<PowerupType, ItemGradeType> = {
   'Dark Blast': 'C',
   'Fire Blast': 'C',
   'Ice Spike': 'A',
+  'Poison Clouds': 'C',
   Regen: 'D',
   'Time Slow': 'S',
   Tornado: 'D',
@@ -103,6 +104,11 @@ export const ICESPIKE_BASE_SIZE_SCALE = 1.5;
 export const ICESPIKE_BASE_SPEED = 100;
 export const ICESPIKE_LEVELUP_COOLDOWN_MULTIPLIER = 0.9;
 export const ICESPIKE_LEVELUP_POOL_INCREASE = 0.05;
+
+export const POISON_SPRITE_BASE_AMOUNT = 2;
+export const POISON_SPRITE_BASE_DURATION = 2000;
+export const POISON_SPRITE_BASE_SCALE = 0.35
+export const POISON_SPRITE_BASE_COOLDOWN = 5000;
 
 export const REGEN_BASE_COOLDOWN = 5000;
 export const REGEN_BASE_HEAL_AMOUNT = 5;

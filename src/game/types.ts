@@ -33,6 +33,7 @@ export type PowerupType =
   | 'Dark Blast'
   | 'Fire Blast'
   | 'Ice Spike'
+  | 'Poison Clouds'
   | 'Regen'
   | 'Time Slow'
   | 'Tornado';
