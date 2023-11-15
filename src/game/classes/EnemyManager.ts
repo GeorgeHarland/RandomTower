@@ -35,9 +35,7 @@ export default class EnemyManager {
   };
 
   public spawnEnemy = (enemyRecord: EnemyTypes) => {
-    const timerKey = `spawn${EnemyConstants[enemyRecord].TYPE.charAt(
-      0
-    ).toUpperCase()}Timer`;
+    const timerKey = `spawn${EnemyConstants[enemyRecord].TYPE}Timer`;
     this.enemyTimers[timerKey]?.destroy();
     const { x, y } = getRandomEdgeOfScreen(this.scene);
     const enemy = this.scene.physics.add.sprite(

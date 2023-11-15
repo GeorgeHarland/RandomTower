@@ -202,6 +202,7 @@ export default class PowerupManager {
 
       const arrow = this.scene.physics.add.sprite(x, y, 'arrowTexture');
       arrow.setData('id', `weapon-${this.weaponCounter++}`);
+      arrow.scale = Math.max(1 * this.scene.gameSpeedScale, 0.6);
 
       this.scene.weapons?.add(arrow);
 
@@ -458,21 +459,21 @@ export default class PowerupManager {
     timeSlowSprite.scale = 0.5 * this.scene.gameSpeedScale;
     timeSlowSprite.setData('type', 'timeSlow');
     timeSlowSprite.play('timeSlowAnimation');
-    if (this.scene.enemyManager.enemyTimers.spawnMinionTimer)
-      this.scene.enemyManager.enemyTimers.spawnMinionTimer.paused = true;
-    if (this.scene.enemyManager.enemyTimers.spawnJuggernautTimer)
-      this.scene.enemyManager.enemyTimers.spawnJuggernautTimer.paused = true;
-    if (this.scene.enemyManager.enemyTimers.spawnBossTimer)
-      this.scene.enemyManager.enemyTimers.spawnBossTimer.paused = true;
+    if (this.scene.enemyManager.enemyTimers.spawnminionTimer)
+      this.scene.enemyManager.enemyTimers.spawnminionTimer.paused = true;
+    if (this.scene.enemyManager.enemyTimers.spawnjuggernautTimer)
+      this.scene.enemyManager.enemyTimers.spawnjuggernautTimer.paused = true;
+    if (this.scene.enemyManager.enemyTimers.spawnbossTimer)
+      this.scene.enemyManager.enemyTimers.spawnbossTimer.paused = true;
     timeSlowSprite.setImmovable(true);
     timeSlowSprite.on('animationcomplete', () => {
       timeSlowSprite.destroy();
-      if (this.scene.enemyManager.enemyTimers.spawnMinionTimer)
-        this.scene.enemyManager.enemyTimers.spawnMinionTimer.paused = false;
-      if (this.scene.enemyManager.enemyTimers.spawnJuggernautTimer)
-        this.scene.enemyManager.enemyTimers.spawnJuggernautTimer.paused = false;
-      if (this.scene.enemyManager.enemyTimers.spawnBossTimer)
-        this.scene.enemyManager.enemyTimers.spawnBossTimer.paused = false;
+      if (this.scene.enemyManager.enemyTimers.spawnminionTimer)
+        this.scene.enemyManager.enemyTimers.spawnminionTimer.paused = false;
+      if (this.scene.enemyManager.enemyTimers.spawnjuggernautTimer)
+        this.scene.enemyManager.enemyTimers.spawnjuggernautTimer.paused = false;
+      if (this.scene.enemyManager.enemyTimers.spawnbossTimer)
+        this.scene.enemyManager.enemyTimers.spawnbossTimer.paused = false;
       this.timeSlow = false;
       this.timeSlowTimer = this.scene.time.addEvent({
         delay: this.timeSlowCooldown,

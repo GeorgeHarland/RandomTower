@@ -48,7 +48,6 @@ export default class HowToPlayScene extends Phaser.Scene {
           fontSize: `${textFontSize}px`,
           color: '#FFFFFF',
           fontFamily: 'MedievalSharp',
-          lineSpacing: -6,
         }
       )
       .setOrigin(0.5);

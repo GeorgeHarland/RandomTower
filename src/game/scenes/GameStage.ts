@@ -245,21 +245,21 @@ export default class GameStageScene extends Phaser.Scene {
       loop: true,
     });
 
-    this.enemyManager.enemyTimers.spawnJuggernautTimer = this.time.addEvent({
+    this.enemyManager.enemyTimers.spawnjuggernautTimer = this.time.addEvent({
       delay: 1000 / this.enemyManager.enemyRates.juggernautRate,
       callback: () => this.enemyManager.spawnEnemy('juggernaut'),
       callbackScope: this,
       loop: true,
     });
 
-    this.enemyManager.enemyTimers.spawnBossTimer = this.time.addEvent({
+    this.enemyManager.enemyTimers.spawnbossTimer = this.time.addEvent({
       delay: 1000 / this.enemyManager.enemyRates.bossRate,
       callback: () => this.enemyManager.spawnEnemy('boss'),
       callbackScope: this,
       loop: true,
     });
 
-    this.enemyManager.enemyTimers.spawnMinionTimer = this.time.addEvent({
+    this.enemyManager.enemyTimers.spawnminionTimer = this.time.addEvent({
       delay: 1000 / this.enemyManager.enemyRates.minionRate,
       callback: () => this.enemyManager.spawnEnemy('minion'),
       callbackScope: this,

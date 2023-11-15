@@ -13,7 +13,7 @@ export const setupAnimations = (scene: GameStageScene) => {
   scene.anims.create({
     key: 'darkBlastAnimation',
     frames: Array.from({ length: 15 }, (_, i) => ({
-      key: `darkBlastSprite${i}`,
+      key: `darkBlastSprite${i+1}`,
     })),
     frameRate: 14,
     repeat: -1,
@@ -21,7 +21,7 @@ export const setupAnimations = (scene: GameStageScene) => {
   scene.anims.create({
     key: 'fireBlastAnimation',
     frames: Array.from({ length: 15 }, (_, i) => ({
-      key: `fireBlastSprite${i}`,
+      key: `fireBlastSprite${i+1}`,
     })),
     frameRate: 14,
     repeat: -1,
@@ -29,7 +29,7 @@ export const setupAnimations = (scene: GameStageScene) => {
   scene.anims.create({
     key: 'poisonCloudStartAnim',
     frames: Array.from({ length: 4 }, (_, i) => ({
-      key: `poisonStart${i}`,
+      key: `poisonStart${i+1}`,
     })),
     frameRate: 8,
     repeat: 0,
@@ -37,7 +37,7 @@ export const setupAnimations = (scene: GameStageScene) => {
   scene.anims.create({
     key: 'poisonCloudRepeatAnim',
     frames: Array.from({ length: 5 }, (_, i) => ({
-      key: `poisonRepeat${i}`,
+      key: `poisonRepeat${i+1}`,
     })),
     frameRate: 8,
     repeat: -1,
@@ -63,7 +63,7 @@ export const setupAnimations = (scene: GameStageScene) => {
   scene.anims.create({
     key: 'tornadoAnimation',
     frames: Array.from({ length: 9 }, (_, i) => ({
-      key: `tornadoRepeat${i}`,
+      key: `tornadoRepeat${i+1}`,
     })),
     frameRate: 28,
     repeat: -1,
@@ -71,7 +71,7 @@ export const setupAnimations = (scene: GameStageScene) => {
   scene.anims.create({
     key: 'iceSpikeAnimation',
     frames: Array.from({ length: 9 }, (_, i) => ({
-      key: `iceSpikeImage${i}`,
+      key: `iceSpikeImage${i+1}`,
     })),
     frameRate: 28,
     repeat: -1,
@@ -79,7 +79,7 @@ export const setupAnimations = (scene: GameStageScene) => {
   scene.anims.create({
     key: 'iceExplosionAnimation',
     frames: Array.from({ length: 9 }, (_, i) => ({
-      key: `iceExplosionImage${i}`,
+      key: `iceExplosionImage${i+1}`,
     })),
     frameRate: 18,
     repeat: 0,

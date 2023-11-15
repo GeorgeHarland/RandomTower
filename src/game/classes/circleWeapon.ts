@@ -16,7 +16,7 @@ export default class CircleWeapon extends Phaser.Physics.Arcade.Sprite {
   private targetPosition: Phaser.Math.Vector2 | null = null;
 
   public constructor({ scene, x, y, circleNumber }: Props) {
-    super(scene, x, y, 'circleSprite', 'circleAnimation');
+    super(scene, x, y, 'circleSprite', '');
     scene.physics.world.enable(this);
     scene.add.existing(this);
     this.gameScene = scene as GameStageScene;
@@ -24,6 +24,7 @@ export default class CircleWeapon extends Phaser.Physics.Arcade.Sprite {
     this.circleNumber = circleNumber;
     this.setScale(this.scene.scale.width / CIRCLE_BASE_SIZE_DIVISION);
     this.setDepth(0.9 - 0.1 * circleNumber);
+    this.setData('id', `weapon-circle`);
 
     this.setInteractive();
     this.scene.input.on('pointerdown', this.onPointerDown, this);
