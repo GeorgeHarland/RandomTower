@@ -129,7 +129,7 @@ export default class GameOverScene extends Phaser.Scene {
 
   private displayPowerupCount() {
     const powerupCountFontSize = Math.floor(this.sys.canvas.width / 40);
-    let x = this.scale.width / 4.75;
+    let x = this.scale.width / 6.5;
     const initialY = this.scale.height - this.scale.height / 6;
     let y = initialY;
     let rowCount = 0;
@@ -138,10 +138,11 @@ export default class GameOverScene extends Phaser.Scene {
 
     for (const key in PowerupRecord) {
       if (PowerupRecord.hasOwnProperty(key)) {
-        this.add.image(x, y, key);
+        const icon = this.add.image(x, y, key);
+        icon.setScale(this.scale.width / 800);
         this.add.text(
-          x + this.scale.width / 25,
-          y,
+          x + this.scale.width / 20,
+          y - (this.scale.width / 100),
           powerupCountDict[key]?.toString(),
           {
             fontSize: `${powerupCountFontSize}px`,

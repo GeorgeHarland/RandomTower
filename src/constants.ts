@@ -18,7 +18,7 @@ export const EnemyConstants: Record<EnemyTypes, EnemyConfig> = {
     TEXTURE: 'enemyTexture', // uses texture if sprite null
     SPRITE: 'minionSprite',
     SPRITE_SCALE: 0.05,
-    DAMAGE: 5,
+    DAMAGE: 100,
     RATE: 0.3,
     RATE_MULTIPLIER: 1.012,
     SPEED_MULTIPLIER: 1,
