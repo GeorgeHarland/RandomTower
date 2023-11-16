@@ -142,7 +142,7 @@ export default class GameOverScene extends Phaser.Scene {
         icon.setScale(this.scale.width / 800);
         this.add.text(
           x + this.scale.width / 20,
-          y - (this.scale.width / 100),
+          y - this.scale.width / 100,
           powerupCountDict[key]?.toString(),
           {
             fontSize: `${powerupCountFontSize}px`,

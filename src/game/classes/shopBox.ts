@@ -29,11 +29,13 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
 
     this.gameScene = scene as GameStageScene;
     this.keybind = keybind;
-    this.dynamicFontSize = `${(
-      scene.scale.width > MOBILE_BREAKPOINT ? scene.scale.width / 50 : scene.scale.width / 35
+    this.dynamicFontSize = `${(scene.scale.width > MOBILE_BREAKPOINT
+      ? scene.scale.width / 50
+      : scene.scale.width / 35
     ).toString()}px MedievalSharp`;
-    this.titleFontSize = `${(
-      scene.scale.width > MOBILE_BREAKPOINT ? scene.scale.width / 75 : scene.scale.width / 45
+    this.titleFontSize = `${(scene.scale.width > MOBILE_BREAKPOINT
+      ? scene.scale.width / 75
+      : scene.scale.width / 45
     ).toString()}px MedievalSharp`;
 
     scene.add.existing(this);
@@ -44,8 +46,12 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
     const mobileKeybindTextY = y + scene.scale.height / 38;
 
     this.keybindText = scene.add.text(
-      this.scene.scale.width > MOBILE_BREAKPOINT ? keybindTextX : mobileKeybindTextX,
-      this.scene.scale.width > MOBILE_BREAKPOINT ? keybindTextY : mobileKeybindTextY,
+      this.scene.scale.width > MOBILE_BREAKPOINT
+        ? keybindTextX
+        : mobileKeybindTextX,
+      this.scene.scale.width > MOBILE_BREAKPOINT
+        ? keybindTextY
+        : mobileKeybindTextY,
       keybind,
       {
         font: this.dynamicFontSize,
@@ -72,8 +78,12 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
     const mobilePriceTextX = this.x + this.gameScene.scale.width / 20;
     const mobilePriceTextY = this.y + this.gameScene.scale.height / 38;
     this.priceText = this.gameScene.add.text(
-      this.scene.scale.width > MOBILE_BREAKPOINT ? priceTextX : mobilePriceTextX,
-      this.scene.scale.width > MOBILE_BREAKPOINT ? priceTextY : mobilePriceTextY,
+      this.scene.scale.width > MOBILE_BREAKPOINT
+        ? priceTextX
+        : mobilePriceTextX,
+      this.scene.scale.width > MOBILE_BREAKPOINT
+        ? priceTextY
+        : mobilePriceTextY,
       item.cost.toString(),
       { font: this.dynamicFontSize, color: '#000000' }
     );
@@ -84,8 +94,12 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
     const mobilePowerupTextX = this.x - this.gameScene.scale.width / 20;
     const mobilePowerupTextY = this.y - this.gameScene.scale.height / 14;
     this.powerupText = this.gameScene.add.text(
-      this.scene.scale.width > MOBILE_BREAKPOINT ? powerupTextX : mobilePowerupTextX,
-      this.scene.scale.width > MOBILE_BREAKPOINT ? powerupTextY : mobilePowerupTextY,
+      this.scene.scale.width > MOBILE_BREAKPOINT
+        ? powerupTextX
+        : mobilePowerupTextX,
+      this.scene.scale.width > MOBILE_BREAKPOINT
+        ? powerupTextY
+        : mobilePowerupTextY,
       item.powerup,
       { font: this.titleFontSize, color: '#FFFFFF' }
     );
