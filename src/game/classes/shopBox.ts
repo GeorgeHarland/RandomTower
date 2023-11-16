@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import Item from './Item';
 import { KeybindType, PowerupType } from '../types';
 import { getArrayRandomElement } from '../../utils';
-import { PowerupRecord, gradeCost } from '../../constants';
+import { MOBILE_BREAKPOINT, PowerupRecord, gradeCost } from '../../constants';
 import GameStageScene from '../scenes/GameStage';
 
 interface ShopBoxConfig {
@@ -30,16 +30,22 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
     this.gameScene = scene as GameStageScene;
     this.keybind = keybind;
     this.dynamicFontSize = `${(
-      scene.scale.width / 50
+      scene.scale.width > MOBILE_BREAKPOINT ? scene.scale.width / 50 : scene.scale.width / 35
     ).toString()}px MedievalSharp`;
     this.titleFontSize = `${(
-      scene.scale.width / 75
+      scene.scale.width > MOBILE_BREAKPOINT ? scene.scale.width / 75 : scene.scale.width / 45
     ).toString()}px MedievalSharp`;
 
     scene.add.existing(this);
+
+    const keybindTextX = x - scene.scale.width / 25;
+    const keybindTextY = y + scene.scale.height / 35;
+    const mobileKeybindTextX = x - scene.scale.width / 20;
+    const mobileKeybindTextY = y + scene.scale.height / 38;
+
     this.keybindText = scene.add.text(
-      x - scene.scale.width / 25,
-      y + scene.scale.height / 35,
+      this.scene.scale.width > MOBILE_BREAKPOINT ? keybindTextX : mobileKeybindTextX,
+      this.scene.scale.width > MOBILE_BREAKPOINT ? keybindTextY : mobileKeybindTextY,
       keybind,
       {
         font: this.dynamicFontSize,
@@ -60,16 +66,26 @@ export default class ShopBox extends Phaser.GameObjects.Sprite {
     this.priceText?.destroy();
     this.powerupText?.destroy();
     this.itemImage?.destroy();
+
+    const priceTextX = this.x + this.gameScene.scale.width / 25;
+    const priceTextY = this.y + this.gameScene.scale.height / 35;
+    const mobilePriceTextX = this.x + this.gameScene.scale.width / 20;
+    const mobilePriceTextY = this.y + this.gameScene.scale.height / 38;
     this.priceText = this.gameScene.add.text(
-      this.x + this.gameScene.scale.width / 25,
-      this.y + this.gameScene.scale.height / 35,
+      this.scene.scale.width > MOBILE_BREAKPOINT ? priceTextX : mobilePriceTextX,
+      this.scene.scale.width > MOBILE_BREAKPOINT ? priceTextY : mobilePriceTextY,
       item.cost.toString(),
       { font: this.dynamicFontSize, color: '#000000' }
     );
     this.priceText.setOrigin(1, 0);
+
+    const powerupTextX = this.x - this.gameScene.scale.width / 25;
+    const powerupTextY = this.y - this.gameScene.scale.height / 18;
+    const mobilePowerupTextX = this.x - this.gameScene.scale.width / 20;
+    const mobilePowerupTextY = this.y - this.gameScene.scale.height / 14;
     this.powerupText = this.gameScene.add.text(
-      this.x - this.gameScene.scale.width / 25,
-      this.y - this.gameScene.scale.height / 18,
+      this.scene.scale.width > MOBILE_BREAKPOINT ? powerupTextX : mobilePowerupTextX,
+      this.scene.scale.width > MOBILE_BREAKPOINT ? powerupTextY : mobilePowerupTextY,
       item.powerup,
       { font: this.titleFontSize, color: '#FFFFFF' }
     );

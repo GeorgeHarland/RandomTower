@@ -94,9 +94,8 @@ export const generateTextures = (scene: GameStageScene) => {
   arrowGraphic.generateTexture('arrowTexture', 12, 3);
 
   const shopBoxTexture = objectCreator.graphics();
-  const shopBoxSize = scene.scale.width / 10;
-  const bevelSize =
-    scene.scale.width > MOBILE_BREAKPOINT ? shopBoxSize / 18 : shopBoxSize / 22;
+  const shopBoxSize = scene.scale.width > MOBILE_BREAKPOINT ? scene.scale.width / 10 : scene.scale.width / 8;
+  const bevelSize = shopBoxSize / 18;
   shopBoxTexture.fillStyle(0xa52a2a, 1);
   shopBoxTexture.fillRect(0, 0, shopBoxSize, shopBoxSize);
 

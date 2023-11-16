@@ -12,6 +12,7 @@ import {
   EnemyConstants,
   TORNADO_BASE_SHAKE_AMOUNT,
   ICEPOOL_SLOW,
+  MOBILE_BREAKPOINT,
 } from '../../constants';
 import { setupAnimations, setupKeybindings } from './helpers/animationHelpers';
 
@@ -135,10 +136,14 @@ export default class GameStageScene extends Phaser.Scene {
       if (i === 0) keybind = 'Q';
       if (i === 1) keybind = 'W';
       if (i === 2) keybind = 'E';
+      const shopboxX = this.scale.width / 10 + (this.scale.width / 8) * i;
+      const shopboxY = this.scale.height - this.scale.height / 8;
+      const mobileShopboxX = this.scale.width / 12;
+      const mobileShopboxY = this.scale.height / 1.15 - (this.scale.height / 5) * i+1;
       const shopBox = new ShopBox({
         scene: this,
-        x: this.scale.width / 10 + (this.scale.width / 8) * i,
-        y: this.scale.height - this.scale.height / 8,
+        x: this.scale.width > MOBILE_BREAKPOINT ? shopboxX : mobileShopboxX,
+        y: this.scale.width > MOBILE_BREAKPOINT ? shopboxY : mobileShopboxY,
         key: 'shopBoxTexture',
         keybind: keybind,
       });
