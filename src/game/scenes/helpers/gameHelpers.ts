@@ -40,6 +40,16 @@ export const secondsToMMSS = (seconds: number): string => {
   return Duration.fromObject({ seconds }).toFormat('mm:ss');
 };
 
+export const setupKeybindings = (scene: GameStageScene) => {
+  if (scene.input.keyboard) {
+    scene.keyQ = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
+    scene.keyW = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+    scene.keyE = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+    scene.keyU = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.U);
+    scene.keyK = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
+  }
+};
+
 export const goFullScreen = () => {
   let element: any = document.getElementById('game-container');
 

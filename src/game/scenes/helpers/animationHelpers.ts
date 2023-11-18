@@ -85,13 +85,3 @@ export const setupAnimations = (scene: GameStageScene) => {
     repeat: 0,
   });
 };
-
-export const setupKeybindings = (scene: GameStageScene) => {
-  if (scene.input.keyboard) {
-    scene.keyQ = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
-    scene.keyW = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-    scene.keyE = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
-    scene.keyU = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.U);
-    scene.keyK = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
-  }
-};

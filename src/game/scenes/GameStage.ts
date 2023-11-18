@@ -4,7 +4,7 @@ import EnemyManager from '../classes/EnemyManager';
 import PlayerTower from '../classes/PlayerTower';
 import PowerupManager from '../classes/PowerupManager';
 import ShopBox from '../classes/ShopBox';
-import { secondsToMMSS } from './helpers/gameHelpers';
+import { secondsToMMSS, setupKeybindings } from './helpers/gameHelpers';
 import { extractTowerFrames } from './helpers/spriteHelpers';
 import { generateTextures } from './helpers/textureHelpers';
 import { KeybindType, PowerupType } from '../types';
@@ -14,7 +14,7 @@ import {
   ICEPOOL_SLOW,
   MOBILE_BREAKPOINT,
 } from '../../constants';
-import { setupAnimations, setupKeybindings } from './helpers/animationHelpers';
+import { setupAnimations } from './helpers/animationHelpers';
 
 export default class GameStageScene extends Phaser.Scene {
   public gameSpeedScale: number = 1;

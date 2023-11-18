@@ -4,10 +4,6 @@ import {
   ARROW_RATE_INCREASE,
   CIRCLE_SCALE_MULTIPLIER,
   CIRCLE_SPEED_INCREASE,
-  DARKBLAST_BASE_ANGLE_CHANGE,
-  DARKBLAST_BASE_COOLDOWN,
-  DARKBLAST_LEVELUP_ANGLE_MULTIPLIER,
-  DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER,
   ENEMY_BASE_SPEED,
   FIREBLAST_BASE_ANGLE_CHANGE,
   FIREBLAST_BASE_COOLDOWN,
@@ -38,12 +34,11 @@ import { getRandomCoordinatesInBounds } from '../scenes/helpers/gameHelpers';
 import CircleWeapon from './CircleWeapon';
 import Item from './Item';
 import ShopBox from './ShopBox';
+import DarkBlastManager from './powerups/DarkBlastManager';
 
 export default class PowerupManager {
+  public darkBlastManager: DarkBlastManager;
   public arrowRate: number = ARROW_BASE_RATE;
-  public darkBlastAngleChange: number = DARKBLAST_BASE_ANGLE_CHANGE;
-  public darkBlastCooldown: number = DARKBLAST_BASE_COOLDOWN;
-  public darkBlastDirection: number = 0;
   public fireBlastAngleChange: number = FIREBLAST_BASE_ANGLE_CHANGE;
   public fireBlastCooldown: number = FIREBLAST_BASE_COOLDOWN;
   public fireBlastDirection: number = 180;
@@ -58,7 +53,6 @@ export default class PowerupManager {
   public weaponCounter: number = 0;
 
   public spawnArrowTimer: Phaser.Time.TimerEvent | undefined;
-  public darkBlastTimer: Phaser.Time.TimerEvent | undefined;
   public fireBlastTimer: Phaser.Time.TimerEvent | undefined;
   public icePoolTimer: Phaser.Time.TimerEvent | undefined;
   public iceSpikeTimer: Phaser.Time.TimerEvent | undefined;
@@ -67,7 +61,9 @@ export default class PowerupManager {
   public regenTimer: Phaser.Time.TimerEvent | undefined;
   public timeSlowTimer: Phaser.Time.TimerEvent | undefined;
 
-  public constructor(private scene: GameStageScene) {}
+  public constructor(private scene: GameStageScene) {
+    this.darkBlastManager = new DarkBlastManager(this.scene);
+  }
 
   public addPowerup = (item: Item) => {
     switch (item.powerup) {
@@ -89,13 +85,7 @@ export default class PowerupManager {
         });
         break;
       case 'Dark Blast':
-        if (this.darkBlastTimer) {
-          this.darkBlastCooldown =
-            this.darkBlastCooldown * DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER;
-          this.darkBlastAngleChange =
-            this.darkBlastAngleChange * DARKBLAST_LEVELUP_ANGLE_MULTIPLIER;
-        }
-        this.spawnDarkBlast();
+        this.darkBlastManager.levelUp();
         break;
       case 'Fire Blast':
         if (this.fireBlastTimer) {
@@ -237,43 +227,6 @@ export default class PowerupManager {
       callback: this.spawnArrow,
       callbackScope: this,
       loop: true,
-    });
-  };
-
-  public spawnDarkBlast = () => {
-    if (this.darkBlastTimer) {
-      this.darkBlastTimer.destroy();
-    }
-    const x: number = this.scene.scale.width / 2;
-    const y: number = this.scene.scale.height / 2;
-    const darkBlastSprite = this.scene.physics.add.sprite(
-      x,
-      y,
-      'darkBlastSprite1'
-    );
-    darkBlastSprite.scale = 2 * this.scene.gameSpeedScale;
-    darkBlastSprite.setData('type', 'darkBlast');
-    darkBlastSprite.setData('id', `weapon-${this.weaponCounter++}`);
-    darkBlastSprite.play('darkBlastAnimation');
-
-    this.scene.time.delayedCall(1, () => {
-      this.scene.physics.velocityFromAngle(
-        this.darkBlastDirection,
-        200 * this.scene.gameSpeedScale,
-        darkBlastSprite.body.velocity
-      );
-      darkBlastSprite.angle = this.darkBlastDirection;
-      if (this.darkBlastDirection + this.darkBlastAngleChange < 360)
-        this.darkBlastDirection += this.darkBlastAngleChange;
-      else this.darkBlastDirection = 0;
-    });
-
-    this.scene.weapons?.add(darkBlastSprite);
-    this.darkBlastTimer = this.scene.time.addEvent({
-      delay: this.darkBlastCooldown,
-      callback: this.spawnDarkBlast,
-      callbackScope: this,
-      loop: false,
     });
   };
 
