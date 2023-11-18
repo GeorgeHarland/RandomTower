@@ -139,8 +139,7 @@ export default class GameStageScene extends Phaser.Scene {
       const shopboxX = this.scale.width / 10 + (this.scale.width / 8) * i;
       const shopboxY = this.scale.height - this.scale.height / 8;
       const mobileShopboxX = this.scale.width / 12;
-      const mobileShopboxY =
-        this.scale.height / 1.15 - (this.scale.height / 5) * i + 1;
+      const mobileShopboxY = (this.scale.height / 5) * i * 1.3 + (this.scale.height / 2.9);
       const shopBox = new ShopBox({
         scene: this,
         x: this.scale.width > MOBILE_BREAKPOINT ? shopboxX : mobileShopboxX,
