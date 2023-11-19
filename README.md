@@ -18,7 +18,7 @@ Powerups get more expensive each purchase, by 1 gold + 1 for every 30 seconds pl
 
 ![image](https://github.com/GeorgeHarland/RandomTower/assets/37070520/f57536ee-b45f-4349-bc3d-488d7c872ced)
 
-![image](https://github.com/GeorgeHarland/RandomTower/assets/37070520/eb5cf1c6-f486-4b3f-a876-8d24494c6c8e)
+![image](https://github.com/GeorgeHarland/RandomTower/assets/37070520/ad689bc9-4fc7-4a59-a86f-7533d055f0b7)
 
 ![image](https://github.com/GeorgeHarland/RandomTower/assets/37070520/cfd211ea-cca7-4c32-99d0-5975e7a24498)
 
