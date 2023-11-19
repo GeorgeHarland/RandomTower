@@ -1,5 +1,10 @@
-import { DARKBLAST_BASE_ANGLE_CHANGE, DARKBLAST_BASE_COOLDOWN, DARKBLAST_LEVELUP_ANGLE_MULTIPLIER, DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER } from "../../../constants";
-import GameStageScene from "../../scenes/GameStage";
+import {
+  DARKBLAST_BASE_ANGLE_CHANGE,
+  DARKBLAST_BASE_COOLDOWN,
+  DARKBLAST_LEVELUP_ANGLE_MULTIPLIER,
+  DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER,
+} from '../../../constants';
+import GameStageScene from '../../scenes/GameStage';
 
 export default class DarkBlastManager {
   public darkBlastAngleChange: number = DARKBLAST_BASE_ANGLE_CHANGE;
@@ -32,7 +37,10 @@ export default class DarkBlastManager {
     );
     darkBlastSprite.scale = 2 * this.scene.gameSpeedScale;
     darkBlastSprite.setData('type', 'darkBlast');
-    darkBlastSprite.setData('id', `weapon-${this.scene.powerupManager.weaponCounter++}`);
+    darkBlastSprite.setData(
+      'id',
+      `weapon-${this.scene.powerupManager.weaponCounter++}`
+    );
     darkBlastSprite.play('darkBlastAnimation');
 
     this.scene.time.delayedCall(1, () => {
@@ -55,4 +63,4 @@ export default class DarkBlastManager {
       loop: false,
     });
   };
-} 
+}
