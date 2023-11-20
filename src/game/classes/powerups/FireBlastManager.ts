@@ -1,5 +1,10 @@
-import { FIREBLAST_BASE_ANGLE_CHANGE, FIREBLAST_BASE_COOLDOWN, FIREBLAST_LEVELUP_ANGLE_MULTIPLIER, FIREBLAST_LEVELUP_COOLDOWN_MULTIPLIER } from "../../../constants";
-import GameStageScene from "../../scenes/GameStage";
+import {
+  FIREBLAST_BASE_ANGLE_CHANGE,
+  FIREBLAST_BASE_COOLDOWN,
+  FIREBLAST_LEVELUP_ANGLE_MULTIPLIER,
+  FIREBLAST_LEVELUP_COOLDOWN_MULTIPLIER,
+} from '../../../constants';
+import GameStageScene from '../../scenes/GameStage';
 
 export default class FireBlastManager {
   public fireBlastAngleChange: number = FIREBLAST_BASE_ANGLE_CHANGE;
@@ -9,7 +14,7 @@ export default class FireBlastManager {
 
   constructor(private scene: GameStageScene) {}
 
-  public levelup = () => {
+  public levelUp = () => {
     if (this.fireBlastTimer) {
       this.fireBlastCooldown =
         this.fireBlastCooldown * FIREBLAST_LEVELUP_COOLDOWN_MULTIPLIER;
@@ -17,7 +22,7 @@ export default class FireBlastManager {
         this.fireBlastAngleChange * FIREBLAST_LEVELUP_ANGLE_MULTIPLIER;
     }
     this.spawnFireBlast();
-  }
+  };
 
   public spawnFireBlast = () => {
     if (this.fireBlastTimer) {
@@ -32,7 +37,10 @@ export default class FireBlastManager {
     );
     fireBlastSprite.scale = 2 * this.scene.gameSpeedScale;
     fireBlastSprite.setData('type', 'fireBlast');
-    fireBlastSprite.setData('id', `weapon-${this.scene.powerupManager.weaponCounter++}`);
+    fireBlastSprite.setData(
+      'id',
+      `weapon-${this.scene.powerupManager.weaponCounter++}`
+    );
     fireBlastSprite.play('fireBlastAnimation');
 
     this.scene.time.delayedCall(1, () => {

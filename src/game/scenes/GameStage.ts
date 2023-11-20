@@ -293,7 +293,9 @@ export default class GameStageScene extends Phaser.Scene {
 
     this.PermanentWeapons?.children.entries.forEach((weapon) => {
       if (weapon.getData('type') === 'tornado') {
-        this.powerupManager.tornadoManager.moveTornado(weapon as Phaser.Physics.Arcade.Sprite);
+        this.powerupManager.tornadoManager.moveTornado(
+          weapon as Phaser.Physics.Arcade.Sprite
+        );
       }
     });
 

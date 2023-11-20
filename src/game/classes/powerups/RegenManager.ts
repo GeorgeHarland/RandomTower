@@ -1,5 +1,11 @@
-import { REGEN_BASE_COOLDOWN, REGEN_BASE_HEAL_AMOUNT, REGEN_LEVELUP_COOLDOWN_MULTIPLIER, REGEN_LEVELUP_HEAL_INCREASE, REGEN_LEVELUP_MAXHP_INCREASE } from "../../../constants";
-import GameStageScene from "../../scenes/GameStage";
+import {
+  REGEN_BASE_COOLDOWN,
+  REGEN_BASE_HEAL_AMOUNT,
+  REGEN_LEVELUP_COOLDOWN_MULTIPLIER,
+  REGEN_LEVELUP_HEAL_INCREASE,
+  REGEN_LEVELUP_MAXHP_INCREASE,
+} from '../../../constants';
+import GameStageScene from '../../scenes/GameStage';
 
 export default class RegenManager {
   public regenAmount: number = REGEN_BASE_HEAL_AMOUNT;
@@ -8,14 +14,14 @@ export default class RegenManager {
 
   constructor(private scene: GameStageScene) {}
 
-  public levelup = () => {
+  public levelUp = () => {
     this.scene.playerTower.maxHp += REGEN_LEVELUP_MAXHP_INCREASE;
     if (this.regenTimer) {
       this.regenCooldown *= REGEN_LEVELUP_COOLDOWN_MULTIPLIER;
       this.regenAmount += REGEN_LEVELUP_HEAL_INCREASE;
     }
     this.spawnRegen();
-  }
+  };
 
   public spawnRegen = () => {
     if (this.regenTimer) {

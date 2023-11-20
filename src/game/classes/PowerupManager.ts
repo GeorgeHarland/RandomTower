@@ -15,18 +15,14 @@ import {
   TIMESLOW_BASE_COOLDOWN,
   TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER,
   ICESPIKE_LEVELUP_POOL_INCREASE,
-  POISON_CLOUDS_BASE_DURATION,
-  POISON_CLOUDS_BASE_AMOUNT,
-  POISON_CLOUDS_BASE_SCALE,
-  POISON_CLOUDS_BASE_COOLDOWN,
 } from '../../constants';
 import GameStageScene from '../scenes/GameStage';
-import { getRandomCoordinatesInBounds } from '../scenes/helpers/gameHelpers';
 import CircleWeapon from './CircleWeapon';
 import Item from './Item';
 import ShopBox from './ShopBox';
 import DarkBlastManager from './powerups/DarkBlastManager';
 import FireBlastManager from './powerups/FireBlastManager';
+import PoisonCloudsManager from './powerups/PoisonCloudsManager';
 import RegenManager from './powerups/RegenManager';
 import TornadoManager from './powerups/TornadoManager';
 
@@ -34,13 +30,12 @@ export default class PowerupManager {
   public darkBlastManager: DarkBlastManager;
   public fireBlastManager: FireBlastManager;
   public tornadoManager: TornadoManager;
+  public poisonCloudsManager: PoisonCloudsManager;
   public regenManager: RegenManager;
 
   public arrowRate: number = ARROW_BASE_RATE;
   public icePoolSizeScale: number = ICEPOOL_BASE_SIZE_SCALE;
   public iceSpikeCooldown: number = ICESPIKE_BASE_COOLDOWN;
-  public poisonCloudAmount: number = POISON_CLOUDS_BASE_AMOUNT;
-  public poisonCloudScale: number = POISON_CLOUDS_BASE_SCALE;
   public timeSlow: boolean = false;
   public timeSlowCooldown: number = TIMESLOW_BASE_COOLDOWN;
   public weaponCounter: number = 0;
@@ -48,14 +43,13 @@ export default class PowerupManager {
   public spawnArrowTimer: Phaser.Time.TimerEvent | undefined;
   public icePoolTimer: Phaser.Time.TimerEvent | undefined;
   public iceSpikeTimer: Phaser.Time.TimerEvent | undefined;
-  public poisonSpriteDurationTimer: Phaser.Time.TimerEvent | undefined;
-  public poisonSpriteCooldownTimer: Phaser.Time.TimerEvent | undefined;
   public timeSlowTimer: Phaser.Time.TimerEvent | undefined;
 
   public constructor(private scene: GameStageScene) {
     this.darkBlastManager = new DarkBlastManager(this.scene);
     this.fireBlastManager = new FireBlastManager(this.scene);
     this.tornadoManager = new TornadoManager(this.scene);
+    this.poisonCloudsManager = new PoisonCloudsManager(this.scene);
     this.regenManager = new RegenManager(this.scene);
   }
 
@@ -82,7 +76,7 @@ export default class PowerupManager {
         this.darkBlastManager.levelUp();
         break;
       case 'Fire Blast':
-        this.fireBlastManager.levelup();
+        this.fireBlastManager.levelUp();
         break;
       case 'Ice Spike':
         if (this.iceSpikeTimer) {
@@ -93,14 +87,10 @@ export default class PowerupManager {
         this.spawnIceSpike();
         break;
       case 'Poison Clouds':
-        if (this.poisonSpriteCooldownTimer) {
-          this.poisonCloudAmount++;
-          this.poisonCloudScale += 0.1;
-        }
-        this.spawnPoisonClouds();
+        this.poisonCloudsManager.levelUp();
         break;
       case 'Regen':
-        this.regenManager.levelup();
+        this.regenManager.levelUp();
         break;
       case 'Time Slow':
         if (this.timeSlowTimer) {
@@ -350,43 +340,6 @@ export default class PowerupManager {
         callbackScope: this,
         loop: false,
       });
-    });
-  };
-
-  public spawnPoisonClouds = () => {
-    if (this.poisonSpriteCooldownTimer) this.poisonSpriteCooldownTimer.destroy;
-
-    for (let i = 0; i < this.poisonCloudAmount; i++) {
-      const { x, y } = getRandomCoordinatesInBounds(this.scene);
-      const poisonSprite = this.scene.physics.add.sprite(x, y, 'poisonStart1');
-      poisonSprite.scale = this.poisonCloudScale * this.scene.gameSpeedScale;
-      poisonSprite.setData('type', 'poisonCloud');
-      poisonSprite.setData('id', `weapon-${this.weaponCounter++}`);
-      this.scene.PermanentWeapons?.add(poisonSprite);
-      poisonSprite.play('poisonCloudStartAnim');
-      poisonSprite.setImmovable(true);
-      poisonSprite.setAlpha(0.6);
-      this.poisonSpriteDurationTimer = this.scene.time.addEvent({
-        delay: POISON_CLOUDS_BASE_DURATION,
-        callback: () => this.destroyPoisonCloud(poisonSprite),
-        callbackScope: this,
-        loop: false,
-      });
-      poisonSprite.on('animationcomplete', () => {
-        poisonSprite.play('poisonCloudRepeatAnim');
-      });
-    }
-  };
-
-  public destroyPoisonCloud = (poisonSprite: Phaser.Physics.Arcade.Sprite) => {
-    poisonSprite.destroy();
-    if (this.poisonSpriteCooldownTimer)
-      this.poisonSpriteCooldownTimer.destroy();
-    this.poisonSpriteCooldownTimer = this.scene.time.addEvent({
-      delay: POISON_CLOUDS_BASE_COOLDOWN,
-      callback: () => this.spawnPoisonClouds(),
-      callbackScope: this,
-      loop: false,
     });
   };
 

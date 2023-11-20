@@ -22,7 +22,7 @@ export default class DarkBlastManager {
         this.darkBlastAngleChange * DARKBLAST_LEVELUP_ANGLE_MULTIPLIER;
     }
     this.spawnDarkBlast();
-  }
+  };
 
   public spawnDarkBlast = () => {
     if (this.darkBlastTimer) {
