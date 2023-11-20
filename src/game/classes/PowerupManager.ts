@@ -32,10 +32,13 @@ import Item from './Item';
 import ShopBox from './ShopBox';
 import DarkBlastManager from './powerups/DarkBlastManager';
 import FireBlastManager from './powerups/FireBlastManager';
+import TornadoManager from './powerups/TornadoManager';
 
 export default class PowerupManager {
   public darkBlastManager: DarkBlastManager;
   public fireBlastManager: FireBlastManager;
+  public tornadoManager: TornadoManager;
+
   public arrowRate: number = ARROW_BASE_RATE;
   public icePoolSizeScale: number = ICEPOOL_BASE_SIZE_SCALE;
   public iceSpikeCooldown: number = ICESPIKE_BASE_COOLDOWN;
@@ -58,6 +61,7 @@ export default class PowerupManager {
   public constructor(private scene: GameStageScene) {
     this.darkBlastManager = new DarkBlastManager(this.scene);
     this.fireBlastManager = new FireBlastManager(this.scene);
+    this.tornadoManager = new TornadoManager(this.scene);
   }
 
   public addPowerup = (item: Item) => {
@@ -115,7 +119,7 @@ export default class PowerupManager {
         this.spawnTimeSlow();
         break;
       case 'Tornado':
-        this.spawnTornado();
+        this.tornadoManager.spawnTornado();
         break;
       default:
         break;
@@ -424,18 +428,6 @@ export default class PowerupManager {
       callbackScope: this,
       loop: false,
     });
-  };
-
-  public spawnTornado = () => {
-    const { x, y } = getRandomCoordinatesInBounds(this.scene);
-
-    const tornadoSprite = this.scene.physics.add.sprite(x, y, 'tornadoRepeat1');
-    tornadoSprite.scale = 0.2 * this.scene.gameSpeedScale;
-    tornadoSprite.setData('type', 'tornado');
-    tornadoSprite.setData('id', `weapon-${this.weaponCounter++}`);
-    this.scene.PermanentWeapons?.add(tornadoSprite);
-    tornadoSprite.play('tornadoAnimation');
-    tornadoSprite.setImmovable(true);
   };
 
   public updateTimeSlow = () => {
