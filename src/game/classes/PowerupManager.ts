@@ -12,11 +12,6 @@ import {
   ICESPIKE_LEVELUP_COOLDOWN_MULTIPLIER,
   ICESPIKE_BASE_SIZE_SCALE,
   PowerupRecord,
-  REGEN_BASE_COOLDOWN,
-  REGEN_BASE_HEAL_AMOUNT,
-  REGEN_LEVELUP_COOLDOWN_MULTIPLIER,
-  REGEN_LEVELUP_HEAL_INCREASE,
-  REGEN_LEVELUP_MAXHP_INCREASE,
   TIMESLOW_BASE_COOLDOWN,
   TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER,
   ICESPIKE_LEVELUP_POOL_INCREASE,
@@ -32,20 +27,20 @@ import Item from './Item';
 import ShopBox from './ShopBox';
 import DarkBlastManager from './powerups/DarkBlastManager';
 import FireBlastManager from './powerups/FireBlastManager';
+import RegenManager from './powerups/RegenManager';
 import TornadoManager from './powerups/TornadoManager';
 
 export default class PowerupManager {
   public darkBlastManager: DarkBlastManager;
   public fireBlastManager: FireBlastManager;
   public tornadoManager: TornadoManager;
+  public regenManager: RegenManager;
 
   public arrowRate: number = ARROW_BASE_RATE;
   public icePoolSizeScale: number = ICEPOOL_BASE_SIZE_SCALE;
   public iceSpikeCooldown: number = ICESPIKE_BASE_COOLDOWN;
   public poisonCloudAmount: number = POISON_CLOUDS_BASE_AMOUNT;
   public poisonCloudScale: number = POISON_CLOUDS_BASE_SCALE;
-  public regenAmount: number = REGEN_BASE_HEAL_AMOUNT;
-  public regenCooldown: number = REGEN_BASE_COOLDOWN;
   public timeSlow: boolean = false;
   public timeSlowCooldown: number = TIMESLOW_BASE_COOLDOWN;
   public weaponCounter: number = 0;
@@ -55,13 +50,13 @@ export default class PowerupManager {
   public iceSpikeTimer: Phaser.Time.TimerEvent | undefined;
   public poisonSpriteDurationTimer: Phaser.Time.TimerEvent | undefined;
   public poisonSpriteCooldownTimer: Phaser.Time.TimerEvent | undefined;
-  public regenTimer: Phaser.Time.TimerEvent | undefined;
   public timeSlowTimer: Phaser.Time.TimerEvent | undefined;
 
   public constructor(private scene: GameStageScene) {
     this.darkBlastManager = new DarkBlastManager(this.scene);
     this.fireBlastManager = new FireBlastManager(this.scene);
     this.tornadoManager = new TornadoManager(this.scene);
+    this.regenManager = new RegenManager(this.scene);
   }
 
   public addPowerup = (item: Item) => {
@@ -105,12 +100,7 @@ export default class PowerupManager {
         this.spawnPoisonClouds();
         break;
       case 'Regen':
-        this.scene.playerTower.maxHp += REGEN_LEVELUP_MAXHP_INCREASE;
-        if (this.regenTimer) {
-          this.regenCooldown *= REGEN_LEVELUP_COOLDOWN_MULTIPLIER;
-          this.regenAmount += REGEN_LEVELUP_HEAL_INCREASE;
-        }
-        this.spawnRegen();
+        this.regenManager.levelup();
         break;
       case 'Time Slow':
         if (this.timeSlowTimer) {
@@ -324,36 +314,6 @@ export default class PowerupManager {
     });
     iceExplosionSprite.on('animationcomplete', () => {
       iceExplosionSprite.destroy();
-    });
-  };
-
-  public spawnRegen = () => {
-    if (this.regenTimer) {
-      this.regenTimer.destroy();
-    }
-    const x: number = this.scene.scale.width / 2;
-    const y: number = this.scene.scale.height / 2.3;
-    const regenSprite = this.scene.physics.add.sprite(x, y, 'regen');
-    regenSprite.scale = 1.2 * this.scene.gameSpeedScale;
-    regenSprite.setData('type', 'regen');
-    regenSprite.play('regenAnimation');
-    regenSprite.setImmovable(true);
-    if (
-      this.scene.playerTower.currentHp + this.regenAmount >=
-      this.scene.playerTower.maxHp
-    )
-      this.scene.playerTower.currentHp = this.scene.playerTower.maxHp;
-    else this.scene.playerTower.currentHp += this.regenAmount;
-    if (this.scene.playerTower.currentHp > this.scene.playerTower.maxHp)
-      this.scene.playerTower.currentHp === this.scene.playerTower.maxHp;
-    regenSprite.on('animationcomplete', () => {
-      regenSprite.destroy();
-      this.regenTimer = this.scene.time.addEvent({
-        delay: this.regenCooldown,
-        callback: this.spawnRegen,
-        callbackScope: this,
-        loop: false,
-      });
     });
   };
 
