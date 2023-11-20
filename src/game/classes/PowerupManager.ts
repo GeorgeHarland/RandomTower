@@ -5,10 +5,6 @@ import {
   CIRCLE_SCALE_MULTIPLIER,
   CIRCLE_SPEED_INCREASE,
   ENEMY_BASE_SPEED,
-  FIREBLAST_BASE_ANGLE_CHANGE,
-  FIREBLAST_BASE_COOLDOWN,
-  FIREBLAST_LEVELUP_ANGLE_MULTIPLIER,
-  FIREBLAST_LEVELUP_COOLDOWN_MULTIPLIER,
   ICEPOOL_DURATION,
   ICEPOOL_BASE_SIZE_SCALE,
   ICESPIKE_BASE_COOLDOWN,
@@ -35,13 +31,12 @@ import CircleWeapon from './CircleWeapon';
 import Item from './Item';
 import ShopBox from './ShopBox';
 import DarkBlastManager from './powerups/DarkBlastManager';
+import FireBlastManager from './powerups/FireBlastManager';
 
 export default class PowerupManager {
   public darkBlastManager: DarkBlastManager;
+  public fireBlastManager: FireBlastManager;
   public arrowRate: number = ARROW_BASE_RATE;
-  public fireBlastAngleChange: number = FIREBLAST_BASE_ANGLE_CHANGE;
-  public fireBlastCooldown: number = FIREBLAST_BASE_COOLDOWN;
-  public fireBlastDirection: number = 180;
   public icePoolSizeScale: number = ICEPOOL_BASE_SIZE_SCALE;
   public iceSpikeCooldown: number = ICESPIKE_BASE_COOLDOWN;
   public poisonCloudAmount: number = POISON_CLOUDS_BASE_AMOUNT;
@@ -53,7 +48,6 @@ export default class PowerupManager {
   public weaponCounter: number = 0;
 
   public spawnArrowTimer: Phaser.Time.TimerEvent | undefined;
-  public fireBlastTimer: Phaser.Time.TimerEvent | undefined;
   public icePoolTimer: Phaser.Time.TimerEvent | undefined;
   public iceSpikeTimer: Phaser.Time.TimerEvent | undefined;
   public poisonSpriteDurationTimer: Phaser.Time.TimerEvent | undefined;
@@ -63,6 +57,7 @@ export default class PowerupManager {
 
   public constructor(private scene: GameStageScene) {
     this.darkBlastManager = new DarkBlastManager(this.scene);
+    this.fireBlastManager = new FireBlastManager(this.scene);
   }
 
   public addPowerup = (item: Item) => {
@@ -88,13 +83,7 @@ export default class PowerupManager {
         this.darkBlastManager.levelUp();
         break;
       case 'Fire Blast':
-        if (this.fireBlastTimer) {
-          this.fireBlastCooldown =
-            this.fireBlastCooldown * FIREBLAST_LEVELUP_COOLDOWN_MULTIPLIER;
-          this.fireBlastAngleChange =
-            this.fireBlastAngleChange * FIREBLAST_LEVELUP_ANGLE_MULTIPLIER;
-        }
-        this.spawnFireBlast();
+        this.fireBlastManager.levelup();
         break;
       case 'Ice Spike':
         if (this.iceSpikeTimer) {
@@ -227,43 +216,6 @@ export default class PowerupManager {
       callback: this.spawnArrow,
       callbackScope: this,
       loop: true,
-    });
-  };
-
-  public spawnFireBlast = () => {
-    if (this.fireBlastTimer) {
-      this.fireBlastTimer.destroy();
-    }
-    const x: number = this.scene.scale.width / 2;
-    const y: number = this.scene.scale.height / 2;
-    const fireBlastSprite = this.scene.physics.add.sprite(
-      x,
-      y,
-      'fireBlastSprite1'
-    );
-    fireBlastSprite.scale = 2 * this.scene.gameSpeedScale;
-    fireBlastSprite.setData('type', 'fireBlast');
-    fireBlastSprite.setData('id', `weapon-${this.weaponCounter++}`);
-    fireBlastSprite.play('fireBlastAnimation');
-
-    this.scene.time.delayedCall(1, () => {
-      this.scene.physics.velocityFromAngle(
-        this.fireBlastDirection,
-        200 * this.scene.gameSpeedScale,
-        fireBlastSprite.body.velocity
-      );
-      fireBlastSprite.angle = this.fireBlastDirection;
-      if (this.fireBlastDirection - this.fireBlastAngleChange > 0)
-        this.fireBlastDirection -= this.fireBlastAngleChange;
-      else this.fireBlastDirection = 360;
-    });
-
-    this.scene.weapons?.add(fireBlastSprite);
-    this.fireBlastTimer = this.scene.time.addEvent({
-      delay: this.fireBlastCooldown,
-      callback: this.spawnFireBlast,
-      callbackScope: this,
-      loop: false,
     });
   };
 

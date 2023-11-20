@@ -14,7 +14,7 @@ export default class DarkBlastManager {
 
   public constructor(private scene: GameStageScene) {}
 
-  public levelUp() {
+  public levelUp = () => {
     if (this.darkBlastTimer) {
       this.darkBlastCooldown =
         this.darkBlastCooldown * DARKBLAST_LEVELUP_COOLDOWN_MULTIPLIER;
