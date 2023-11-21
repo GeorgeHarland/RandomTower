@@ -118,7 +118,7 @@ export default class EnemyManager {
     if (weaponDestroyed) {
       weapon.destroy();
     } else if (weapon.getData('type') === 'iceSpike' && hasHitpoints) {
-      this.scene.powerupManager.spawnIceSpikeExplosion(
+      this.scene.powerupManager.iceSpikeManager.spawnIceSpikeExplosion(
         weapon.body.x + weapon.body.width / 2,
         weapon.body.y + weapon.body.height / 2
       );

@@ -5,16 +5,9 @@ import {
   CIRCLE_SCALE_MULTIPLIER,
   CIRCLE_SPEED_INCREASE,
   ENEMY_BASE_SPEED,
-  ICEPOOL_DURATION,
-  ICEPOOL_BASE_SIZE_SCALE,
-  ICESPIKE_BASE_COOLDOWN,
-  ICESPIKE_BASE_SPEED,
-  ICESPIKE_LEVELUP_COOLDOWN_MULTIPLIER,
-  ICESPIKE_BASE_SIZE_SCALE,
   PowerupRecord,
   TIMESLOW_BASE_COOLDOWN,
   TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER,
-  ICESPIKE_LEVELUP_POOL_INCREASE,
 } from '../../constants';
 import GameStageScene from '../scenes/GameStage';
 import CircleWeapon from './CircleWeapon';
@@ -22,6 +15,7 @@ import Item from './Item';
 import ShopBox from './ShopBox';
 import DarkBlastManager from './powerups/DarkBlastManager';
 import FireBlastManager from './powerups/FireBlastManager';
+import IceSpikeManager from './powerups/IceSpikeManager';
 import PoisonCloudsManager from './powerups/PoisonCloudsManager';
 import RegenManager from './powerups/RegenManager';
 import TornadoManager from './powerups/TornadoManager';
@@ -29,25 +23,23 @@ import TornadoManager from './powerups/TornadoManager';
 export default class PowerupManager {
   public darkBlastManager: DarkBlastManager;
   public fireBlastManager: FireBlastManager;
+  public iceSpikeManager: IceSpikeManager;
   public tornadoManager: TornadoManager;
   public poisonCloudsManager: PoisonCloudsManager;
   public regenManager: RegenManager;
 
   public arrowRate: number = ARROW_BASE_RATE;
-  public icePoolSizeScale: number = ICEPOOL_BASE_SIZE_SCALE;
-  public iceSpikeCooldown: number = ICESPIKE_BASE_COOLDOWN;
   public timeSlow: boolean = false;
   public timeSlowCooldown: number = TIMESLOW_BASE_COOLDOWN;
   public weaponCounter: number = 0;
 
   public spawnArrowTimer: Phaser.Time.TimerEvent | undefined;
-  public icePoolTimer: Phaser.Time.TimerEvent | undefined;
-  public iceSpikeTimer: Phaser.Time.TimerEvent | undefined;
   public timeSlowTimer: Phaser.Time.TimerEvent | undefined;
 
   public constructor(private scene: GameStageScene) {
     this.darkBlastManager = new DarkBlastManager(this.scene);
     this.fireBlastManager = new FireBlastManager(this.scene);
+    this.iceSpikeManager = new IceSpikeManager(this.scene);
     this.tornadoManager = new TornadoManager(this.scene);
     this.poisonCloudsManager = new PoisonCloudsManager(this.scene);
     this.regenManager = new RegenManager(this.scene);
@@ -79,12 +71,7 @@ export default class PowerupManager {
         this.fireBlastManager.levelUp();
         break;
       case 'Ice Spike':
-        if (this.iceSpikeTimer) {
-          this.iceSpikeCooldown =
-            this.iceSpikeCooldown * ICESPIKE_LEVELUP_COOLDOWN_MULTIPLIER;
-          this.icePoolSizeScale += ICESPIKE_LEVELUP_POOL_INCREASE;
-        }
-        this.spawnIceSpike();
+        this.iceSpikeManager.levelUp();
         break;
       case 'Poison Clouds':
         this.poisonCloudsManager.levelUp();
@@ -200,110 +187,6 @@ export default class PowerupManager {
       callback: this.spawnArrow,
       callbackScope: this,
       loop: true,
-    });
-  };
-
-  public spawnIceSpike = () => {
-    if (this.iceSpikeTimer) {
-      this.iceSpikeTimer.destroy();
-    }
-    if (this.scene.tower) {
-      const x: number = this.scene.scale.width / 2;
-      const y: number = this.scene.scale.height / 2;
-      const iceSpikeSprite = this.scene.physics.add.sprite(
-        x,
-        y,
-        'iceSpikeImage1'
-      );
-      iceSpikeSprite.scale =
-        ICESPIKE_BASE_SIZE_SCALE * this.scene.gameSpeedScale;
-      iceSpikeSprite.setData('type', 'iceSpike');
-      iceSpikeSprite.setData('id', `weapon-${this.weaponCounter++}`);
-      iceSpikeSprite.play('iceSpikeAnimation');
-      iceSpikeSprite.body.setImmovable(true);
-
-      const closestJuggernaut = this.scene.enemyManager.getClosestEnemy(
-        this.scene.tower,
-        'juggernaut'
-      );
-      const closestEnemy = this.scene.enemyManager.getClosestEnemy(
-        this.scene.tower
-      );
-
-      // prioritize nearest juggernaut -> then any other enemy -> then random direction
-      this.scene.time.delayedCall(1, () => {
-        if (closestJuggernaut) {
-          this.scene.physics.moveToObject(
-            iceSpikeSprite,
-            closestJuggernaut,
-            ICESPIKE_BASE_SPEED * this.scene.gameSpeedScale
-          );
-          iceSpikeSprite.angle = Phaser.Math.RadToDeg(
-            Math.atan2(
-              closestJuggernaut.y - iceSpikeSprite.y,
-              closestJuggernaut.x - iceSpikeSprite.x
-            )
-          );
-        } else if (closestEnemy) {
-          this.scene.physics.moveToObject(
-            iceSpikeSprite,
-            closestEnemy,
-            ICESPIKE_BASE_SPEED * this.scene.gameSpeedScale
-          );
-          iceSpikeSprite.angle = Phaser.Math.RadToDeg(
-            Math.atan2(
-              closestEnemy.y - iceSpikeSprite.y,
-              closestEnemy.x - iceSpikeSprite.x
-            )
-          );
-        } else {
-          const angle = Phaser.Math.Between(0, 360);
-          this.scene.physics.velocityFromAngle(
-            angle,
-            ICESPIKE_BASE_SPEED * this.scene.gameSpeedScale,
-            iceSpikeSprite.body.velocity
-          );
-          iceSpikeSprite.angle = angle;
-        }
-      });
-
-      this.scene.PermanentWeapons?.add(iceSpikeSprite);
-      this.iceSpikeTimer = this.scene.time.addEvent({
-        delay: this.iceSpikeCooldown,
-        callback: this.spawnIceSpike,
-        callbackScope: this,
-        loop: false,
-      });
-    }
-  };
-
-  public spawnIceSpikeExplosion = (x: number, y: number) => {
-    const iceExplosionSprite = this.scene.physics.add.sprite(
-      x,
-      y,
-      'iceExplosionImage1'
-    );
-    iceExplosionSprite.scale =
-      this.icePoolSizeScale * this.scene.gameSpeedScale;
-    iceExplosionSprite.setData('type', 'iceExplosion');
-    iceExplosionSprite.setData('id', `weapon-${this.weaponCounter++}`);
-    iceExplosionSprite.play('iceExplosionAnimation');
-    iceExplosionSprite.body.setImmovable(true);
-    this.scene.PermanentWeapons?.add(iceExplosionSprite);
-
-    const icePoolSprite = this.scene.physics.add.sprite(x, y, 'icePoolImage');
-    icePoolSprite.scale = this.icePoolSizeScale * this.scene.gameSpeedScale;
-    icePoolSprite.setDepth(-0.9);
-    icePoolSprite.setData('type', 'icePool');
-    this.scene.terrainEffects?.add(icePoolSprite);
-    this.icePoolTimer = this.scene.time.addEvent({
-      delay: ICEPOOL_DURATION,
-      callback: () => icePoolSprite.destroy(),
-      callbackScope: this,
-      loop: false,
-    });
-    iceExplosionSprite.on('animationcomplete', () => {
-      iceExplosionSprite.destroy();
     });
   };
 
