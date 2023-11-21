@@ -1,5 +1,13 @@
-import { ICEPOOL_BASE_SIZE_SCALE, ICEPOOL_DURATION, ICESPIKE_BASE_COOLDOWN, ICESPIKE_BASE_SIZE_SCALE, ICESPIKE_BASE_SPEED, ICESPIKE_LEVELUP_COOLDOWN_MULTIPLIER, ICESPIKE_LEVELUP_POOL_INCREASE } from "../../../constants";
-import GameStageScene from "../../scenes/GameStage";
+import {
+  ICEPOOL_BASE_SIZE_SCALE,
+  ICEPOOL_DURATION,
+  ICESPIKE_BASE_COOLDOWN,
+  ICESPIKE_BASE_SIZE_SCALE,
+  ICESPIKE_BASE_SPEED,
+  ICESPIKE_LEVELUP_COOLDOWN_MULTIPLIER,
+  ICESPIKE_LEVELUP_POOL_INCREASE,
+} from '../../../constants';
+import GameStageScene from '../../scenes/GameStage';
 
 export default class IceSpikeManager {
   public icePoolSizeScale: number = ICEPOOL_BASE_SIZE_SCALE;
@@ -16,7 +24,7 @@ export default class IceSpikeManager {
       this.icePoolSizeScale += ICESPIKE_LEVELUP_POOL_INCREASE;
     }
     this.spawnIceSpike();
-  }
+  };
 
   public spawnIceSpike = () => {
     if (this.iceSpikeTimer) {
@@ -33,7 +41,10 @@ export default class IceSpikeManager {
       iceSpikeSprite.scale =
         ICESPIKE_BASE_SIZE_SCALE * this.scene.gameSpeedScale;
       iceSpikeSprite.setData('type', 'iceSpike');
-      iceSpikeSprite.setData('id', `weapon-${this.scene.powerupManager.weaponCounter++}`);
+      iceSpikeSprite.setData(
+        'id',
+        `weapon-${this.scene.powerupManager.weaponCounter++}`
+      );
       iceSpikeSprite.play('iceSpikeAnimation');
       iceSpikeSprite.body.setImmovable(true);
 
@@ -101,7 +112,10 @@ export default class IceSpikeManager {
     iceExplosionSprite.scale =
       this.icePoolSizeScale * this.scene.gameSpeedScale;
     iceExplosionSprite.setData('type', 'iceExplosion');
-    iceExplosionSprite.setData('id', `weapon-${this.scene.powerupManager.weaponCounter++}`);
+    iceExplosionSprite.setData(
+      'id',
+      `weapon-${this.scene.powerupManager.weaponCounter++}`
+    );
     iceExplosionSprite.play('iceExplosionAnimation');
     iceExplosionSprite.body.setImmovable(true);
     this.scene.PermanentWeapons?.add(iceExplosionSprite);
@@ -121,4 +135,4 @@ export default class IceSpikeManager {
       iceExplosionSprite.destroy();
     });
   };
-} 
+}

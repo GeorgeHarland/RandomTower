@@ -1,13 +1,9 @@
-import {
-  CIRCLE_SCALE_MULTIPLIER,
-  CIRCLE_SPEED_INCREASE,
-  PowerupRecord,
-} from '../../constants';
+import { PowerupRecord } from '../../constants';
 import GameStageScene from '../scenes/GameStage';
-import CircleWeapon from './CircleWeapon';
 import Item from './Item';
 import ShopBox from './ShopBox';
 import ArrowRateManager from './powerups/ArrowRateManager';
+import CircleSpeedManager from './powerups/CircleSpeedManager';
 import DarkBlastManager from './powerups/DarkBlastManager';
 import FireBlastManager from './powerups/FireBlastManager';
 import IceSpikeManager from './powerups/IceSpikeManager';
@@ -18,6 +14,7 @@ import TornadoManager from './powerups/TornadoManager';
 
 export default class PowerupManager {
   public arrowRateManager: ArrowRateManager;
+  public circleSpeedManager: CircleSpeedManager;
   public darkBlastManager: DarkBlastManager;
   public fireBlastManager: FireBlastManager;
   public iceSpikeManager: IceSpikeManager;
@@ -29,6 +26,7 @@ export default class PowerupManager {
 
   public constructor(private scene: GameStageScene) {
     this.arrowRateManager = new ArrowRateManager(this.scene);
+    this.circleSpeedManager = new CircleSpeedManager(this.scene);
     this.darkBlastManager = new DarkBlastManager(this.scene);
     this.fireBlastManager = new FireBlastManager(this.scene);
     this.iceSpikeManager = new IceSpikeManager(this.scene);
@@ -44,17 +42,7 @@ export default class PowerupManager {
         this.arrowRateManager.levelUp();
         break;
       case 'Circle Speed':
-        this.scene.circleWeapons?.children.entries.forEach((circle) => {
-          const weaponCircle = circle as CircleWeapon;
-          weaponCircle.circleSpeed +=
-            CIRCLE_SPEED_INCREASE * this.scene.gameSpeedScale;
-          const currentX = weaponCircle.x;
-          const currentY = weaponCircle.y;
-          weaponCircle.scaleX *= CIRCLE_SCALE_MULTIPLIER;
-          weaponCircle.scaleY *= CIRCLE_SCALE_MULTIPLIER;
-          weaponCircle.x = currentX;
-          weaponCircle.y = currentY;
-        });
+        this.circleSpeedManager.levelUp();
         break;
       case 'Dark Blast':
         this.darkBlastManager.levelUp();

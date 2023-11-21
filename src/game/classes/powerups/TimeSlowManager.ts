@@ -1,5 +1,9 @@
-import { ENEMY_BASE_SPEED, TIMESLOW_BASE_COOLDOWN, TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER } from "../../../constants";
-import GameStageScene from "../../scenes/GameStage";
+import {
+  ENEMY_BASE_SPEED,
+  TIMESLOW_BASE_COOLDOWN,
+  TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER,
+} from '../../../constants';
+import GameStageScene from '../../scenes/GameStage';
 
 export default class TimeSlowManager {
   public timeSlow: boolean = false;
@@ -13,7 +17,7 @@ export default class TimeSlowManager {
       this.timeSlowCooldown *= TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER;
     }
     this.spawnTimeSlow();
-  }
+  };
 
   public spawnTimeSlow = () => {
     if (this.timeSlowTimer) {

@@ -1,5 +1,9 @@
-import { ARROW_BASE_RATE, ARROW_BASE_SPEED, ARROW_RATE_INCREASE } from "../../../constants";
-import GameStageScene from "../../scenes/GameStage";
+import {
+  ARROW_BASE_RATE,
+  ARROW_BASE_SPEED,
+  ARROW_RATE_INCREASE,
+} from '../../../constants';
+import GameStageScene from '../../scenes/GameStage';
 
 export default class ArrowRateManager {
   public arrowRate: number = ARROW_BASE_RATE;
@@ -10,7 +14,7 @@ export default class ArrowRateManager {
   public levelUp = () => {
     this.arrowRate += this.arrowRate + ARROW_RATE_INCREASE;
     this.spawnArrow();
-  }
+  };
 
   public spawnArrow = () => {
     if (this.scene.tower) {
@@ -18,7 +22,10 @@ export default class ArrowRateManager {
       const y: number = this.scene.scale.height / 2;
 
       const arrow = this.scene.physics.add.sprite(x, y, 'arrowTexture');
-      arrow.setData('id', `weapon-${this.scene.powerupManager.weaponCounter++}`);
+      arrow.setData(
+        'id',
+        `weapon-${this.scene.powerupManager.weaponCounter++}`
+      );
       arrow.scale = Math.max(1 * this.scene.gameSpeedScale, 0.6);
 
       this.scene.weapons?.add(arrow);
@@ -56,4 +63,4 @@ export default class ArrowRateManager {
       loop: true,
     });
   };
-} 
+}
