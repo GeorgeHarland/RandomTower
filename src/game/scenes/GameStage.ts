@@ -299,7 +299,7 @@ export default class GameStageScene extends Phaser.Scene {
       }
     });
 
-    this.powerupManager.updateTimeSlow();
+    this.powerupManager.timeSlowManager.updateTimeSlow();
 
     const shopBoxKeybinds: { [id: string]: ShopBox } = {};
     this.shopBoxes?.children.entries.forEach(

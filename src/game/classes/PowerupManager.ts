@@ -4,10 +4,7 @@ import {
   ARROW_RATE_INCREASE,
   CIRCLE_SCALE_MULTIPLIER,
   CIRCLE_SPEED_INCREASE,
-  ENEMY_BASE_SPEED,
   PowerupRecord,
-  TIMESLOW_BASE_COOLDOWN,
-  TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER,
 } from '../../constants';
 import GameStageScene from '../scenes/GameStage';
 import CircleWeapon from './CircleWeapon';
@@ -18,6 +15,7 @@ import FireBlastManager from './powerups/FireBlastManager';
 import IceSpikeManager from './powerups/IceSpikeManager';
 import PoisonCloudsManager from './powerups/PoisonCloudsManager';
 import RegenManager from './powerups/RegenManager';
+import TimeSlowManager from './powerups/TimeSlowManager';
 import TornadoManager from './powerups/TornadoManager';
 
 export default class PowerupManager {
@@ -27,14 +25,12 @@ export default class PowerupManager {
   public tornadoManager: TornadoManager;
   public poisonCloudsManager: PoisonCloudsManager;
   public regenManager: RegenManager;
-
-  public arrowRate: number = ARROW_BASE_RATE;
-  public timeSlow: boolean = false;
-  public timeSlowCooldown: number = TIMESLOW_BASE_COOLDOWN;
+  public timeSlowManager: TimeSlowManager;
   public weaponCounter: number = 0;
 
+  public arrowRate: number = ARROW_BASE_RATE;
+
   public spawnArrowTimer: Phaser.Time.TimerEvent | undefined;
-  public timeSlowTimer: Phaser.Time.TimerEvent | undefined;
 
   public constructor(private scene: GameStageScene) {
     this.darkBlastManager = new DarkBlastManager(this.scene);
@@ -43,6 +39,7 @@ export default class PowerupManager {
     this.tornadoManager = new TornadoManager(this.scene);
     this.poisonCloudsManager = new PoisonCloudsManager(this.scene);
     this.regenManager = new RegenManager(this.scene);
+    this.timeSlowManager = new TimeSlowManager(this.scene);
   }
 
   public addPowerup = (item: Item) => {
@@ -80,10 +77,7 @@ export default class PowerupManager {
         this.regenManager.levelUp();
         break;
       case 'Time Slow':
-        if (this.timeSlowTimer) {
-          this.timeSlowCooldown *= TIMESLOW_LEVELUP_COOLDOWN_MULTIPLIER;
-        }
-        this.spawnTimeSlow();
+        this.timeSlowManager.levelUp();
         break;
       case 'Tornado':
         this.tornadoManager.spawnTornado();
@@ -188,55 +182,5 @@ export default class PowerupManager {
       callbackScope: this,
       loop: true,
     });
-  };
-
-  public spawnTimeSlow = () => {
-    if (this.timeSlowTimer) {
-      this.timeSlowTimer.destroy();
-    }
-    const x: number = this.scene.scale.width / 2;
-    const y: number = this.scene.scale.height / 2;
-    const timeSlowSprite = this.scene.physics.add.sprite(x, y, '');
-    this.timeSlow = true;
-    timeSlowSprite.scale = 0.5 * this.scene.gameSpeedScale;
-    timeSlowSprite.setData('type', 'timeSlow');
-    timeSlowSprite.play('timeSlowAnimation');
-    if (this.scene.enemyManager.enemyTimers.spawnminionTimer)
-      this.scene.enemyManager.enemyTimers.spawnminionTimer.paused = true;
-    if (this.scene.enemyManager.enemyTimers.spawnjuggernautTimer)
-      this.scene.enemyManager.enemyTimers.spawnjuggernautTimer.paused = true;
-    if (this.scene.enemyManager.enemyTimers.spawnbossTimer)
-      this.scene.enemyManager.enemyTimers.spawnbossTimer.paused = true;
-    timeSlowSprite.setImmovable(true);
-    timeSlowSprite.on('animationcomplete', () => {
-      timeSlowSprite.destroy();
-      if (this.scene.enemyManager.enemyTimers.spawnminionTimer)
-        this.scene.enemyManager.enemyTimers.spawnminionTimer.paused = false;
-      if (this.scene.enemyManager.enemyTimers.spawnjuggernautTimer)
-        this.scene.enemyManager.enemyTimers.spawnjuggernautTimer.paused = false;
-      if (this.scene.enemyManager.enemyTimers.spawnbossTimer)
-        this.scene.enemyManager.enemyTimers.spawnbossTimer.paused = false;
-      this.timeSlow = false;
-      this.timeSlowTimer = this.scene.time.addEvent({
-        delay: this.timeSlowCooldown,
-        callback: this.spawnTimeSlow,
-        callbackScope: this,
-        loop: false,
-      });
-    });
-  };
-
-  public updateTimeSlow = () => {
-    if (this.timeSlow) this.scene.enemyManager.enemiesCurrentSpeed *= 0.95;
-    else if (
-      this.scene.enemyManager.enemiesCurrentSpeed <
-      ENEMY_BASE_SPEED / 10
-    )
-      this.scene.enemyManager.enemiesCurrentSpeed = ENEMY_BASE_SPEED / 10;
-    else if (this.scene.enemyManager.enemiesCurrentSpeed < ENEMY_BASE_SPEED)
-      this.scene.enemyManager.enemiesCurrentSpeed /= 0.95;
-    if (this.scene.enemyManager.enemiesCurrentSpeed > ENEMY_BASE_SPEED)
-      this.scene.enemyManager.enemiesCurrentSpeed =
-        ENEMY_BASE_SPEED * this.scene.gameSpeedScale;
   };
 }
