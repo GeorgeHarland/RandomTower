@@ -1,7 +1,4 @@
 import {
-  ARROW_BASE_RATE,
-  ARROW_BASE_SPEED,
-  ARROW_RATE_INCREASE,
   CIRCLE_SCALE_MULTIPLIER,
   CIRCLE_SPEED_INCREASE,
   PowerupRecord,
@@ -10,6 +7,7 @@ import GameStageScene from '../scenes/GameStage';
 import CircleWeapon from './CircleWeapon';
 import Item from './Item';
 import ShopBox from './ShopBox';
+import ArrowRateManager from './powerups/ArrowRateManager';
 import DarkBlastManager from './powerups/DarkBlastManager';
 import FireBlastManager from './powerups/FireBlastManager';
 import IceSpikeManager from './powerups/IceSpikeManager';
@@ -19,6 +17,7 @@ import TimeSlowManager from './powerups/TimeSlowManager';
 import TornadoManager from './powerups/TornadoManager';
 
 export default class PowerupManager {
+  public arrowRateManager: ArrowRateManager;
   public darkBlastManager: DarkBlastManager;
   public fireBlastManager: FireBlastManager;
   public iceSpikeManager: IceSpikeManager;
@@ -28,11 +27,8 @@ export default class PowerupManager {
   public timeSlowManager: TimeSlowManager;
   public weaponCounter: number = 0;
 
-  public arrowRate: number = ARROW_BASE_RATE;
-
-  public spawnArrowTimer: Phaser.Time.TimerEvent | undefined;
-
   public constructor(private scene: GameStageScene) {
+    this.arrowRateManager = new ArrowRateManager(this.scene);
     this.darkBlastManager = new DarkBlastManager(this.scene);
     this.fireBlastManager = new FireBlastManager(this.scene);
     this.iceSpikeManager = new IceSpikeManager(this.scene);
@@ -45,8 +41,7 @@ export default class PowerupManager {
   public addPowerup = (item: Item) => {
     switch (item.powerup) {
       case 'Arrow Rate':
-        this.arrowRate += item.cost * ARROW_RATE_INCREASE;
-        this.spawnArrow();
+        this.arrowRateManager.levelUp();
         break;
       case 'Circle Speed':
         this.scene.circleWeapons?.children.entries.forEach((circle) => {
@@ -136,51 +131,6 @@ export default class PowerupManager {
       if (shopBox.getItem != null) {
         this.scene.generatedItems.push((shopBox.getItem() as Item).powerup);
       }
-    });
-  };
-
-  public spawnArrow = () => {
-    if (this.scene.tower) {
-      const x: number = this.scene.scale.width / 2;
-      const y: number = this.scene.scale.height / 2;
-
-      const arrow = this.scene.physics.add.sprite(x, y, 'arrowTexture');
-      arrow.setData('id', `weapon-${this.weaponCounter++}`);
-      arrow.scale = Math.max(1 * this.scene.gameSpeedScale, 0.6);
-
-      this.scene.weapons?.add(arrow);
-
-      const closestEnemy = this.scene.enemyManager.getClosestEnemy(
-        this.scene.tower
-      );
-      if (closestEnemy) {
-        this.scene.physics.moveToObject(
-          arrow,
-          closestEnemy,
-          ARROW_BASE_SPEED * this.scene.gameSpeedScale
-        );
-      } else {
-        const angle = Phaser.Math.Between(0, 360);
-        this.scene.physics.velocityFromAngle(
-          angle,
-          ARROW_BASE_SPEED * this.scene.gameSpeedScale,
-          arrow.body.velocity
-        );
-      }
-
-      this.updateArrowTimer();
-    }
-  };
-
-  public updateArrowTimer = () => {
-    if (this.spawnArrowTimer) {
-      this.spawnArrowTimer.destroy();
-    }
-    this.spawnArrowTimer = this.scene.time.addEvent({
-      delay: 1000 / this.arrowRate,
-      callback: this.spawnArrow,
-      callbackScope: this,
-      loop: true,
     });
   };
 }

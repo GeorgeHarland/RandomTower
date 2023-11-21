@@ -243,9 +243,9 @@ export default class GameStageScene extends Phaser.Scene {
       }
     );
 
-    this.powerupManager.spawnArrowTimer = this.time.addEvent({
-      delay: 1000 / this.powerupManager.arrowRate,
-      callback: this.powerupManager.spawnArrow,
+    this.powerupManager.arrowRateManager.spawnArrowTimer = this.time.addEvent({
+      delay: 1000 / this.powerupManager.arrowRateManager.arrowRate,
+      callback: this.powerupManager.arrowRateManager.spawnArrow,
       callbackScope: this,
       loop: true,
     });

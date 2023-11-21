@@ -79,7 +79,7 @@ export const gradeCost: Record<ItemGradeType, number> = {
 
 export const ARROW_BASE_SPEED = 200;
 export const ARROW_BASE_RATE = 0.2;
-export const ARROW_RATE_INCREASE = 0.025;
+export const ARROW_RATE_INCREASE = 0.3;
 
 export const CIRCLE_BASE_SPEED = 1.1;
 export const CIRCLE_BASE_SIZE_DIVISION = 4000;
