@@ -3,6 +3,7 @@ import {
   POISON_CLOUDS_BASE_COOLDOWN,
   POISON_CLOUDS_BASE_DURATION,
   POISON_CLOUDS_BASE_SCALE,
+  POISON_CLOUDS_LEVELUP_SCALE,
 } from '../../../constants';
 import GameStageScene from '../../scenes/GameStage';
 import { getRandomCoordinatesInBounds } from '../../scenes/helpers/gameHelpers';
@@ -18,7 +19,7 @@ export default class PoisonCloudsManager {
   public levelUp = () => {
     if (this.poisonSpriteCooldownTimer) {
       this.poisonCloudAmount++;
-      this.poisonCloudScale += 0.1;
+      this.poisonCloudScale += POISON_CLOUDS_LEVELUP_SCALE;
     }
     this.spawnPoisonClouds();
   };

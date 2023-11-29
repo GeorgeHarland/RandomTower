@@ -56,16 +56,12 @@ export default class TimeSlowManager {
   };
 
   public updateTimeSlow = () => {
-    if (this.timeSlow) this.scene.enemyManager.enemiesCurrentSpeed *= 0.95;
-    else if (
-      this.scene.enemyManager.enemiesCurrentSpeed <
-      ENEMY_BASE_SPEED / 10
-    )
-      this.scene.enemyManager.enemiesCurrentSpeed = ENEMY_BASE_SPEED / 10;
-    else if (this.scene.enemyManager.enemiesCurrentSpeed < ENEMY_BASE_SPEED)
-      this.scene.enemyManager.enemiesCurrentSpeed /= 0.95;
-    if (this.scene.enemyManager.enemiesCurrentSpeed > ENEMY_BASE_SPEED)
-      this.scene.enemyManager.enemiesCurrentSpeed =
-        ENEMY_BASE_SPEED * this.scene.gameSpeedScale;
+    const { enemiesCurrentSpeed } = this.scene.enemyManager;
+
+    if (this.timeSlow) {
+      this.scene.enemyManager.enemiesCurrentSpeed = Math.max(enemiesCurrentSpeed * 0.95);
+    } else {
+      this.scene.enemyManager.enemiesCurrentSpeed = Math.min(enemiesCurrentSpeed / 0.95, ENEMY_BASE_SPEED * this.scene.gameSpeedScale);
+    }
   };
 }
