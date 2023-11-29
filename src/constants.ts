@@ -1,6 +1,6 @@
 import {
   EnemyConfig,
-  EnemyTypes,
+  EnemyType,
   ItemGradeType,
   PowerupType,
 } from './game/types';
@@ -12,10 +12,9 @@ export const MOBILE_BREAKPOINT = 600;
 export const ENEMY_BASE_SPEED = 80;
 export const ENEMY_WEAPON_HIT_RATE = 200;
 
-export const EnemyConstants: Record<EnemyTypes, EnemyConfig> = {
+export const EnemyConstants: Record<EnemyType, EnemyConfig> = {
   minion: {
     TYPE: 'minion',
-    TEXTURE: 'enemyTexture', // uses texture if sprite null
     SPRITE: 'minionSprite',
     SPRITE_SCALE: 0.05,
     DAMAGE: 5,
@@ -27,7 +26,6 @@ export const EnemyConstants: Record<EnemyTypes, EnemyConfig> = {
   },
   juggernaut: {
     TYPE: 'juggernaut',
-    TEXTURE: 'juggernautTexture',
     SPRITE: 'juggernautSprite',
     SPRITE_SCALE: 0.135,
     DAMAGE: 20,
@@ -39,7 +37,6 @@ export const EnemyConstants: Record<EnemyTypes, EnemyConfig> = {
   },
   boss: {
     TYPE: 'boss',
-    TEXTURE: 'bossTexture',
     SPRITE: 'bossSprite',
     SPRITE_SCALE: 0.25,
     DAMAGE: 50,

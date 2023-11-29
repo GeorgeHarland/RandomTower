@@ -3,12 +3,11 @@ export type KeybindType = 'Q' | 'W' | 'E' | 'Z';
 
 export type ItemGradeType = 'S' | 'A' | 'B' | 'C' | 'D';
 
-export type EnemyTypes = 'minion' | 'juggernaut' | 'boss';
+export type EnemyType = 'minion' | 'juggernaut' | 'boss';
 
 export type EnemyConfig = {
-  TYPE: string;
-  TEXTURE: string;
-  SPRITE: string | null;
+  TYPE: EnemyType;
+  SPRITE: string;
   SPRITE_SCALE: number;
   DAMAGE: number;
   RATE: number;

@@ -5,7 +5,7 @@ import {
 } from '../../constants';
 import GameStageScene from '../scenes/GameStage';
 import { getRandomEdgeOfScreen } from '../scenes/helpers/gameHelpers';
-import { EnemyRatesMap, EnemyTimerMap, EnemyTypes } from '../types';
+import { EnemyRatesMap, EnemyTimerMap, EnemyType } from '../types';
 import PlayerTower from './PlayerTower';
 
 export default class EnemyManager {
@@ -34,14 +34,14 @@ export default class EnemyManager {
     });
   };
 
-  public spawnEnemy = (enemyRecord: EnemyTypes) => {
+  public spawnEnemy = (enemyRecord: EnemyType) => {
     const timerKey = `spawn${EnemyConstants[enemyRecord].TYPE}Timer`;
     this.enemyTimers[timerKey]?.destroy();
     const { x, y } = getRandomEdgeOfScreen(this.scene);
     const enemy = this.scene.physics.add.sprite(
       x,
       y,
-      EnemyConstants[enemyRecord].SPRITE || EnemyConstants[enemyRecord].TEXTURE
+      EnemyConstants[enemyRecord].SPRITE
     );
     enemy.setData('type', EnemyConstants[enemyRecord].TYPE);
     enemy.setData('hitpoints', EnemyConstants[enemyRecord].HITPOINTS);
@@ -139,7 +139,7 @@ export default class EnemyManager {
 
   public getClosestEnemy = (
     origin: Phaser.Physics.Arcade.Sprite,
-    type: EnemyTypes | null = null
+    type: EnemyType | null = null
   ): Phaser.Physics.Arcade.Sprite | null => {
     let closestEnemy = null;
     let closestDistance = Number.MAX_VALUE;
