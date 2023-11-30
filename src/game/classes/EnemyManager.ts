@@ -32,6 +32,27 @@ export default class EnemyManager {
     this.enemies = this.scene.physics.add.group({
       classType: Phaser.GameObjects.Rectangle,
     });
+
+    this.enemyTimers.spawnjuggernautTimer = this.scene.time.addEvent({
+      delay: 1000 / this.enemyRates.juggernautRate,
+      callback: () => this.spawnEnemy('juggernaut'),
+      callbackScope: this,
+      loop: true,
+    });
+
+    this.enemyTimers.spawnbossTimer = this.scene.time.addEvent({
+      delay: 1000 / this.enemyRates.bossRate,
+      callback: () => this.spawnEnemy('boss'),
+      callbackScope: this,
+      loop: true,
+    });
+
+    this.enemyTimers.spawnminionTimer = this.scene.time.addEvent({
+      delay: 1000 / this.enemyRates.minionRate,
+      callback: () => this.spawnEnemy('minion'),
+      callbackScope: this,
+      loop: true,
+    });
   };
 
   public spawnEnemy = (enemyRecord: EnemyType) => {
