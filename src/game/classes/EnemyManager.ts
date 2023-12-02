@@ -6,6 +6,7 @@ import {
 import GameStageScene from '../scenes/GameStage';
 import { getRandomEdgeOfScreen } from '../scenes/helpers/gameHelpers';
 import { EnemyRatesMap, EnemyTimerMap, EnemyType } from '../types';
+import EnemyHealthBar from './EnemyHealthBar';
 import PlayerTower from './PlayerTower';
 
 export default class EnemyManager {
@@ -65,7 +66,8 @@ export default class EnemyManager {
       EnemyConstants[enemyRecord].SPRITE
     );
     enemy.setData('type', EnemyConstants[enemyRecord].TYPE);
-    enemy.setData('hitpoints', EnemyConstants[enemyRecord].HITPOINTS);
+    const healthBar = new EnemyHealthBar(this.scene, enemy.x - enemy.width / 2, enemy.y, EnemyConstants[enemyRecord].HITPOINTS);
+    enemy.setData('healthBar', healthBar);
     enemy.setData('id', `enemy-${this.enemyCounter++}`);
     EnemyConstants[enemyRecord].SPRITE &&
       enemy.setScale(
@@ -92,6 +94,8 @@ export default class EnemyManager {
     else if (enemy.getData('type') === EnemyConstants.boss.TYPE)
       this.playerTower.currentHp -= EnemyConstants.boss.DAMAGE;
     else this.playerTower.currentHp -= EnemyConstants.minion.DAMAGE;
+    const healthBar = enemy.getData('healthBar')
+    healthBar.destroy();
     enemy.destroy();
   };
 
@@ -117,12 +121,12 @@ export default class EnemyManager {
     const hitCooldown = ENEMY_WEAPON_HIT_RATE;
     const weaponId = weapon.getData('id');
     const enemyId = enemy.getData('id');
-    const hasHitpoints =
+    const healthBar = enemy.getData('healthBar') as EnemyHealthBar;
+    const enemyIsBig =
       enemy.getData('type') === EnemyConstants.juggernaut.TYPE ||
       EnemyConstants.boss.TYPE
         ? true
         : false;
-
     const compositeKey = `${weaponId}-${enemyId}`;
     const lastHitTime = this.weaponEnemyHitMap.get(compositeKey) || 0;
     if (currentTime - lastHitTime < hitCooldown) {
@@ -130,15 +134,15 @@ export default class EnemyManager {
     }
     this.weaponEnemyHitMap.set(compositeKey, currentTime);
 
-    if (hasHitpoints && enemy.getData('hitpoints') > 1) {
-      enemy.setData('hitpoints', enemy.getData('hitpoints') - 5);
+    if (enemyIsBig && healthBar.currentValue > 1) {
+      healthBar.decrease(5);
     } else {
       this.enemyDefeated(enemy);
     }
 
     if (weaponDestroyed) {
       weapon.destroy();
-    } else if (weapon.getData('type') === 'iceSpike' && hasHitpoints) {
+    } else if (weapon.getData('type') === 'iceSpike' && enemyIsBig) {
       this.scene.powerupManager.iceSpikeManager.spawnIceSpikeExplosion(
         weapon.body.x + weapon.body.width / 2,
         weapon.body.y + weapon.body.height / 2
@@ -150,6 +154,8 @@ export default class EnemyManager {
   public enemyDefeated = (
     enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
   ) => {
+    const healthBar = enemy.getData('healthBar')
+    healthBar.destroy();
     if (enemy.getData('type') === EnemyConstants.juggernaut.TYPE)
       this.playerTower.currentGold += EnemyConstants.juggernaut.GOLD_VALUE;
     if (enemy.getData('type') === EnemyConstants.boss.TYPE)

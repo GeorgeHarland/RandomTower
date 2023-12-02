@@ -329,6 +329,12 @@ export default class GameStageScene extends Phaser.Scene {
     }
 
     this.enemyManager.enemies?.children.entries.forEach((enemy) => {
+      // update healthbar positions
+      const healthBar = enemy.getData('healthBar');
+      const enemySprite = enemy as Phaser.Physics.Arcade.Sprite;
+      healthBar.x = enemySprite.x - 10;
+      healthBar.y = enemySprite.y - 10;  
+
       if (this.tower) {
         const effectMultiplier =
           enemy.getData('chilled') === true ? ICEPOOL_SLOW : 1;
