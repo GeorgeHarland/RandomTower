@@ -26,16 +26,16 @@ class EnemyHealthBar extends Phaser.GameObjects.Graphics {
     this.clear();
     // black background
     this.fillStyle(0x000000);
-    this.fillRect(0, 0, 80, 16);
+    this.fillRect(0, 0, this.scene.scale.width / 10, this.scene.scale.width / 50);
     // red health
     this.fillStyle(0xffffff);
-    this.fillRect(2, 2, 76, 12);
+    this.fillRect(2, 2, this.scene.scale.width / 10.5, this.scene.scale.width / 64);
     if (this.currentValue < 30) {
       this.fillStyle(0xff0000);
     } else {
       this.fillStyle(0x00ff00);
     }
-    this.fillRect(2, 2, (this.currentValue / this.maxValue) * 76, 12);
+    this.fillRect(2, 2, (this.currentValue / this.maxValue) * this.scene.scale.width / 10.5, this.scene.scale.width / 64);
   }
 }
 
