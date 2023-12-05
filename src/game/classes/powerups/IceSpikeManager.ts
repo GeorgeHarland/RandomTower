@@ -58,7 +58,7 @@ export default class IceSpikeManager {
 
       // prioritize nearest juggernaut -> then any other enemy -> then random direction
       this.scene.time.delayedCall(1, () => {
-        if (closestJuggernaut) {
+        if (closestJuggernaut && iceSpikeSprite) {
           this.scene.physics.moveToObject(
             iceSpikeSprite,
             closestJuggernaut,
@@ -70,7 +70,7 @@ export default class IceSpikeManager {
               closestJuggernaut.x - iceSpikeSprite.x
             )
           );
-        } else if (closestEnemy) {
+        } else if (closestEnemy && iceSpikeSprite) {
           this.scene.physics.moveToObject(
             iceSpikeSprite,
             closestEnemy,
@@ -82,7 +82,7 @@ export default class IceSpikeManager {
               closestEnemy.x - iceSpikeSprite.x
             )
           );
-        } else {
+        } else if (iceSpikeSprite) {
           const angle = Phaser.Math.Between(0, 360);
           this.scene.physics.velocityFromAngle(
             angle,
