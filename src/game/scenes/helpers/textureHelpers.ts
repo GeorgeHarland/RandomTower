@@ -1,4 +1,5 @@
 import { MOBILE_BREAKPOINT } from '../../../constants';
+import EnemyHealthBar from '../../classes/EnemyHealthBar';
 import GameStageScene from '../GameStage';
 
 export const generateTextures = (scene: GameStageScene) => {
@@ -51,3 +52,18 @@ export const generateTextures = (scene: GameStageScene) => {
 
   shopBoxTexture.generateTexture('shopBoxTexture', shopBoxSize, shopBoxSize);
 };
+
+export const drawHealthBar = (healthBar: EnemyHealthBar) => {
+    // black background
+    healthBar.fillStyle(0x000000);
+    healthBar.fillRect(0, 0, healthBar.scene.scale.width / 10, healthBar.scene.scale.width / 50);
+    // red health
+    healthBar.fillStyle(0xffffff);
+    healthBar.fillRect(2, 2, healthBar.scene.scale.width / 10.5, healthBar.scene.scale.width / 64);
+    if (healthBar.currentValue < 30) {
+      healthBar.fillStyle(0xff0000);
+    } else {
+      healthBar.fillStyle(0x00ff00);
+    }
+    healthBar.fillRect(2, 2, (healthBar.currentValue / healthBar.maxValue) * healthBar.scene.scale.width / 10.5, healthBar.scene.scale.width / 64);
+}
