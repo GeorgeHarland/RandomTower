@@ -72,6 +72,30 @@ export default class CircleWeapon extends Phaser.Physics.Arcade.Sprite {
     this.y += direction.y * this.circleSpeed * this.gameScene.gameSpeedScale;
   }
 
+  //   private moveToCursor(direction: Phaser.Math.Vector2) {
+  //     if (this.circleNumber === 0) {
+  //         // Main circle movement
+  //         this.x += direction.x * this.circleSpeed * this.gameScene.gameSpeedScale;
+  //         this.y += direction.y * this.circleSpeed * this.gameScene.gameSpeedScale;
+  //     } else {
+  //         const mainCircle = this.gameScene.circleWeapons?.children.entries[0] as CircleWeapon;
+  //         if (mainCircle) {
+  //             setTimeout(() => {
+  //                 const distanceToMain = Phaser.Math.Distance.Between(this.x, this.y, mainCircle.x, mainCircle.y);
+
+  //                 const isMainCircleStationary = mainCircle.body && mainCircle.body.velocity ? mainCircle.body.velocity.length() < 1 : true;
+
+  //                 const adjustedDistanceThreshold = 5 + (this.circleNumber - 1) * 10;
+
+  //                 if (distanceToMain < adjustedDistanceThreshold && isMainCircleStationary) {
+  //                 } else {
+  //                     this.x += direction.x * this.circleSpeed * this.gameScene.gameSpeedScale;
+  //                     this.y += direction.y * this.circleSpeed * this.gameScene.gameSpeedScale;
+  //                 }
+  //             }, this.circleNumber * 170);
+  //         }
+  //     }
+
   private moveUp() {
     this.y -= this.circleSpeed * this.gameScene.gameSpeedScale;
   }
