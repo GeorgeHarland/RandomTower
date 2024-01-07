@@ -1,9 +1,7 @@
 import { MOBILE_BREAKPOINT } from '../../constants';
-import GameStageScene from './GameStage';
-import HowToPlayScene from './HowToPlayScene';
 
 export default class MainMenuScene extends Phaser.Scene {
-  private gameScene: GameStageScene | null = null;
+  // private gameScene: GameStageScene | null = null;
 
   public constructor() {
     super({ key: 'MainMenuScene' });
@@ -12,7 +10,6 @@ export default class MainMenuScene extends Phaser.Scene {
   public preload() {}
 
   public create() {
-    this.gameScene = this.scene.get('GameStageScene') as GameStageScene;
     this.setupKeybindings();
 
     const music = this.sound.add('mainMenuMusic', { loop: true });
@@ -35,8 +32,8 @@ export default class MainMenuScene extends Phaser.Scene {
         : this.sys.canvas.width / 17.5;
     const heightMod =
       this.scale.width > MOBILE_BREAKPOINT
-        ? this.scale.height / 10
-        : this.scale.height / 7.5;
+        ? this.scale.height / 12
+        : this.scale.height / 8.5;
 
     this.add
       .text(
@@ -61,7 +58,7 @@ export default class MainMenuScene extends Phaser.Scene {
     startButton.on(
       'pointerup',
       () => {
-        this.startGame();
+        this.startScene('GameStageScene');
       },
       this
     );
@@ -81,34 +78,49 @@ export default class MainMenuScene extends Phaser.Scene {
     htpButton.on(
       'pointerup',
       () => {
-        this.startHtp();
+        this.startScene('HowToPlayScene');
+      },
+      this
+    );
+    const settingsButton = this.add
+      .text(
+        this.cameras.main.centerX,
+        this.cameras.main.centerY + heightMod*2,
+        'Settings',
+        {
+          fontSize: `${buttonFontSize}px`,
+          color: '#FFFFFF',
+          fontFamily: 'MedievalSharp',
+        }
+      )
+      .setOrigin(0.5);
+      settingsButton.setInteractive({ useHandCursor: true });
+      settingsButton.on(
+      'pointerup',
+      () => {
+        this.startScene('SettingsScene');
       },
       this
     );
   }
 
-  private startGame() {
-    this.sound.stopAll();
-    this.gameScene && this.gameScene.scene.remove();
-    !this.scene.get('GameStageScene') &&
-      this.scene.add('GameStageScene', GameStageScene);
-    this.scene.start('GameStageScene');
-  }
-
-  private startHtp() {
-    !this.scene.get('HowToPlayScene') &&
-      this.scene.add('HowToPlayScene', HowToPlayScene);
-    this.scene.start('HowToPlayScene');
+  private startScene(sceneKey: string) {
+    if(sceneKey === 'GameStageScene') {
+      this.sound.stopAll();
+    } 
+    !this.scene.get(sceneKey) &&
+      this.scene.add(sceneKey, sceneKey as Phaser.Types.Scenes.SceneType);
+    this.scene.start(sceneKey);
   }
 
   private setupKeybindings() {
     const enterKey = this.input.keyboard?.addKey(
       Phaser.Input.Keyboard.KeyCodes.ENTER
     );
-    enterKey?.on('down', this.startGame, this);
+    enterKey?.on('down', () => this.startScene('GameStageScene'), this);
     const spacebar = this.input.keyboard?.addKey(
       Phaser.Input.Keyboard.KeyCodes.SPACE
     );
-    spacebar?.on('down', this.startGame, this);
+    spacebar?.on('down', () => this.startScene('GameStageScene'), this);
   }
 }
