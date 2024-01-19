@@ -18,7 +18,7 @@ export const EnemyConstants: Record<EnemyType, EnemyConfig> = {
     SPRITE: 'minionSprite',
     SPRITE_SCALE: 0.05,
     DAMAGE: 5,
-    RATE: 0.3,
+    RATE: 0.35,
     RATE_MULTIPLIER: 1.012,
     SPEED_MULTIPLIER: 1,
     HITPOINTS: 1,
@@ -29,7 +29,7 @@ export const EnemyConstants: Record<EnemyType, EnemyConfig> = {
     SPRITE: 'juggernautSprite',
     SPRITE_SCALE: 0.135,
     DAMAGE: 20,
-    RATE: 0.05, // first around 25s
+    RATE: 0.04, // first around 25s
     RATE_MULTIPLIER: 1.025,
     SPEED_MULTIPLIER: 0.25,
     HITPOINTS: 50,
@@ -40,7 +40,7 @@ export const EnemyConstants: Record<EnemyType, EnemyConfig> = {
     SPRITE: 'bossSprite',
     SPRITE_SCALE: 0.25,
     DAMAGE: 50,
-    RATE: 0.015, // first around 85s
+    RATE: 0.010, // first around 85s
     RATE_MULTIPLIER: 1.005,
     SPEED_MULTIPLIER: 0.1,
     HITPOINTS: 400,
