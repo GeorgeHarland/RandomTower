@@ -39,6 +39,7 @@ export default class GameStageScene extends Phaser.Scene {
   private gameTimeText: Phaser.GameObjects.Text | undefined;
   private goldText: Phaser.GameObjects.Text | undefined;
   private startTime: number = 0;
+  private gameStarted: boolean = false;
   private towerLifeText: Phaser.GameObjects.Text | undefined;
   private towerSprites: Phaser.GameObjects.Image[] = [];
 
@@ -258,11 +259,15 @@ export default class GameStageScene extends Phaser.Scene {
     });
 
     this.gameSpeedScale = this.scale.width / 800;
-    this.startTime = this.time.now;
-    this.elapsedSeconds = 0;
   }
 
   public update(time: number) {
+    if(!this.gameStarted) {
+      this.elapsedSeconds = 0;
+      this.startTime = this.time.now;
+      this.gameStarted = true;
+    }
+
     const cursors = this.input.keyboard?.createCursorKeys();
     this.elapsedSeconds = Math.floor((time - this.startTime) / 1000);
 
