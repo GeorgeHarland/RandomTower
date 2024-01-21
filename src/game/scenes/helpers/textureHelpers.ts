@@ -54,16 +54,33 @@ export const generateTextures = (scene: GameStageScene) => {
 };
 
 export const drawHealthBar = (healthBar: EnemyHealthBar) => {
-    // black background
-    healthBar.fillStyle(0x000000);
-    healthBar.fillRect(0, 0, healthBar.scene.scale.width / 10, healthBar.scene.scale.width / 50);
-    // red health
-    healthBar.fillStyle(0xffffff);
-    healthBar.fillRect(2, 2, healthBar.scene.scale.width / 10.5, healthBar.scene.scale.width / 64);
-    if (healthBar.currentValue < 30) {
-      healthBar.fillStyle(0xff0000);
-    } else {
-      healthBar.fillStyle(0x00ff00);
-    }
-    healthBar.fillRect(2, 2, (healthBar.currentValue / healthBar.maxValue) * healthBar.scene.scale.width / 10.5, healthBar.scene.scale.width / 64);
-}
+  // black background
+  healthBar.fillStyle(0x000000);
+  healthBar.fillRect(
+    0,
+    0,
+    healthBar.scene.scale.width / 10,
+    healthBar.scene.scale.width / 50
+  );
+  // red health
+  healthBar.fillStyle(0xffffff);
+  healthBar.fillRect(
+    2,
+    2,
+    healthBar.scene.scale.width / 10.5,
+    healthBar.scene.scale.width / 64
+  );
+  if (healthBar.currentValue < 30) {
+    healthBar.fillStyle(0xff0000);
+  } else {
+    healthBar.fillStyle(0x00ff00);
+  }
+  healthBar.fillRect(
+    2,
+    2,
+    ((healthBar.currentValue / healthBar.maxValue) *
+      healthBar.scene.scale.width) /
+      10.5,
+    healthBar.scene.scale.width / 64
+  );
+};

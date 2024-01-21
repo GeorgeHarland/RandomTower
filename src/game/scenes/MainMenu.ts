@@ -85,7 +85,7 @@ export default class MainMenuScene extends Phaser.Scene {
     const settingsButton = this.add
       .text(
         this.cameras.main.centerX,
-        this.cameras.main.centerY + heightMod*2,
+        this.cameras.main.centerY + heightMod * 2,
         'Settings',
         {
           fontSize: `${buttonFontSize}px`,
@@ -94,8 +94,8 @@ export default class MainMenuScene extends Phaser.Scene {
         }
       )
       .setOrigin(0.5);
-      settingsButton.setInteractive({ useHandCursor: true });
-      settingsButton.on(
+    settingsButton.setInteractive({ useHandCursor: true });
+    settingsButton.on(
       'pointerup',
       () => {
         this.startScene('SettingsScene');
@@ -105,9 +105,9 @@ export default class MainMenuScene extends Phaser.Scene {
   }
 
   private startScene(sceneKey: string) {
-    if(sceneKey === 'GameStageScene') {
+    if (sceneKey === 'GameStageScene') {
       this.sound.stopAll();
-    } 
+    }
     !this.scene.get(sceneKey) &&
       this.scene.add(sceneKey, sceneKey as Phaser.Types.Scenes.SceneType);
     this.scene.start(sceneKey);

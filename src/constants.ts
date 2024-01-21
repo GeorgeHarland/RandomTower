@@ -40,7 +40,7 @@ export const EnemyConstants: Record<EnemyType, EnemyConfig> = {
     SPRITE: 'bossSprite',
     SPRITE_SCALE: 0.25,
     DAMAGE: 50,
-    RATE: 0.010, // first around 85s
+    RATE: 0.01, // first around 85s
     RATE_MULTIPLIER: 1.005,
     SPEED_MULTIPLIER: 0.1,
     HITPOINTS: 400,

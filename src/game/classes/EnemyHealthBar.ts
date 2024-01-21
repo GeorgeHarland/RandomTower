@@ -1,10 +1,15 @@
-import GameStageScene from "../scenes/GameStage";
-import { drawHealthBar } from "../scenes/helpers/textureHelpers";
+import GameStageScene from '../scenes/GameStage';
+import { drawHealthBar } from '../scenes/helpers/textureHelpers';
 
 class EnemyHealthBar extends Phaser.GameObjects.Graphics {
   public currentValue: number;
 
-  constructor(scene: GameStageScene, public x: number, public y: number, public maxValue: number) {
+  constructor(
+    scene: GameStageScene,
+    public x: number,
+    public y: number,
+    public maxValue: number
+  ) {
     super(scene);
     this.currentValue = maxValue;
 

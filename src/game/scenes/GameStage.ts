@@ -262,7 +262,7 @@ export default class GameStageScene extends Phaser.Scene {
   }
 
   public update(time: number) {
-    if(!this.gameStarted) {
+    if (!this.gameStarted) {
       this.elapsedSeconds = 0;
       this.startTime = this.time.now;
       this.gameStarted = true;
@@ -338,7 +338,7 @@ export default class GameStageScene extends Phaser.Scene {
       const healthBar = enemy.getData('healthBar');
       const enemySprite = enemy as Phaser.Physics.Arcade.Sprite;
       healthBar.x = enemySprite.x - 10;
-      healthBar.y = enemySprite.y - enemySprite.height * 0.1;  
+      healthBar.y = enemySprite.y - enemySprite.height * 0.1;
 
       if (this.tower) {
         const effectMultiplier =

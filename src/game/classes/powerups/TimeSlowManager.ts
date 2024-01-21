@@ -59,9 +59,14 @@ export default class TimeSlowManager {
     const { enemiesCurrentSpeed } = this.scene.enemyManager;
 
     if (this.timeSlow) {
-      this.scene.enemyManager.enemiesCurrentSpeed = Math.max(enemiesCurrentSpeed * 0.95);
+      this.scene.enemyManager.enemiesCurrentSpeed = Math.max(
+        enemiesCurrentSpeed * 0.95
+      );
     } else {
-      this.scene.enemyManager.enemiesCurrentSpeed = Math.min(enemiesCurrentSpeed / 0.95, ENEMY_BASE_SPEED * this.scene.gameSpeedScale);
+      this.scene.enemyManager.enemiesCurrentSpeed = Math.min(
+        enemiesCurrentSpeed / 0.95,
+        ENEMY_BASE_SPEED * this.scene.gameSpeedScale
+      );
     }
   };
 }

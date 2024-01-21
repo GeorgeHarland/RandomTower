@@ -66,7 +66,12 @@ export default class EnemyManager {
       EnemyConstants[enemyRecord].SPRITE
     );
     enemy.setData('type', EnemyConstants[enemyRecord].TYPE);
-    const healthBar = new EnemyHealthBar(this.scene, enemy.x - enemy.width / 2, enemy.y, EnemyConstants[enemyRecord].HITPOINTS);
+    const healthBar = new EnemyHealthBar(
+      this.scene,
+      enemy.x - enemy.width / 2,
+      enemy.y,
+      EnemyConstants[enemyRecord].HITPOINTS
+    );
     enemy.setData('healthBar', healthBar);
     enemy.setData('id', `enemy-${this.enemyCounter++}`);
     EnemyConstants[enemyRecord].SPRITE &&
@@ -94,7 +99,7 @@ export default class EnemyManager {
     else if (enemy.getData('type') === EnemyConstants.boss.TYPE)
       this.playerTower.currentHp -= EnemyConstants.boss.DAMAGE;
     else this.playerTower.currentHp -= EnemyConstants.minion.DAMAGE;
-    const healthBar = enemy.getData('healthBar')
+    const healthBar = enemy.getData('healthBar');
     healthBar.destroy();
     enemy.destroy();
   };
@@ -154,7 +159,7 @@ export default class EnemyManager {
   public enemyDefeated = (
     enemy: Phaser.Types.Physics.Arcade.GameObjectWithBody
   ) => {
-    const healthBar = enemy.getData('healthBar')
+    const healthBar = enemy.getData('healthBar');
     healthBar.destroy();
     if (enemy.getData('type') === EnemyConstants.juggernaut.TYPE)
       this.playerTower.currentGold += EnemyConstants.juggernaut.GOLD_VALUE;
