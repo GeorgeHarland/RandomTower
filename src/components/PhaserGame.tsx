@@ -5,6 +5,7 @@ import HowToPlayScene from '../game/scenes/HowToPlayScene';
 import MainMenuScene from '../game/scenes/MainMenu';
 import { useEffect, useRef } from 'preact/hooks';
 import InitialLoadingScene from '../game/scenes/InitialLoadingScene';
+import SettingsScene from '../game/scenes/SettingsScene';
 
 const PhaserGame = () => {
   const gameContainerRef = useRef<HTMLDivElement>(null);
@@ -31,6 +32,7 @@ const PhaserGame = () => {
         InitialLoadingScene,
         MainMenuScene,
         HowToPlayScene,
+        SettingsScene,
         GameStageScene,
         GameOverScene,
       ],

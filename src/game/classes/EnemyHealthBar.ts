@@ -3,6 +3,7 @@ import { drawHealthBar } from '../scenes/helpers/textureHelpers';
 
 class EnemyHealthBar extends Phaser.GameObjects.Graphics {
   public currentValue: number;
+  public poisoned: boolean;
 
   constructor(
     scene: GameStageScene,
@@ -12,6 +13,7 @@ class EnemyHealthBar extends Phaser.GameObjects.Graphics {
   ) {
     super(scene);
     this.currentValue = maxValue;
+    this.poisoned = false;
 
     this.draw();
     this.setVisible(false);
