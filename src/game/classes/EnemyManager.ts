@@ -125,6 +125,7 @@ export default class EnemyManager {
     const currentTime = Date.now();
     const hitCooldown = ENEMY_WEAPON_HIT_RATE;
     const weaponId = weapon.getData('id');
+    const weaponType = weapon.getData('type');
     const enemyId = enemy.getData('id');
     const healthBar = enemy.getData('healthBar') as EnemyHealthBar;
     const enemyIsBig =
@@ -141,6 +142,9 @@ export default class EnemyManager {
 
     if (enemyIsBig && healthBar.currentValue > 1) {
       healthBar.decrease(5);
+      if(weaponType === 'poisonCloud') {
+        healthBar.poisoned = true;
+      }
     } else {
       this.enemyDefeated(enemy);
     }

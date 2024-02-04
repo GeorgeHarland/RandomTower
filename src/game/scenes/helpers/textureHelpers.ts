@@ -62,7 +62,11 @@ export const drawHealthBar = (healthBar: EnemyHealthBar) => {
     healthBar.scene.scale.width / 10,
     healthBar.scene.scale.width / 50
   );
-  // red health
+  // red health or green if poisoned
+  let hpColour = 0x00ff00;
+  if(healthBar.currentValue < 30) hpColour = 0xff0000;
+  if(healthBar.poisoned) hpColour = 0xff00ff;
+
   healthBar.fillStyle(0xffffff);
   healthBar.fillRect(
     2,
@@ -70,11 +74,7 @@ export const drawHealthBar = (healthBar: EnemyHealthBar) => {
     healthBar.scene.scale.width / 10.5,
     healthBar.scene.scale.width / 64
   );
-  if (healthBar.currentValue < 30) {
-    healthBar.fillStyle(0xff0000);
-  } else {
-    healthBar.fillStyle(0x00ff00);
-  }
+  healthBar.fillStyle(hpColour);
   healthBar.fillRect(
     2,
     2,
