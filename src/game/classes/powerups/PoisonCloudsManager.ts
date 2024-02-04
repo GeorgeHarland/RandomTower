@@ -3,6 +3,7 @@ import {
   POISON_CLOUDS_BASE_COOLDOWN,
   POISON_CLOUDS_BASE_DURATION,
   POISON_CLOUDS_BASE_SCALE,
+  POISON_CLOUDS_DAMAGE_FREQUENCY,
   POISON_CLOUDS_LEVELUP_SCALE,
 } from '../../../constants';
 import GameStageScene from '../../scenes/GameStage';
@@ -11,6 +12,7 @@ import { getRandomCoordinatesInBounds } from '../../scenes/helpers/gameHelpers';
 export default class PoisonCloudsManager {
   public poisonCloudAmount: number = POISON_CLOUDS_BASE_AMOUNT;
   public poisonCloudScale: number = POISON_CLOUDS_BASE_SCALE;
+  public poisonDamageTimer: Phaser.Time.TimerEvent | undefined;
   public poisonSpriteDurationTimer: Phaser.Time.TimerEvent | undefined;
   public poisonSpriteCooldownTimer: Phaser.Time.TimerEvent | undefined;
 
@@ -22,6 +24,7 @@ export default class PoisonCloudsManager {
       this.poisonCloudScale += POISON_CLOUDS_LEVELUP_SCALE;
     }
     this.spawnPoisonClouds();
+    if(!this.poisonDamageTimer) this.startPoisonTimer();
   };
 
   public spawnPoisonClouds = () => {
@@ -63,4 +66,13 @@ export default class PoisonCloudsManager {
       loop: false,
     });
   };
+
+  public startPoisonTimer = () => {
+    this.poisonSpriteCooldownTimer = this.scene.time.addEvent({
+      delay: POISON_CLOUDS_DAMAGE_FREQUENCY,
+      callback: () => this.handlePoisonDamage(),
+      callbackScope: this,
+      loop: false,
+    });
+  }
 }
