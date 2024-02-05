@@ -143,6 +143,7 @@ export default class EnemyManager {
     if (enemyIsBig && healthBar.currentValue > 1) {
       healthBar.decrease(5);
       if(weaponType === 'poisonCloud') {
+        enemy.setData('poisoned', true)
         healthBar.poisoned = true;
       }
     } else {

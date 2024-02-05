@@ -8,6 +8,7 @@ import {
 } from '../../../constants';
 import GameStageScene from '../../scenes/GameStage';
 import { getRandomCoordinatesInBounds } from '../../scenes/helpers/gameHelpers';
+import EnemyHealthBar from '../EnemyHealthBar';
 
 export default class PoisonCloudsManager {
   public poisonCloudAmount: number = POISON_CLOUDS_BASE_AMOUNT;
@@ -74,5 +75,20 @@ export default class PoisonCloudsManager {
       callbackScope: this,
       loop: false,
     });
+  }
+
+  public handlePoisonDamage = () => {
+    // each enemy
+    this.scene.enemyManager.enemies?.children.entries.forEach((enemy) => {
+      if(enemy.getData('poisoned') === true) {
+        const healthBar = enemy.getData('healthBar') as EnemyHealthBar;
+        if (healthBar.currentValue > 1) {
+          healthBar.decrease(5);
+        } else {
+          this.scene.enemyManager.enemyDefeated(enemy as Phaser.Types.Physics.Arcade.GameObjectWithBody);
+        }
+      }
+    });
+    this.startPoisonTimer();
   }
 }
