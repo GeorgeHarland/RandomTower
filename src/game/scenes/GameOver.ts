@@ -110,6 +110,7 @@ export default class GameOverScene extends Phaser.Scene {
 
   private startMainMenu() {
     this.sound.stopAll();
+    this.gameScene && this.gameScene.scene.remove();
     this.mainMenuScene && this.mainMenuScene.scene.remove();
     !this.scene.get('MainMenuScene') &&
       this.scene.add('MainMenuScene', MainMenuScene);
